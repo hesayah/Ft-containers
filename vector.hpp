@@ -1,6 +1,7 @@
 #ifndef __VECTOR_HPP__
 # define __VECTOR_HPP__
 
+#include "includes/iterator.hpp"
 #include <memory>
 
 namespace ft {
@@ -17,14 +18,14 @@ public:
   typedef Alloc                                   allocator_type;        
   typedef allocator_type::size_type               size_type;             
   typedef allocator_type::difference_type         difference_type;       
-  typedef unspecified                             reference;             
-  typedef unspecified                             const_reference;       
-  typedef allocator_type::pointer                 pointer;               
-  typedef allocator_type::const_pointer           const_pointer;         
-  typedef buffer_iterator< T >                    iterator;              
-  typedef buffer_iterator< T >                    const_iterator;        
-  typedef std::reverse_iterator< iterator >       reverse_iterator;      
-  typedef std::reverse_iterator< const_iterator > const_reverse_iterator;
+  //typedef unspecified                             reference;             
+  //typedef unspecified                             const_reference;       
+  //typedef allocator_type::pointer                 pointer;               
+  //typedef allocator_type::const_pointer           const_pointer;         
+  //typedef buffer_iterator< T >                    iterator;              
+  //typedef buffer_iterator< T >                    const_iterator;        
+  //typedef std::reverse_iterator< iterator >       reverse_iterator;      
+  //typedef std::reverse_iterator< const_iterator > const_reverse_iterator;
 
   vector();
   ~vector();
