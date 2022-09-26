@@ -5,9 +5,6 @@
 
 namespace ft {
 
-template <class iterator_category, class value_type, class difference_type = std::ptrdiff_t ,class pointer = value_type*, class reference = value_type&>
-struct iterator ;
-
 template<typename itertype>
 class iterator : public iterator<random_access_iterator_tag, itertype>
 {
