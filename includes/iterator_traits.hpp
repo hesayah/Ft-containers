@@ -6,12 +6,13 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 03:29:36 by hesayah           #+#    #+#             */
-/*   Updated: 2022/09/26 04:45:08 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/09/27 01:08:23 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
 *** https://en.cppreference.com/w/cpp/iterator/iterator_tags
+*** https://en.cppreference.com/w/cpp/iterator/iterator
 *** https://cplusplus.com/reference/iterator/iterator_traits/
 *** https://cplusplus.com/reference/iterator/iterator/
 **/
@@ -29,7 +30,7 @@ namespace ft {
 	struct					bidirectional_iterator_tag : public forward_iterator_tag {};
 	struct					random_access_iterator_tag : public bidirectional_iterator_tag {};
 
-	template <class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T*, class Reference = T&>
+							template <class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T*, class Reference = T&>
   	struct					iterator 
 	{
     	
@@ -40,17 +41,17 @@ namespace ft {
     	typedef				Category						iterator_category;
 	};
 
-	template<class iterators>
+							template<class Iterator>
 	struct					iterator_traits
 	{
-		typedef typename	iterators::difference_type		difference_type;
-		typedef typename	iterators::value_type			value_type;
-		typedef typename	iterators::pointer				pointer;
-		typedef typename	iterators::reference			reference;
-		typedef typename	iterators::iterator_category	iterator_category;
+		typedef typename	Iterator::difference_type		difference_type;
+		typedef typename	Iterator::value_type			value_type;
+		typedef typename	Iterator::pointer				pointer;
+		typedef typename	Iterator::reference			reference;
+		typedef typename	Iterator::iterator_category	iterator_category;
 	};
 
-	template<class T>
+							template<class T>
 	struct					iterator_traits<T*>
 	{
 		typedef 			std::ptrdiff_t					difference_type;
@@ -60,7 +61,7 @@ namespace ft {
 		typedef 			random_access_iterator_tag		iterator_category;
 	};
 
-	template<class T>
+							template<class T>
 	struct					iterator_traits<const T*>
 	{
 		typedef 			std::ptrdiff_t					difference_type;

@@ -1,77 +1,121 @@
 #ifndef __VECTOR_HPP__
 # define __VECTOR_HPP__
 
-#include "includes/iterator.hpp"
+/**
+*** https://cplusplus.com/reference/vector/vector/
+*** https://en.cppreference.com/w/cpp/container/vector
+*** https://fr.acervolima.com/programme-pour-creer-une-classe-vectorielle-personnalisee-en-c/
+**/
+
 #include <memory>
 
 namespace ft {
+								template <class T, class Alloc = std::allocator<T>>
+	class						vector 
+	{
 
-template<typename T, typename Alloc = std::allocator<T> > 
-class vector {
+		typedef typename		value_type<T>;
+		typedef typename		allocator_type	 allocator<value_type>;
+		typedef typename		reference	allocator_type::reference	= value_type&;
+		typedef typename		const_reference	allocator_type::const_reference = const value_type&;
+		typedef typename		pointer	allocator_type::pointer	= value_type*;
+		typedef typename		const_pointer	allocator_type::const_pointer = const value_type*;
+		typedef typename		iterator;
+		typedef typename		const_iterator	= const value_type;	
+		typedef typename		reverse_iterator	reverse_iterator<iterator>;
+		typedef typename		const_reverse_iterator	reverse_iterator<const_iterator>;	
+		typedef typename		difference_type iterator_traits<iterator>::difference_type	= ptrdiff_t;
+		typedef typename		size_type	 size_t;
 
-    private:
+		explicit				vector(const allocator_type& alloc = allocator_type());
+		explicit				vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type());
+								template <class InputIterator>         
+								vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());	
+								vector(const vector& src);
+								~vector(void){};
+		private :
+		T						*arr;
+		size_t					capacity;
+		size_t					size;
+		
+/**
+*** Members function
+**/
 
-    //size capasiti inter
-
-public:
-  typedef T                                       value_type;            
-  typedef Alloc                                   allocator_type;        
-  typedef allocator_type::size_type               size_type;             
-  typedef allocator_type::difference_type         difference_type;       
-  //typedef unspecified                             reference;             
-  //typedef unspecified                             const_reference;       
-  //typedef allocator_type::pointer                 pointer;               
-  //typedef allocator_type::const_pointer           const_pointer;         
-  //typedef buffer_iterator< T >                    iterator;              
-  //typedef buffer_iterator< T >                    const_iterator;        
-  //typedef std::reverse_iterator< iterator >       reverse_iterator;      
-  //typedef std::reverse_iterator< const_iterator > const_reverse_iterator;
-
-  vector();
-  ~vector();
+		vector & 				operator=(const vector & src);
+		void 					assign( size_type count, const T& value );
+								template< class InputIt >
+		void 					assign( InputIt first, InputIt last );
+		allocator_type 			get_allocator() const;
 
 
-  iterator begin();
-  const_iterator begin() const;
-  const_iterator cbegin() const;
-  iterator end();
-  const_iterator end() const;
-  const_iterator cend() const;
-  reverse_iterator rbegin();
-  const_reverse_iterator rbegin() const;
-  const_reverse_iterator crbegin() const;
-  reverse_iterator rend();
-  const_reverse_iterator rend() const;
-  const_reverse_iterator crend() const;
-  size_type size() const;
-  size_type max_size() const;
-  void resize(size_type);
-  bool empty() const;
-  size_type capacity() const;
-  void reserve(size_type);
-  reference operator[](size_type);
-  const_reference operator[](size_type) const;
-  reference at(size_type);
-  const_reference at(size_type) const;
-  reference front();
-  const_reference front() const;
-  reference back();
-  const_reference back() const;
-  void assign(size_type, const T &);
-  void push_back(const T &);
-  void pop_back();
-  iterator insert(iterator, const T &);
-  void insert(iterator, size_type, const T &);
-  template<typename InputIterator> 
-    void insert(iterator, InputIterator, InputIterator);
-  iterator erase(iterator);
-  iterator erase(iterator, iterator);
-  void swap(vector< T > &);
-  void clear();
-  allocator_type get_allocator() const;
-  const buffer & get_buffer() const;
-};
+/**
+*** Iterators
+**/
 
+		iterator				begin();
+		const_iterator			begin() const;
+		iterator				end();
+		const_iterator			end() const;
+		reverse_iterator		rbegin();
+		const_reverse_iterator	rbegin() const;
+		reverse_iterator		rend();
+		const_reverse_iterator	rend() const;
+
+/**
+*** Capacity
+**/
+
+		bool 					empty() const;
+		void 					reserve(size_type new_cap);
+		size_type 				size() const;
+		size_type 				max_size() const;
+		size_type 				capacity() const;
+
+/**
+*** Element access
+**/
+		T* 						data();
+		reference 				at(size_type pos);
+		reference 				operator[](size_type pos);
+		reference 				front();
+		reference 				back();
+
+/**
+*** Modifiers
+**/
+
+		void 					clear();
+		void 					push_back(const T& value);
+		void 					pop_back();
+		void 					resize(size_type count, T value = T());
+		void 					swap(vector	& other);
+		iterator 				insert(const_iterator pos, const T & value);
+		iterator 				insert(const_iterator pos, size_type count, const T & value);
+								template<class InputIt>
+		iterator 				insert(const_iterator pos, InputIt first, InputIt last);
+		iterator 				erase(iterator pos);
+		iterator 				erase(iterator first, iterator last);
+		
+
+
+/**
+*** Vector operator
+**/
+								template<class T, class Alloc>
+		bool					operator==(const std::vector<T,Alloc> & lhs, const std::vector<T,Alloc> & rhs);
+								template<class T, class Alloc>
+
+		bool					operator!=(const std::vector<T,Alloc> & lhs, const std::vector<T,Alloc> & rhs);
+								template<class T, class Alloc>
+		bool					operator<(const std::vector<T,Alloc> & lhs, const std::vector<T,Alloc> & rhs);
+								template<class T, class Alloc>
+		bool					operator<=(const std::vector<T,Alloc> & lhs, const std::vector<T,Alloc> & rhs);
+								template<class T, class Alloc>
+		bool					operator>(const std::vector<T,Alloc> & lhs, const std::vector<T,Alloc> & rhs );
+								template< class T, class Alloc >
+		bool					operator>=( const std::vector<T,Alloc> & lhs, const std::vector<T,Alloc> & rhs );
+	};
 }
 
 
