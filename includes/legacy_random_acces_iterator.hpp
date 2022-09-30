@@ -34,29 +34,27 @@ class vector_iterator
     		vector_iterator(const vector_iterator &rhs) : _ptr(rhs._ptr) {}
 			~vector_iterator();
 
-    		inline vector_iterator& 		operator=(iterartor_type* rhs) {_ptr = rhs; return *this;}
-	    	inline vector_iterator& 		operator=(const vector_iterator &rhs) {_ptr = rhs._ptr; return *this;} 
-    		inline vector_iterator& 		operator+=(difference_type rhs) {_ptr += rhs; return *this;}
-			inline vector_iterator& 		operator-=(difference_type rhs) {_ptr -= rhs; return *this;}
-			inline iterartor_type& 			operator*() const {return *_ptr;}
-			inline iterartor_type* 			operator->() const {return _ptr;}
-			inline iterartor_type& 			operator[](difference_type rhs) const {return _ptr[rhs];}
-			inline vector_iterator& 		operator++() {++_ptr; return *this;}
-			inline vector_iterator& 		operator--() {--_ptr; return *this;}
-			inline vector_iterator 			operator++(int) const {vector_iterator tmp(*this); ++_ptr; return tmp;}
-			inline vector_iterator 			operator--(int) const {vector_iterator tmp(*this); --_ptr; return tmp;}
-			inline difference_type			operator+(const vector_iterator& rhs) {return vector_iterator(_ptr+rhs.ptr);}
-			inline difference_type 			operator-(const vector_iterator& rhs) const {return _ptr-rhs.ptr;}
-			inline vector_iterator 			operator+(difference_type rhs) const {return vector_iterator(_ptr+rhs);}
-			inline vector_iterator 			operator-(difference_type rhs) const {return vector_iterator(_ptr-rhs);}
-			friend inline vector_iterator 	operator+(difference_type lhs, const vector_iterator& rhs) {return vector_iterator(lhs+rhs._ptr);}
-			friend inline vector_iterator 	operator-(difference_type lhs, const vector_iterator& rhs) {return vector_iterator(lhs-rhs._ptr);}
-			inline bool 					operator==(const vector_iterator& rhs) const {return _ptr == rhs._ptr;}
-			inline bool 					operator!=(const vector_iterator& rhs) const {return _ptr != rhs._ptr;}
-			inline bool 					operator>(const vector_iterator& rhs) const {return _ptr > rhs._ptr;}
-			inline bool 					operator<(const vector_iterator& rhs) const {return _ptr < rhs._ptr;}
-			inline bool 					operator>=(const vector_iterator& rhs) const {return _ptr >= rhs._ptr;}
-			inline bool 					operator<=(const vector_iterator& rhs) const {return _ptr <= rhs._ptr;}
+    		inline vector_iterator& 		operator=(iterartor_type* rhs) {this->_ptr = rhs; return *this;}
+	    	inline vector_iterator& 		operator=(const vector_iterator &rhs) {this->_ptr = rhs._ptr; return *this;} 
+    		inline vector_iterator& 		operator+=(difference_type rhs) {this->_ptr += rhs; return *this;}
+			inline vector_iterator& 		operator-=(difference_type rhs) {this->_ptr -= rhs; return *this;}
+			inline iterartor_type& 			operator*() const {return *this->_ptr;}
+			inline iterartor_type* 			operator->() const {return this->_ptr;}
+			inline iterartor_type& 			operator[](difference_type rhs) const {return this->_ptr[rhs];}
+			inline vector_iterator& 		operator++() {++this->_ptr; return *this;}
+			inline vector_iterator& 		operator--() {--this->_ptr; return *this;}
+			inline vector_iterator 			operator++(int) const {vector_iterator tmp(*this); ++this->_ptr; return tmp;}
+			inline vector_iterator 			operator--(int) const {vector_iterator tmp(*this); --this->_ptr; return tmp;}
+			inline difference_type			operator+(const vector_iterator& rhs) {return vector_iterator(this->_ptr+rhs._ptr);}
+			inline difference_type 			operator-(const vector_iterator& rhs) const {return this->_ptr-rhs.ptr;}
+			inline vector_iterator 			operator+(difference_type rhs) const {return vector_iterator(this->_ptr+rhs);}
+			inline vector_iterator 			operator-(difference_type rhs) const {return vector_iterator(this->_ptr-rhs);}
+			inline bool 					operator==(const vector_iterator& rhs) const {return this->_ptr == rhs._ptr;}
+			inline bool 					operator!=(const vector_iterator& rhs) const {return this->_ptr != rhs._ptr;}
+			inline bool 					operator>(const vector_iterator& rhs) const {return this->_ptr > rhs._ptr;}
+			inline bool 					operator<(const vector_iterator& rhs) const {return this->_ptr < rhs._ptr;}
+			inline bool 					operator>=(const vector_iterator& rhs) const {return this->_ptr >= rhs._ptr;}
+			inline bool 					operator<=(const vector_iterator& rhs) const {return this->_ptr <= rhs._ptr;}
 	};	
 }
 

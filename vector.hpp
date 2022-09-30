@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/09/29 04:40:28 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/09/30 04:06:55 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 #ifndef __VECTOR_HPP__
 # define __VECTOR_HPP__
 
-#	include <memory>
+# include <limits>
+# include <memory>
 # include "includes/legacy_random_acces_iterator.hpp"
 
 namespace ft {
@@ -40,24 +41,27 @@ namespace ft {
 			typedef typename	std::reverse_iterator<iterator>				reverse_iterator;
 			typedef typename	std::reverse_iterator<const_iterator>		const_reverse_iterator;
 
-								vector();
-		explicit				vector(const allocator_type&);
-		explicit 				vector(size_type count, const T& value, const Allocator&);
+			protected :
+								pointer										_first;
+								allocator_type								_alloc;
+								size_t										_capacity;
+								size_t										_size;
+
+								vector(void){};
+		explicit 				vector(const Allocator& alloc);
+		explicit 				vector(size_type count, const T& value = T(), const Allocator& alloc = Allocator());
 								template <class InputIt>
-								vector(InputIt first, InputIt last, const allocator_type&);	
-								vector(const vector& src);
+								vector(InputIt first, InputIt last,const Allocator& alloc = Allocator());	
+								vector(const vector& other);
 								~vector(void){};
-		protected :
-		T						*_vec;
-		size_t					_capacity;
-		size_t					_size;
+
 		
 /**
 *** Members function
 **/
 
-		vector & 				operator=(const vector & src);
-		void 					assign(size_type count, const T& value);
+		vector	& 				operator=(const vector& other){this->_first = other._first; this->_alloc = other._alloc; this->_capacity = other._capacity; this->size = other._size;};
+		void 					assign(size_type count, const T& value){};
 								template<class InputIt>
 		void 					assign(InputIt first, InputIt last);
 		allocator_type 			get_allocator() const;
@@ -67,10 +71,10 @@ namespace ft {
 *** Iterators
 **/
 
-		iterator				begin();
-		const_iterator			begin() const;
-		iterator				end();
-		const_iterator			end() const;
+		iterator				begin(){return (this->_first);};
+		const_iterator			begin()const {return (this->_first);};
+		iterator				end(){return (this->_first[this->_size]);};
+		const_iterator			end() const {return (this->_first[this->_size]);};
 		reverse_iterator		rbegin();
 		const_reverse_iterator	rbegin() const;
 		reverse_iterator		rend();
@@ -80,11 +84,11 @@ namespace ft {
 *** Capacity
 **/
 
-		bool 					empty() const;
-		void 					reserve(size_type new_cap);
-		size_type 				size() const;
-		size_type 				max_size() const;
-		size_type 				capacity() const;
+		bool 					empty() const {return (this->_size == 0);};
+		void 					reserve(size_type new_cap) {pointer tmp; this->_alloc.allocate(); };
+		size_type 				size() const {return (this->_size);};
+		size_type 				max_size() const {return (std::numeric_limits<difference_type>::max());};
+		size_type 				capacity() const {return (this->_capacity);};
 
 /**
 *** Element access
@@ -114,12 +118,12 @@ namespace ft {
 /**
 *** Vector operator
 **/
-		bool					operator==(const vector<T,Allocator> & rhs);
-		bool					operator!=(const vector<T,Allocator> & rhs);
-		bool					operator<(const vector<T,Allocator> & rhs);
-		bool					operator<=(const vector<T,Allocator> & rhs);
-		bool					operator>(const vector<T,Allocator> & rhs);
-		bool					operator>=(const vector<T,Allocator> & rhs);
+		bool					operator==(const vector<T,Allocator>& other);
+		bool					operator!=(const vector<T,Allocator>& other);
+		bool					operator<(const vector<T,Allocator>& other);
+		bool					operator<=(const vector<T,Allocator>& other);
+		bool					operator>(const vector<T,Allocator>& other);
+		bool					operator>=(const vector<T,Allocator>& other);
 	};
 }
 
