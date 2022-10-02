@@ -10,20 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __ENABLE_IF_HPP
-# define __ENABLE_IF_HPP__
+/**
+*** https://en.cppreference.com/w/cpp/types/enable_if
+**/
 
+#ifndef __ENABLE_IF_HPP__
+# define __ENABLE_IF_HPP__
 
 namespace ft {
 
-	template <class T> 
-	struct is_integral : std::integral_constant 
-	{
-
-		private :
-			bool	_value_type;
-			typedef integral_constant<bool,true> true_type;
-			typedef integral_constant<bool,false> false_type;
+	template<bool B, class T = void>
+	struct enable_if {};
+ 
+	template<class T>
+	struct enable_if<true, T> { 
+		typedef T type; 
 	};
 }
 
