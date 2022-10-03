@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/02 09:00:19 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/03 07:49:22 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 # include <memory>
 # include <iterator>
+# include "includes/legacy_random_acces_iterator.hpp"
 # include "includes/reverse_iterator.hpp"
 
 namespace ft {
@@ -36,8 +37,8 @@ namespace ft {
 			typedef				const  value_type&							const_reference;
 			typedef typename	Allocator::pointer							pointer;
 			typedef typename	Allocator::const_pointer					const_pointer;
-		//	typedef	typename	std::random_access_iterator_tag				iterator;
-		//	typedef				const iterator								const_iterator;
+			typedef				vector_iterator<T>							iterator;
+			typedef				vector_iterator<const T>					const_iterator;
 			typedef typename	std::reverse_iterator<iterator>				reverse_iterator;
 			typedef typename	std::reverse_iterator<const_iterator>		const_reverse_iterator;
 
@@ -114,7 +115,7 @@ namespace ft {
 // *** Iterators
 // **/
 
- 		std::iterator				begin(){return (this->_base);};
+ 		iterator				begin(){return (this->_base);};
  		const_iterator			begin()const {return (this->_base);};
  		iterator				end(){return (this->_base[this->_size]);};
  		const_iterator			end() const {return (this->_base[this->_size]);};
