@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/03 07:49:22 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/03 10:09:56 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ namespace ft {
 			typedef				const  value_type&							const_reference;
 			typedef typename	Allocator::pointer							pointer;
 			typedef typename	Allocator::const_pointer					const_pointer;
-			typedef				vector_iterator<T>							iterator;
-			typedef				vector_iterator<const T>					const_iterator;
-			typedef typename	std::reverse_iterator<iterator>				reverse_iterator;
-			typedef typename	std::reverse_iterator<const_iterator>		const_reverse_iterator;
+			typedef				vector_iterator<value_type>					iterator;
+			typedef				vector_iterator<const value_type>			const_iterator;
+//			typedef typename	std::reverse_iterator<iterator>				reverse_iterator;
+//			typedef typename	std::reverse_iterator<const_iterator>		const_reverse_iterator;
 
 			protected :		
 								allocator_type								_alloc;
@@ -115,10 +115,10 @@ namespace ft {
 // *** Iterators
 // **/
 
- 		iterator				begin(){return (this->_base);};
- 		const_iterator			begin()const {return (this->_base);};
- 		iterator				end(){return (this->_base[this->_size]);};
- 		const_iterator			end() const {return (this->_base[this->_size]);};
+ 		iterator				begin(){return (iterator(this->_base));};
+ 		const_iterator			begin()const {return iterator(this->_base);};
+ 		iterator				end(){return iterator(this->_base[this->_size]);};
+ 		const_iterator			end() const {return iterator(this->_base[this->_size]);};
 //		reverse_std::		rbegin();
 // 		const_reverse_std::	rbegin() const;
 // 		reverse_iterator		rend();

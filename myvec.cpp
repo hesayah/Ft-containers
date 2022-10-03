@@ -21,6 +21,8 @@ int main()
     vector_constructor_test();
     ft::vector<int> words1(10, 50);
 
+
+
   for (ft::vector<int>::iterator it = words1.begin(); it != words1.end(); ++it)
     std::cout << ' ' << *it;
   std::cout << '\n';    // words2 == words1

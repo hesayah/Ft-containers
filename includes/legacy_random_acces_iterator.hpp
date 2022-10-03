@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   legacy_random_acces_vector_iterator.hpp                   :+:      :+:    :+:   */
+/*   legacy_random_acces_iterator.hpp                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 02:23:04 by hesayah           #+#    #+#             */
-/*   Updated: 2022/09/29 02:26:52 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/03 10:22:42 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,24 @@
 
 namespace ft {
 
-	template <typename  Category, typename T, typename  Distance = std::ptrdiff_t, typename  Pointer = T*, typename Reference = T&>
-  	struct					iterator
+	template <class T>
+	struct					vector_iterator : public iterator<random_access_iterator_tag, T>
 	{
     	
-    	typedef				Distance						difference_type;
-		typedef				T								value_type;
-    	typedef				Pointer							pointer;
-   		typedef				Reference						reference;
-    	typedef				Category						iterator_category;
+    	typedef	typename		iterator<random_access_iterator_tag, T>::difference_type				difference_type;
+		typedef	typename		iterator<random_access_iterator_tag, T>::value_type						value_type;
+    	typedef	typename		iterator<random_access_iterator_tag, T>::pointer						pointer;
+   		typedef	typename		iterator<random_access_iterator_tag, T>::reference						reference;
+    	typedef	typename		iterator<random_access_iterator_tag, T>::iterator_category				iterator_category;
 	
    
     	protected:
-      						iterator 							_it;
-
-      	typedef 		iterator_traits<iterator>				__traits_type;
-
-   		public:
-      				typedef 			iterator						iterator_type;
-      				typedef typename	__traits_type::difference_type	difference_type;
-      				typedef typename	__traits_type::pointer			pointer;
-      				typedef typename	__traits_type::reference		reference;
-
-    		vector_iterator() :  {this->_it = NULL;}
-    		vector_iterator(const vector_iterator & other) : _it(other._it) {}
-			~vector_iterator();
+      							pointer 																_it;
+		public :
+    							vector_iterator() {this->_it = NULL;}
+								vector_iterator(pointer it) : _it(it) {}
+    							vector_iterator(const vector_iterator & other) : _it(other._it) {}
+								~vector_iterator() {}
 
 			vector_iterator	& 	operator=(const vector_iterator & other) 
 								{
@@ -55,11 +48,11 @@ namespace ft {
 								}
 			bool				operator==(const vector_iterator & other)
 								{
-									return (this->_it == other._it)
+									return (this->_it == other._it);
 								}
 			bool				operator!=(const vector_iterator & other)
 								{
-									return (this->_it != other._it)
+									return (this->_it != other._it);
 								}
 			vector_iterator	& 	operator++() 
 								{
@@ -94,15 +87,15 @@ namespace ft {
 											this->_it -= other;
 											return (*this);
 										}
-			iterator_type& 		operator*() const 
+			value_type & 		operator*() const 
 										{
 											return (this->_it);
 										}
-			iterator_type* 		operator->() const 
+			value_type * 		operator->() const 
 										{
 											return this->_it;
 										}
-			iterator_type& 		operator[](difference_type other) const 
+			value_type & 		operator[](difference_type other) const 
 										{
 											return this->_it[other];
 										}
