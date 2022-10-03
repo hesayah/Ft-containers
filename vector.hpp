@@ -19,15 +19,12 @@
 #ifndef __VECTOR_HPP__
 # define __VECTOR_HPP__
 
-
-
 # include <memory>
-# include <iostream>
+# include <iterator>
 # include "includes/reverse_iterator.hpp"
-# include "includes/legacy_random_acces_iterator.hpp"
 
 namespace ft {
-								template<class T, class Allocator = std::allocator<T>>
+								template<class T, class Allocator = std::allocator<T> >
 	class						vector 
 	{
 		public :
@@ -37,10 +34,10 @@ namespace ft {
 			typedef				std::ptrdiff_t								difference_type;
 			typedef				value_type&									reference;
 			typedef				const  value_type&							const_reference;
-			typedef				vector_iterator<T>							iterator;
-			typedef				vector_iterator<const T>					const_iterator;
 			typedef typename	Allocator::pointer							pointer;
 			typedef typename	Allocator::const_pointer					const_pointer;
+		//	typedef	typename	std::random_access_iterator_tag				iterator;
+		//	typedef				const iterator								const_iterator;
 			typedef typename	std::reverse_iterator<iterator>				reverse_iterator;
 			typedef typename	std::reverse_iterator<const_iterator>		const_reverse_iterator;
 
@@ -48,39 +45,81 @@ namespace ft {
 								allocator_type								_alloc;
 								size_t										_capacity;
 								size_t										_size;
-								pointer										_first;
+								pointer										_base;
 
 			public :
 
-			explicit			vector(const Allocator& alloc = allocator_type()) :  _alloc(alloc), _capacity(0), _size(0), _first(nullptr){}
-			explicit 			vector(size_type count, const_reference value = value_type(), const Allocator& alloc = allocator_type()) :  _alloc(alloc), _capacity(count), _size(count), _first(_alloc.allocate(count)){}
-			// 					template <class InputIt>
-			// 					vector(InputIt first, InputIt last,const Allocator& alloc = Allocator());	
-			// 					vector(const vector& other);
-			 					~vector(void){}
+/**
+***								Member functions 
+**/
+								
+								/** 
+								***  constructors
+								**/
+			explicit			vector(const Allocator& alloc = allocator_type()) : _capacity(0), _size(0),  _alloc(alloc)
+								{
+									_base = NULL;
+									//alloc = allocator_type();_
+									//_alloc = alloc;
+								}
+			explicit 			vector(size_type count, const_reference value = value_type(), const Allocator& alloc = allocator_type()) :  _alloc(alloc), _capacity(count), _size(count), _base(_alloc.allocate(count))
+								{
+									pointer		ptr;
+									ptr = this->_base;
+									for(size_t i = 0; i < count; i++)
+										this->_alloc.construct(ptr++, value);
+								}
+/*								template <class InputIt>
+								vector(InputIt first, InputIt last,const Allocator& alloc = Allocator()) : _alloc(alloc)
+								{
+									difference_type dist;
+									dist = static_cast<size_type>(std::distance(first, last));
+									this->_capacity = dist;
+									this->_size = dist;
+									this->_alloc.allocate(dist);
+									std::uninitialized_copy(first, last, this->_base);
+								}	*/
+								vector(const vector& other)
+								{
+									*this = other;
+								}
+			 					~vector(void)
+								{
+									_alloc.deallocate(this->_base, this->_capacity);
+								}
+ 		vector	& 				operator=(const vector& other)
+								{
+									this->_base = other._base;
+									this->_alloc = other._alloc;
+									this->_capacity = other._capacity;
+									this->_size = other._size;
+									return (*this);
+								}
+ /*		void 					assign(size_type count, const T& value)
+								{
 
-		
-// /**
-// *** Members function
-// **/
+								}
+ 								template<class InputIt>
+ 		void 					assign(InputIt first, InputIt last)
+								{
 
- 		vector	& 				operator=(const vector& other){this->_first = other._first; this->_alloc = other._alloc; this->_capacity = other._capacity; this->_size = other._size; return *this;};
-// 		void 					assign(size_type count, const T& value){};
-// 								template<class InputIt>
-// 		void 					assign(InputIt first, InputIt last);
-// 		allocator_type 			get_allocator() const;
+								}
+ 		allocator_type 			get_allocator() const
+								{
+									return (_alloc);
+								}*/
 
 
 // /**
 // *** Iterators
 // **/
 
-// 		iterator				begin(){return (this->_first);};
-// 		const_iterator			begin()const {return (this->_first);};
-// 		iterator				end(){return (this->_first[this->_size]);};
-// 		const_iterator			end() const {return (this->_first[this->_size]);};
-// 		reverse_iterator		rbegin();
-// 		const_reverse_iterator	rbegin() const;
+ 		std::iterator				begin(){return (this->_base);};
+ 		const_iterator			begin()const {return (this->_base);};
+ 		iterator				end(){return (this->_base[this->_size]);};
+ 		const_iterator			end() const {return (this->_base[this->_size]);};
+//		reverse_std::		rbegin();
+// 		const_reverse_std::	rbegin() const;
 // 		reverse_iterator		rend();
 // 		const_reverse_iterator	rend() const;
 
@@ -119,6 +158,9 @@ namespace ft {
 // 		iterator 				erase(iterator pos);
 // 		iterator 				erase(iterator first, iterator last);
 
+
+	};
+	
 // /**
 // *** Vector operator
 // **/
@@ -128,7 +170,6 @@ namespace ft {
 // 		bool					operator<=(const vector<T,Allocator>& other);
 // 		bool					operator>(const vector<T,Allocator>& other);
 // 		bool					operator>=(const vector<T,Allocator>& other);
-	};
 }
 
 
