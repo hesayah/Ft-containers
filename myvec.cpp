@@ -3,37 +3,32 @@
 #include <string>
 #include <iostream>
 
-void    vector_constructor_test(void)
+template<typename T>
+std::ostream& operator<<(std::ostream& s, const ft::vector<T>& v) 
 {
-	ft::vector<int> on;
-	std::cout << "vector empty construct"<< std::endl;
-
-	ft::vector<int> two;
-
-	on = two;
-	std::cout << "vector empty construct"<< std::endl;
-	
+    s.put('[');
+    char comma[3] = {'\0', ' ', '\0'};
+    for (const auto& e : v)
+    {
+        s << comma << e;
+        comma[0] = ',';
+    }
+    return s << ']';
 }
-
+ 
 int main() 
 {
-	std::cout << "vector construct test"<< std::endl;
-    vector_constructor_test();
-    ft::vector<int> words1(10, 50);
-
-
-
-  for (ft::vector<int>::iterator it = words1.begin(); it != words1.end(); ++it)
-    std::cout << ' ' << *it;
-  std::cout << '\n';    // words2 == words1
-    //ft::vector<std::string> words2(words1.begin(), words1.end());
+    // C++11 initializer list syntax:
+    ft::vector<std::string> words1(5, "Mo");
+    std::cout << "words1: " << words1 << '\n';
+ 
+    // words2 == words1
+  	ft::vector<std::string> words2(words1.begin(), words1.end());
+    std::cout << "words2: " << words2 << '\n';
  
     // words3 == words1
-    //ft::vector<std::string> words3(words1);
- 
-    // words4 is {"Mo", "Mo", "Mo", "Mo", "Mo"}
-   // ft::vector<std::string> words4(5, "Mo");
+    ft::vector<std::string> words3(words1);
+    std::cout << "words3: " << words3 << '\n';
 
-
-	return (0);
+	std::cout << "words3:  cap" << words3.capacity() << '\n';
 }

@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/04 03:58:45 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/04 10:06:37 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # define __VECTOR_HPP__
 
 # include <memory>
-# include <iterator>
+# include <limits>
 # include "includes/legacy_random_acces_iterator.hpp"
 # include "includes/reverse_iterator.hpp"
 
@@ -50,19 +50,12 @@ namespace ft {
 
 			public :
 
-/**
-***								Member functions 
+
+/** 
+***								constructors
 **/
-								
-								/** 
-								***  constructors
-								**/
-			explicit			vector(const Allocator& alloc = allocator_type()) : _capacity(0), _size(0),  _alloc(alloc)
-								{
-									_base = NULL;
-									//alloc = allocator_type();_
-									//_alloc = alloc;
-								}
+			explicit			vector(const Allocator& alloc = allocator_type()) : _capacity(0), _size(0),  _alloc(alloc) , _base(NULL)
+								{}
 			explicit 			vector(size_type count, const_reference value = value_type(), const Allocator& alloc = allocator_type()) :  _alloc(alloc), _capacity(count), _size(count), _base(_alloc.allocate(count))
 								{
 									pointer		ptr;
@@ -70,16 +63,21 @@ namespace ft {
 									for(size_t i = 0; i < count; i++)
 										this->_alloc.construct(ptr++, value);
 								}
-/*								template <class InputIt>
+								template <class InputIt>
 								vector(InputIt first, InputIt last,const Allocator& alloc = Allocator()) : _alloc(alloc)
 								{
-									difference_type dist;
-									dist = static_cast<size_type>(std::distance(first, last));
+									size_type 		dist;
+									iterator		tmp_it;
+									
+									dist = 0;
+									tmp_it = first;
+									for (; tmp_it != last; ++tmp_it)
+										dist++;
 									this->_capacity = dist;
-									this->_size = dist;
-									this->_alloc.allocate(dist);
+									this->_size = this->_capacity;
+									this->_base = this->_alloc.allocate(this->_capacity);
 									std::uninitialized_copy(first, last, this->_base);
-								}	*/
+								}
 								vector(const vector& other)
 								{
 									*this = other;
@@ -88,15 +86,19 @@ namespace ft {
 								{
 									_alloc.deallocate(this->_base, this->_capacity);
 								}
+/**
+***								Member functions 
+**/
  		vector	& 				operator=(const vector& other)
 								{
-									this->_base = other._base;
 									this->_alloc = other._alloc;
+									this->_base = this->_alloc.allocate(other._capacity);
 									this->_capacity = other._capacity;
 									this->_size = other._size;
+									std::uninitialized_copy(other.begin(), other.end(), this->_base);
 									return (*this);
-								}
- /*		void 					assign(size_type count, const T& value)
+								}								
+		void 					assign(size_type count, const T& value)
 								{
 
 								}
@@ -108,7 +110,7 @@ namespace ft {
  		allocator_type 			get_allocator() const
 								{
 									return (_alloc);
-								}*/
+								}
 
 
 // /**
@@ -116,9 +118,9 @@ namespace ft {
 // **/
 
  		iterator				begin(){return (iterator(this->_base));};
- 		const_iterator			begin()const {return iterator(this->_base);};
- 		iterator				end(){pointer end; end = &this->_base[this->_size];return iterator(end);};
- 		const_iterator			end() const {pointer end; end = &this->_base[this->_size];return iterator(end);};
+ 		const_iterator			begin()const {return const_iterator(this->_base);};
+ 		iterator				end(){pointer end; end = (&(this->_base[this->_size]));return iterator(end);};
+ 		const_iterator			end() const {pointer end; end = &this->_base[this->_size];return const_iterator(end);};
 //		reverse_std::		rbegin();
 // 		const_reverse_std::	rbegin() const;
 // 		reverse_iterator		rend();
@@ -128,11 +130,11 @@ namespace ft {
 // *** Capacity
 // **/
 
-// 		bool 					empty() const {return (this->_size == 0);};
-// 		void 					reserve(size_type new_cap) {pointer tmp; this->_alloc.allocate(5); };
-// 		size_type 				size() const {return (this->_size);};
-// 		size_type 				max_size() const {return (std::numeric_limits<difference_type>::max());};
-// 		size_type 				capacity() const {return (this->_capacity);};
+ 		bool 					empty() const {return (this->_size == 0);};
+ 		void 					reserve(size_type new_cap) {pointer tmp; this->_alloc.allocate(5); };
+ 		size_type 				size() const {return (this->_size);};
+ 		size_type 				max_size() const {return (std::numeric_limits<difference_type>::max());};
+ 		size_type 				capacity() const {return (this->_capacity);};
 
 // /**
 // *** Element access
