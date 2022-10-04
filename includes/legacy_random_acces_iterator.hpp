@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 02:23:04 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/03 10:22:42 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/04 03:52:05 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 namespace ft {
 
 	template <class T>
-	struct					vector_iterator : public iterator<random_access_iterator_tag, T>
+	struct						vector_iterator : public iterator<random_access_iterator_tag, T>
 	{
     	
     	typedef	typename		iterator<random_access_iterator_tag, T>::difference_type				difference_type;
@@ -36,7 +36,7 @@ namespace ft {
     	protected:
       							pointer 																_it;
 		public :
-    							vector_iterator() {this->_it = NULL;}
+    							vector_iterator() : _it(NULL) {}
 								vector_iterator(pointer it) : _it(it) {}
     							vector_iterator(const vector_iterator & other) : _it(other._it) {}
 								~vector_iterator() {}
@@ -76,61 +76,61 @@ namespace ft {
 									--this->_it;
 									return (tmp);
 								}
-			
-			vector_iterator& 	operator+=(difference_type other) 
-										{
-											this->_it += other;
-											return (*this);
-										}
-			vector_iterator& 	operator-=(difference_type other)
-										{
-											this->_it -= other;
-											return (*this);
-										}
+			vector_iterator	& 	operator+=(difference_type other) 
+								{
+									this->_it += other;
+									return (*this);
+								}
+			vector_iterator	& 	operator-=(difference_type other)
+								{
+									this->_it -= other;
+									return (*this);
+								}
 			value_type & 		operator*() const 
-										{
-											return (this->_it);
-										}
+								{
+									return (*(this->_it));
+								}
 			value_type * 		operator->() const 
-										{
-											return this->_it;
-										}
+								{
+									return this->_it;
+								}
 			value_type & 		operator[](difference_type other) const 
-										{
-											return this->_it[other];
-										}
+								{
+									
+									return (*(*this + other));
+								}
 			difference_type		operator+(const vector_iterator& other) 
-										{
-											return vector_iterator(this->_it+other._it);
-										}
-			difference_type 		operator-(const vector_iterator& other) const 
-										{
-											return this->_it-other.it;
-										}
-			vector_iterator 		operator+(difference_type other) const 
-										{
-											return vector_iterator(this->_it+other);
-										}
-			vector_iterator 		operator-(difference_type other) const 
-										{
-											return vector_iterator(this->_it-other);
-										}
+								{
+									return vector_iterator(this->_it+other._it);
+								}
+			difference_type 	operator-(const vector_iterator& other) const 
+								{
+									return this->_it-other.it;
+								}
+			vector_iterator 	operator+(difference_type other) const 
+								{
+									return vector_iterator(this->_it+other);
+								}
+			vector_iterator 	operator-(difference_type other) const 
+								{
+									return vector_iterator(this->_it-other);
+								}
 			bool 				operator>(const vector_iterator& other) const 
-										{
-											return this->_it > other._it;
-										}
+								{
+									return this->_it > other._it;
+								}
 			bool 				operator<(const vector_iterator& other) const 
-										{
-											return this->_it < other._it;
-										}
+								{
+									return this->_it < other._it;
+								}
 			bool 				operator>=(const vector_iterator& other) const 
-										{
-											return this->_it >= other._it;
-										}
+								{
+									return this->_it >= other._it;
+								}
 			bool 				operator<=(const vector_iterator& other) const 
-										{
-											return this->_it <= other._it;
-										}
+								{
+									return this->_it <= other._it;
+								}
 	};
 }
 

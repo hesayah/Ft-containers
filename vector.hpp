@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/03 10:09:56 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/04 03:58:45 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,8 @@ namespace ft {
 
  		iterator				begin(){return (iterator(this->_base));};
  		const_iterator			begin()const {return iterator(this->_base);};
- 		iterator				end(){return iterator(this->_base[this->_size]);};
- 		const_iterator			end() const {return iterator(this->_base[this->_size]);};
+ 		iterator				end(){pointer end; end = &this->_base[this->_size];return iterator(end);};
+ 		const_iterator			end() const {pointer end; end = &this->_base[this->_size];return iterator(end);};
 //		reverse_std::		rbegin();
 // 		const_reverse_std::	rbegin() const;
 // 		reverse_iterator		rend();
