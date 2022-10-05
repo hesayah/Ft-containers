@@ -6,18 +6,18 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 08:44:52 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/02 12:47:02 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/05 08:10:26 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __STACK_HPP__
 # define __STACK_HPP__
 
-#include <vector>
+# include "vector.hpp"
 
 namespace ft {
 
-	template<class T, class Container = std::vector<T>> 
+	template<class T, class Container = ft::vector<T>> 
 	class stack 
 	{
 		public :

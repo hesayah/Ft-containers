@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/04 10:06:37 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/05 12:00:07 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 
 # include <memory>
 # include <stdexcept>
+# include "includes/enable_if.hpp"
+# include "includes/is_integral.hpp"
 # include "includes/legacy_random_acces_iterator.hpp"
 # include "includes/reverse_iterator.hpp"
 
@@ -52,7 +54,7 @@ namespace ft {
 /** 
 ***								constructors
 **/
-			explicit			vector(const Allocator& alloc = allocator_type()) : _capacity(0), _size(0),  _alloc(alloc) , _base(NULL)
+			explicit			vector(const Allocator& alloc = allocator_type()) :  _alloc(alloc),_capacity(0), _size(0) , _base(NULL)
 								{}
 			explicit 			vector(size_type count, const_reference value = value_type(), const Allocator& alloc = allocator_type()) :  _alloc(alloc), _capacity(count), _size(count), _base(_alloc.allocate(count))
 								{
@@ -62,19 +64,9 @@ namespace ft {
 										this->_alloc.construct(ptr++, value);
 								}
 								template <class InputIt>
-								vector(InputIt first, InputIt last,const Allocator& alloc = Allocator()) : _alloc(alloc)
+								vector(InputIt first, InputIt last, const Allocator& alloc = Allocator(), typename enable_if<!is_integral<InputIt>::value, InputIt>::type* = NULL) : _alloc(alloc)
 								{
-									size_type 		dist;
-									iterator		tmp_it;
-									
-									dist = 0;
-									tmp_it = first;
-									for (; tmp_it != last; ++tmp_it)
-										dist++;
-									this->_capacity = dist;
-									this->_size = this->_capacity;
-									this->_base = this->_alloc.allocate(this->_capacity);
-									std::uninitialized_copy(first, last, this->_base);
+									this->assign(first, last);
 								}
 								vector(const vector& other)
 								{
@@ -83,7 +75,8 @@ namespace ft {
 			 					~vector(void)
 								{
 									this->clear();
-									this->_alloc.deallocate(this->_base, this->_capacity);
+									if (this->_capacity)
+										this->_alloc.deallocate(this->_base, this->_capacity);
 								}
 /**
 ***								Member functions 
@@ -103,15 +96,17 @@ namespace ft {
 
 									this->clear();
 									this->_size = count;
+									this->_capacity = count;
+									this->_base = this->_alloc.allocate(count);
 									ptr = this->_base;
 									for(size_type i = 0; i < count; i++)
 										this->_alloc.construct(ptr++, value);
 								}
  								template<class InputIt>
- 		void 					assign(InputIt first, InputIt last)
+ 		void 					assign(InputIt first, InputIt last, typename enable_if<!is_integral<InputIt>::value, InputIt>::type* = NULL)
 								{
 									size_type 		dist;
-									iterator		tmp_it;
+									InputIt			tmp_it;
 
 									this->clear();
 									dist = 0;
@@ -119,6 +114,8 @@ namespace ft {
 									for (; tmp_it != last; ++tmp_it)
 										dist++;
 									this->_size = dist;
+									this->_capacity = dist;
+									this->_base = this->_alloc.allocate(dist);
 									std::uninitialized_copy(first, last, this->_base);
 								}
  		allocator_type 			get_allocator() const
@@ -139,12 +136,14 @@ namespace ft {
  		iterator				end()
 								{
 									pointer end;
+
 									end = (&(this->_base[this->_size]));
 									return (iterator(end));
 								}
  		const_iterator			end() const 
 								{
 									pointer end;
+
 									end = (&(this->_base[this->_size]));
 									return (const_iterator(end));
 								}
@@ -163,13 +162,14 @@ namespace ft {
 								{
 									if (new_cap > this->_capacity && new_cap < this->max_size())
 									{
-										vector		tmp(*this);
+										pointer		tmp_ptr;
 
+										tmp_ptr = this->_alloc.allocate(new_cap);
+										std::uninitialized_copy(this->begin(), this->end(), tmp_ptr);
 										this->clear();
-										this->_alloc.desallocate(this->_base, this->_capacity);
+										this->_alloc.deallocate(this->_base, this->_capacity);
 										this->_capacity = new_cap;
-										this->_alloc.allocate(this->_capacity);
-										std::uninitialized_copy(tmp.begin(), tmp.end(), this->_base);
+										this->_base = tmp_ptr;
 									}
 								}
  		size_type 				size() const 
@@ -187,42 +187,41 @@ namespace ft {
 /**
 *** Element access
 **/
- 		value_type* 			data()
-								{
-									return (this->begin());
-								}
-		const value_type* 		data() const
-								{
-									return (this->begin());
-								}
- 		reference 				at(size_type pos)
+ 		reference 				at(size_type pos) const
 								{
 									if (pos > this->size())
 										throw std::out_of_range("pos out of range !");
-									return (&(this->_bas + pos));
+									return (this->_base[pos]);
 								}
- 		reference 				operator[](size_type pos)
+ 		reference 				operator[](size_type pos) const
 								{
-									return (&(this->_bas + pos));
+									return (this->_base[pos]);
 								}
  		reference 				front()
 								{
-									return (&(this->_base));
+									return (*this->begin());
+								}
+		const_reference 		front() const
+								{
+									return (*this->begin());
 								}
  		reference 				back()
 								{
-									return (&(this->_base + this->_size));
+									return (*this->end());
+								}
+ 		const_reference 		back() const
+								{
+									return (*this->end());
 								}
 /**
 *** 							Modifiers
 **/
 		void 					clear()
 								{
-									pointer tmp_ptr;
-
-									tmp_ptr = this->_base;
+									if (!this->_size)
+										return ;
 									for (size_type i = 0; i < this->_size; i++)
-										this->_alloc.destroy(tmp_ptr++);
+										this->_alloc.destroy(this->_base + i);
 									this->_size = 0;
 								}
 		void 					push_back(const T& value)
@@ -230,12 +229,12 @@ namespace ft {
 									if (this->size() + 1 > this->capacity())
 										this->reserve(this->capacity() * 2);
 									this->_size += 1;
-									this->_alloc.construct(++this->end(), value);
+									this->_alloc.construct(this->_base + this->_size, value);
 									
 								}
 		void 					pop_back()
 								{
-									this->_alloc.destroy(this->end());
+									this->_alloc.destroy(this->end() - 1);
 									this->_size -= 1; 
 								}
 		void 					resize(size_type count, T value = T())
@@ -255,7 +254,7 @@ namespace ft {
 									other = *this;
 									*this = tmp_vector;
 								}
-		iterator 				insert(const_iterator pos, const T & value)
+/*		iterator 				insert(const_iterator pos, const T & value)
 								{
 									
 								}
@@ -275,39 +274,26 @@ namespace ft {
 		iterator 				erase(iterator first, iterator last)
 								{
 									
+								}*/
+	};
+								template <class T, class Alloc>
+							void swap (vector<T,Alloc>& lhs, vector<T,Alloc>& rhs) {
+
+								lhs.swap(rhs);
 								}
 
 								template<class T, class Alloc>
-		friend					bool operator==(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) 
-								{
-									return (lhs._base == rhs._base && lhs._alloc == rhs._alloc && lhs._capacity == rhs._capacity && lhs._size == rhs._size);
-								}
+								bool operator==(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs == rhs);}
 								template<class T, class Alloc>
-		friend							bool operator!=(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs)
-								{
-									return (lhs._base != rhs._base && lhs._alloc != rhs._alloc && lhs._capacity != rhs._capacity && lhs._size != rhs._size);
-								}
+								bool operator!=(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs != rhs);}
 								template<class T, class Alloc>
-		friend							bool operator>(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs)
-								{
-									return (lhs._base > rhs._base && lhs._alloc > rhs._alloc && lhs._capacity > rhs._capacity && lhs._size > rhs._size);
-								}
+								bool operator>(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs > rhs);}
 								template<class T, class Alloc>
-		friend							bool operator<(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs)
-								{
-									return (lhs._base < rhs._base && lhs._alloc < rhs._alloc && lhs._capacity < rhs._capacity && lhs._size < rhs._size);
-								}
+								bool operator<(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs < rhs);}
 								template<class T, class Alloc>
-		friend							bool operator>=(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs)
-								{
-									return (lhs._base >= rhs._base && lhs._alloc >= rhs._alloc && lhs._capacity >= rhs._capacity && lhs._size >= rhs._size);
-								}
+								bool operator>=(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs >= rhs);}
 								template<class T, class Alloc>
-		friend							bool operator<=(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs)
-								{
-									return (lhs._base <= rhs._base && lhs._alloc <= rhs._alloc && lhs._capacity <= rhs._capacity && lhs._size <= rhs._size);
-								}
-	};
+								bool operator<=(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs <= rhs);}
 }
 
 

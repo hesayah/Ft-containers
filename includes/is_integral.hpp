@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:10:35 by hesayah           #+#    #+#             */
-/*   Updated: 2022/09/29 03:31:04 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/05 11:06:21 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ namespace ft {
 	typedef 				integral_constant<bool, false> 	false_type;
 	
 							template<class T>
-	struct 					is_integral;
+	struct 					is_integral : public false_type {};
 				
 							template<>
 	struct 					is_integral<bool> : public true_type {};
