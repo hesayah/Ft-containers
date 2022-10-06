@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/05 12:00:07 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/06 11:29:33 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,19 @@ namespace ft {
 								size_t										_capacity;
 								size_t										_size;
 								pointer										_base;
+			private :
+
+			void				_check_storage_limit(size_t capacity)
+								{
+									if (capacity > this->max_size())
+										throw std::out_of_range("pos out of range !");
+								}
+
+			void				_check_range_limit(size_t pos)
+								{
+									if (pos > this->size())
+										throw std::out_of_range("pos out of range !");
+								}
 
 			public :
 /** 
