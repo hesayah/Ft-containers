@@ -83,10 +83,13 @@ namespace ft {
 **/
  		vector	& 				operator=(const vector& other)
 								{
-									this->_alloc = other._alloc;
-									this->_base = this->_alloc.allocate(other._capacity);
+									this->clear();
+									if (this->_capacity)
+										this->_alloc.deallocate(this->_base, this->_capacity);
 									this->_capacity = other._capacity;
+									this->_alloc = other._alloc;
 									this->_size = other._size;
+									this->_base = this->_alloc.allocate(this->_capacity);
 									std::uninitialized_copy(other.begin(), other.end(), this->_base);
 									return (*this);
 								}								
@@ -94,11 +97,15 @@ namespace ft {
 								{
 									pointer		ptr;
 
+									if (!count)
+										return ;
 									this->clear();
-									this->_size = count;
-									this->_capacity = count;
+									if (this->_capacity)
+										this->_alloc.deallocate(this->_base, this->_capacity);
 									this->_base = this->_alloc.allocate(count);
 									ptr = this->_base;
+									this->_size = count;
+									this->_capacity = count;
 									for(size_type i = 0; i < count; i++)
 										this->_alloc.construct(ptr++, value);
 								}
@@ -108,7 +115,11 @@ namespace ft {
 									size_type 		dist;
 									InputIt			tmp_it;
 
+									if (first == last)
+										return ;
 									this->clear();
+									if (this->_capacity)
+										this->_alloc.deallocate(this->_base, this->_capacity);
 									dist = 0;
 									tmp_it = first;
 									for (; tmp_it != last; ++tmp_it)
@@ -171,6 +182,8 @@ namespace ft {
 										this->_capacity = new_cap;
 										this->_base = tmp_ptr;
 									}
+									else if (new_cap > this->max_size())
+										throw std::out_of_range("new_cap out of range !");
 								}
  		size_type 				size() const 
 								{
@@ -218,11 +231,12 @@ namespace ft {
 **/
 		void 					clear()
 								{
-									if (!this->_size)
-										return ;
-									for (size_type i = 0; i < this->_size; i++)
-										this->_alloc.destroy(this->_base + i);
-									this->_size = 0;
+									if (!this->empty())
+									{
+										for (size_type i = 0; i < this->_size; i++)
+											this->_alloc.destroy(this->_base + i);
+										this->_size = 0;
+									}
 								}
 		void 					push_back(const T& value)
 								{
@@ -254,15 +268,31 @@ namespace ft {
 									other = *this;
 									*this = tmp_vector;
 								}
-/*		iterator 				insert(const_iterator pos, const T & value)
+		iterator 				insert(const_iterator pos, const T & value)
 								{
-									
+									pointer tmp_ptr;
+
+									tmp_ptr = this->_base;
+									for (;tmp_ptr != pos; tmp_ptr++)
+									{
+										this->_alloc.destroy(tmp_ptr);
+										this->_alloc.construct(tmp_ptr, value);
+									}
+									return (this->begin());
 								}
 		iterator 				insert(const_iterator pos, size_type count, const T & value)
 								{
-									
+									pointer tmp_ptr;
+
+									tmp_ptr = this->_base;
+									for (;tmp_ptr != pos && count != pos ; tmp_ptr++)
+									{
+										this->_alloc.destroy(tmp_ptr);
+										this->_alloc.construct(tmp_ptr, value);
+									}
+									return (this->begin());
 								}
-								template<class InputIt>
+/*								template<class InputIt>
 		iterator 				insert(const_iterator pos, InputIt first, InputIt last)
 								{
 									
@@ -277,11 +307,7 @@ namespace ft {
 								}*/
 	};
 								template <class T, class Alloc>
-							void swap (vector<T,Alloc>& lhs, vector<T,Alloc>& rhs) {
-
-								lhs.swap(rhs);
-								}
-
+								void swap (vector<T,Alloc>& lhs, vector<T,Alloc>& rhs) {lhs.swap(rhs);}
 								template<class T, class Alloc>
 								bool operator==(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs == rhs);}
 								template<class T, class Alloc>

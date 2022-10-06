@@ -30,5 +30,6 @@ int main()
     ft::vector<std::string> words3(words1);
     std::cout << "words3: " << words3 << '\n';
 
-	std::cout << "words3:  cap" << words3.capacity() << '\n';
+    ft::vector<std::string> words5 = words3;
+	std::cout << "words3:  cap" << words5.capacity() << '\n';
 }
