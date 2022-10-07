@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 02:23:04 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/04 03:52:05 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/07 04:18:04 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,14 @@ namespace ft {
 									--this->_it;
 									return (tmp);
 								}
-			vector_iterator	& 	operator+=(difference_type other) 
+			vector_iterator	& 	operator+=(difference_type diff) 
 								{
-									this->_it += other;
+									this->_it += diff;
 									return (*this);
 								}
-			vector_iterator	& 	operator-=(difference_type other)
+			vector_iterator	& 	operator-=(difference_type diff)
 								{
-									this->_it -= other;
+									this->_it -= diff;
 									return (*this);
 								}
 			value_type & 		operator*() const 
@@ -92,7 +92,7 @@ namespace ft {
 								}
 			value_type * 		operator->() const 
 								{
-									return this->_it;
+									return (this->_it);
 								}
 			value_type & 		operator[](difference_type other) const 
 								{
@@ -101,19 +101,19 @@ namespace ft {
 								}
 			difference_type		operator+(const vector_iterator& other) 
 								{
-									return vector_iterator(this->_it+other._it);
+									return vector_iterator(this->_it + other);
 								}
 			difference_type 	operator-(const vector_iterator& other) const 
 								{
-									return this->_it-other.it;
+									return (this->_it - other);
 								}
-			vector_iterator 	operator+(difference_type other) const 
+			vector_iterator 	operator+(difference_type diff) const 
 								{
-									return vector_iterator(this->_it+other);
+									return vector_iterator(this->_it + diff);
 								}
-			vector_iterator 	operator-(difference_type other) const 
+			vector_iterator 	operator-(difference_type diff) const 
 								{
-									return vector_iterator(this->_it-other);
+									return vector_iterator(this->_it - diff);
 								}
 			bool 				operator>(const vector_iterator& other) const 
 								{

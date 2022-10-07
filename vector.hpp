@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/06 11:29:33 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/07 06:23:30 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 # include <memory>
 # include <stdexcept>
+# include <iostream>
 # include "includes/enable_if.hpp"
 # include "includes/is_integral.hpp"
 # include "includes/legacy_random_acces_iterator.hpp"
@@ -35,8 +36,8 @@ namespace ft {
 			typedef		 		Allocator									allocator_type;
 			typedef				std::size_t									size_type;
 			typedef				std::ptrdiff_t								difference_type;
-			typedef				value_type&									reference;
-			typedef				const  value_type&							const_reference;
+			typedef	typename	Allocator::reference						reference;
+			typedef	typename	Allocator::const_reference					const_reference;
 			typedef typename	Allocator::pointer							pointer;
 			typedef typename	Allocator::const_pointer					const_pointer;
 			typedef				vector_iterator<value_type>					iterator;
@@ -49,35 +50,59 @@ namespace ft {
 								size_t										_capacity;
 								size_t										_size;
 								pointer										_base;
+								pointer										_end;
 			private :
 
-			void				_check_storage_limit(size_t capacity)
+			void				_check_storage_limit(size_t new_cap) const
 								{
-									if (capacity > this->max_size())
-										throw std::out_of_range("pos out of range !");
+									if (new_cap > this->max_size())
+										throw std::length_error("new_cap over max_size() !");
 								}
 
-			void				_check_range_limit(size_t pos)
+			void				_check_range_limit(size_t pos) const
 								{
 									if (pos > this->size())
 										throw std::out_of_range("pos out of range !");
 								}
+			void				_allocate(size_t new_cap)
+								{
+									    try {
+											this->_base = this->_alloc.allocate(new_cap);
+										}
+    									catch (const std::bad_alloc& e) {  
+											std::cout  << e.what() << std::endl;
+    									}
+									this->_capacity = new_cap;
+								}
 
+			void				_deallocate(void)
+								{
+									if (this->_capacity)
+										this->_alloc.deallocate(this->_base, this->_capacity);
+									this->_capacity = 0;
+									this->_base = NULL;
+								}
+			void				_clear(void)
+								{
+									if (!this->empty())
+									{
+										for (size_type i = 0; i < this->_size; i++)
+											this->_alloc.destroy(this->_base + i);
+										this->_size = 0;
+									}
+								}
 			public :
 /** 
 ***								constructors
 **/
-			explicit			vector(const Allocator& alloc = allocator_type()) :  _alloc(alloc),_capacity(0), _size(0) , _base(NULL)
+			explicit			vector(const Allocator& alloc = allocator_type()) :  _alloc(alloc), _capacity(0), _size(0) , _base(NULL)
 								{}
-			explicit 			vector(size_type count, const_reference value = value_type(), const Allocator& alloc = allocator_type()) :  _alloc(alloc), _capacity(count), _size(count), _base(_alloc.allocate(count))
+			explicit 			vector(size_type count, const_reference value = value_type(), const Allocator& alloc = allocator_type()) :  _alloc(alloc), _capacity(0), _size(0) , _base(NULL)
 								{
-									pointer		ptr;
-									ptr = this->_base;
-									for(size_t i = 0; i < count; i++)
-										this->_alloc.construct(ptr++, value);
+									this->assign(count, value);
 								}
 								template <class InputIt>
-								vector(InputIt first, InputIt last, const Allocator& alloc = Allocator(), typename enable_if<!is_integral<InputIt>::value, InputIt>::type* = NULL) : _alloc(alloc)
+								vector(InputIt first, InputIt last, const Allocator& alloc = Allocator(), typename enable_if<!is_integral<InputIt>::value, InputIt>::type* = NULL) : _alloc(alloc), _capacity(0), _size(0) , _base(NULL)
 								{
 									this->assign(first, last);
 								}
@@ -88,22 +113,15 @@ namespace ft {
 			 					~vector(void)
 								{
 									this->clear();
-									if (this->_capacity)
-										this->_alloc.deallocate(this->_base, this->_capacity);
+									this->_deallocate();
 								}
 /**
 ***								Member functions 
 **/
  		vector	& 				operator=(const vector& other)
 								{
-									this->clear();
-									if (this->_capacity)
-										this->_alloc.deallocate(this->_base, this->_capacity);
-									this->_capacity = other._capacity;
-									this->_alloc = other._alloc;
-									this->_size = other._size;
-									this->_base = this->_alloc.allocate(this->_capacity);
-									std::uninitialized_copy(other.begin(), other.end(), this->_base);
+									if (*this != other)
+										this->assign(other.begin(), other.end());
 									return (*this);
 								}								
 		void 					assign(size_type count, const T& value)
@@ -113,8 +131,8 @@ namespace ft {
 									if (!count)
 										return ;
 									this->clear();
-									if (this->_capacity)
-										this->_alloc.deallocate(this->_base, this->_capacity);
+									this->_deallocate();
+									this->_check_storage_limit(count);
 									this->_base = this->_alloc.allocate(count);
 									ptr = this->_base;
 									this->_size = count;
@@ -128,17 +146,15 @@ namespace ft {
 									size_type 		dist;
 									InputIt			tmp_it;
 
-									if (first == last)
-										return ;
 									this->clear();
-									if (this->_capacity)
-										this->_alloc.deallocate(this->_base, this->_capacity);
+									this->_deallocate();
 									dist = 0;
 									tmp_it = first;
 									for (; tmp_it != last; ++tmp_it)
 										dist++;
 									this->_size = dist;
 									this->_capacity = dist;
+									this->_check_storage_limit(dist);
 									this->_base = this->_alloc.allocate(dist);
 									std::uninitialized_copy(first, last, this->_base);
 								}
@@ -215,13 +231,12 @@ namespace ft {
 **/
  		reference 				at(size_type pos) const
 								{
-									if (pos > this->size())
-										throw std::out_of_range("pos out of range !");
-									return (this->_base[pos]);
+									this->_check_range_limit(pos);
+									return ((this->_base + pos));
 								}
  		reference 				operator[](size_type pos) const
 								{
-									return (this->_base[pos]);
+									return ((this->_base[pos]));
 								}
  		reference 				front()
 								{
@@ -233,23 +248,18 @@ namespace ft {
 								}
  		reference 				back()
 								{
-									return (*this->end());
+									return (*(this->end() - 1));
 								}
  		const_reference 		back() const
 								{
-									return (*this->end());
+									return (*(this->end() - 1));
 								}
 /**
 *** 							Modifiers
 **/
 		void 					clear()
 								{
-									if (!this->empty())
-									{
-										for (size_type i = 0; i < this->_size; i++)
-											this->_alloc.destroy(this->_base + i);
-										this->_size = 0;
-									}
+									this->_clear();
 								}
 		void 					push_back(const T& value)
 								{
