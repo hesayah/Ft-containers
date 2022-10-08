@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 02:23:04 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/07 04:18:04 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/08 07:22:24 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,103 +34,111 @@ namespace ft {
 	
    
     	protected:
-      							pointer 																_it;
+      							pointer 																_ptr;
 		public :
-    							vector_iterator() : _it(NULL) {}
-								vector_iterator(pointer it) : _it(it) {}
-    							vector_iterator(const vector_iterator & other) : _it(other._it) {}
+    							vector_iterator() {this->_ptr = NULL;}
+								vector_iterator(pointer ptr) : _ptr(ptr) {}
+    							vector_iterator(const vector_iterator & other) : _ptr(other._ptr) {}
 								~vector_iterator() {}
 
-			vector_iterator	& 	operator=(const vector_iterator & other) 
+			operator			vector_iterator<const value_type>() const 
 								{
-									this->_it = other._it; 
+
+									return (vector_iterator<const value_type>(this->_ptr));
+								}
+			vector_iterator &	operator=(const vector_iterator & other) 
+								{
+
+									if (this == &other)
+										return (*this);
+									this->_ptr = other._ptr;
 									return (*this);
 								}
-			bool				operator==(const vector_iterator & other)
+			vector_iterator	& 	operator++(void)
 								{
-									return (this->_it == other._it);
-								}
-			bool				operator!=(const vector_iterator & other)
-								{
-									return (this->_it != other._it);
-								}
-			vector_iterator	& 	operator++() 
-								{
-									++this->_it;
+									++(this->_ptr);
 									return (*this);
 								}
 			vector_iterator 	operator++(int) const 
 								{
 									vector_iterator tmp(*this); 
-									++this->_it;
+									++(this->_ptr);
 									return (tmp);
 								}										
-			vector_iterator	& 	operator--() 
+			vector_iterator	& 	operator--(void) 
 								{
-									--this->_it;
+									--(this->ptr);
 									return (*this);
 								}
 			vector_iterator 	operator--(int) const 
 								{
 									vector_iterator tmp(*this);
-									--this->_it;
+									--(this->_ptr);
 									return (tmp);
 								}
 			vector_iterator	& 	operator+=(difference_type diff) 
 								{
-									this->_it += diff;
+									this->_ptr += diff;
 									return (*this);
 								}
 			vector_iterator	& 	operator-=(difference_type diff)
 								{
-									this->_it -= diff;
+									this->_ptr -= diff;
 									return (*this);
 								}
-			value_type & 		operator*() const 
+			reference 			operator*() const 
 								{
-									return (*(this->_it));
+									return (*(this->_ptr));
 								}
-			value_type * 		operator->() const 
+			pointer 			operator->() const 
 								{
-									return (this->_it);
+									return (this->_ptr);
 								}
-			value_type & 		operator[](difference_type other) const 
+			reference			operator[](difference_type diff) const 
 								{
 									
-									return (*(*this + other));
-								}
-			difference_type		operator+(const vector_iterator& other) 
-								{
-									return vector_iterator(this->_it + other);
-								}
-			difference_type 	operator-(const vector_iterator& other) const 
-								{
-									return (this->_it - other);
-								}
+									return (*(this->_ptr + diff));
+								}			
 			vector_iterator 	operator+(difference_type diff) const 
 								{
-									return vector_iterator(this->_it + diff);
+									return (vector_iterator(this->_ptr + diff));
 								}
 			vector_iterator 	operator-(difference_type diff) const 
 								{
-									return vector_iterator(this->_it - diff);
+									return (vector_iterator(this->_ptr - diff));
 								}
-			bool 				operator>(const vector_iterator& other) const 
+			difference_type		operator+(const vector_iterator & other) 
 								{
-									return this->_it > other._it;
+									return (this->_ptr + other._ptr);
 								}
-			bool 				operator<(const vector_iterator& other) const 
+			difference_type 	operator-(const vector_iterator & other) const 
 								{
-									return this->_it < other._it;
+									return (this->_ptr - other._ptr);
 								}
-			bool 				operator>=(const vector_iterator& other) const 
+	friend		bool				operator==(const vector_iterator & lhs, const vector_iterator & other)
 								{
-									return this->_it >= other._it;
+									return (lhs._ptr == other._ptr);
 								}
-			bool 				operator<=(const vector_iterator& other) const 
+	friend		bool				operator!=(const vector_iterator & lhs, const vector_iterator & other)
 								{
-									return this->_it <= other._it;
+									return (!(lhs._ptr == other._ptr));
 								}
+	/*friend		bool 				operator>(const vector_iterator & lhs, const vector_iterator & other)
+								{
+									return (lhs._ptr > other._ptr);
+								}
+	friend		bool 				operator<(const vector_iterator & lhs, const vector_iterator & other)
+								{
+									return (lhs._ptr < other._ptr);
+								}
+	friend		bool 				operator>=(const vector_iterator & lhs, const vector_iterator & other) 
+								{
+									return (lhs._ptr >= other._ptr);
+								}
+	friend		bool 				operator<=(const vector_iterator & lhs, const vector_iterator & other) 
+								{
+									return (lhs._ptr <= other._ptr);
+								}*/
 	};
 }
 
