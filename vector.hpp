@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/08 07:24:59 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/08 07:40:46 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace ft {
 			typedef typename	Allocator::pointer							pointer;
 			typedef typename	Allocator::const_pointer					const_pointer;
 			typedef				vector_iterator<value_type>					iterator;
-			typedef				vector_iterator<const iterator>				const_iterator;
+			typedef				vector_iterator<const value_type>				const_iterator;
 			typedef typename	std::reverse_iterator<iterator>				reverse_iterator;
 			typedef typename	std::reverse_iterator<const_iterator>		const_reverse_iterator;
 
@@ -181,7 +181,7 @@ namespace ft {
 **/
  		iterator				begin() const
 								{
-									return (iterator(this->_base));
+									return (this->_base);
 								}
  		/*const_iterator			begin() const 
 								{
@@ -189,10 +189,7 @@ namespace ft {
 								}*/
  		iterator				end() const
 								{
-									pointer end;
-
-									end = (&(this->_base[this->_size]));
-									return (iterator(end));
+									return (this->_base + this->_size);
 								}
 /* 		const_iterator			end() const 
 								{
@@ -292,7 +289,7 @@ namespace ft {
 								}
 		void 					pop_back()
 								{
-									this->_alloc.destroy(this->end() - 1);
+									this->_alloc.destroy(this->_base + this->_size - 1);
 									this->_size -= 1; 
 								}
 		void 					resize(size_type count, T value = T())

@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 02:23:04 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/08 07:22:24 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/08 07:40:40 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ namespace ft {
 									++(this->_ptr);
 									return (*this);
 								}
-			vector_iterator 	operator++(int) const 
+			vector_iterator 	operator++(int)
 								{
 									vector_iterator tmp(*this); 
 									++(this->_ptr);
@@ -70,7 +70,7 @@ namespace ft {
 									--(this->ptr);
 									return (*this);
 								}
-			vector_iterator 	operator--(int) const 
+			vector_iterator 	operator--(int) 
 								{
 									vector_iterator tmp(*this);
 									--(this->_ptr);
