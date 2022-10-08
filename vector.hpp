@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/08 07:40:46 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/08 07:43:21 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,7 +314,7 @@ namespace ft {
 									pointer tmp_ptr;
 
 									tmp_ptr = this->_base;
-									for (;tmp_ptr != pos; tmp_ptr++)
+									for (;tmp_ptr != this->_base + pos; tmp_ptr++)
 									{
 										this->_alloc.destroy(tmp_ptr);
 										this->_alloc.construct(tmp_ptr, value);
@@ -326,7 +326,7 @@ namespace ft {
 									pointer tmp_ptr;
 
 									tmp_ptr = this->_base;
-									for (;tmp_ptr != pos && count != pos ; tmp_ptr++)
+									for (;tmp_ptr != this->_base + pos && count != pos ; tmp_ptr++)
 									{
 										this->_alloc.destroy(tmp_ptr);
 										this->_alloc.construct(tmp_ptr, value);
