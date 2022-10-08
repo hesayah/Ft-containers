@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/08 16:56:32 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/08 17:54:29 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,16 +158,16 @@ namespace ft {
  								template<class InputIt>
  		void 					assign(InputIt first, InputIt last, typename enable_if<!is_integral<InputIt>::value, InputIt>::type* = NULL)
 								{
-									difference_type 		dist;
+									size_type				dist;
 									pointer					ptr;
 
 									this->clear();
 									this->_deallocate();
 									if (first == last)
 										return ;
-									dist = this->_distance(first, last);
-									this->_size = static_cast<size_type>(dist);
-									this->_capacity = static_cast<size_type>(dist);
+									dist = _distance(first, last);
+									this->_size = dist ;
+									this->_capacity = dist;
 									this->_check_storage_limit(this->_capacity);
 									this->_allocate(this->_capacity);
 									ptr = this->_base;
@@ -181,25 +181,45 @@ namespace ft {
 /**
 *** 							Iterators
 **/
- 		iterator				begin() const
+ 		/*iterator				begin() const
 								{
 									return (this->_base);
 								}
- 		/*const_iterator			begin() const 
+ 		const_iterator			begin() const 
 								{
 									return (const_iterator(this->_base));
-								}*/
- 		iterator				end() const
+								}
+		iterator				end() const
 								{
 									return (this->_base + this->_size);
 								}
-/* 		const_iterator			end() const 
+		const_iterator			end() const 
 								{
 									pointer end;
 
 									end = (&(this->_base[this->_size]));
 									return (const_iterator(end));
 								}*/
+								
+    iterator begin()
+    {
+        return iterator(_base);
+    }
+
+    const_iterator begin() const
+    {
+        return const_iterator(_base);
+    }
+
+    iterator end()
+    {
+        return iterator(_base + _size);
+    }
+
+    const_iterator end() const
+    {
+        return const_iterator(_base + _size);
+    }
 //		reverse_std::		rbegin();
 // 		const_reverse_std::	rbegin() const;
 // 		reverse_iterator		rend();
@@ -298,9 +318,8 @@ this->_check_range_limit(n);
 								{
 									if (this->size() + 1 > this->capacity())
 										this->reserve(this->capacity() * 2);
-									this->_size += 1;
 									this->_alloc.construct(this->_base + this->_size, value);
-									
+									this->_size += 1;
 								}
 		void 					pop_back()
 								{
