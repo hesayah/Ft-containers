@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/08 07:43:21 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/08 16:56:32 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <algorithm>
 # include "includes/enable_if.hpp"
 # include "includes/is_integral.hpp"
+# include "includes/equal.hpp"
+# include "includes/lexicographical_compare.hpp"
 # include "includes/legacy_random_acces_iterator.hpp"
 # include "includes/reverse_iterator.hpp"
 
@@ -36,32 +38,32 @@ namespace ft {
 			typedef				T											value_type;
 			typedef		 		Allocator									allocator_type;
 			typedef				std::size_t									size_type;
-			typedef				std::ptrdiff_t								difference_type;
+			typedef	typename	Allocator::difference_type					difference_type;
 			typedef	typename	Allocator::reference						reference;
 			typedef	typename	Allocator::const_reference					const_reference;
 			typedef typename	Allocator::pointer							pointer;
 			typedef typename	Allocator::const_pointer					const_pointer;
 			typedef				vector_iterator<value_type>					iterator;
-			typedef				vector_iterator<const value_type>				const_iterator;
+			typedef				vector_iterator<const value_type>			const_iterator;
 			typedef typename	std::reverse_iterator<iterator>				reverse_iterator;
 			typedef typename	std::reverse_iterator<const_iterator>		const_reverse_iterator;
 
 			protected :		
 								allocator_type								_alloc;
-								size_t										_capacity;
-								size_t										_size;
+								size_type										_capacity;
+								size_type										_size;
 								pointer										_base;
 			private :
 
-			void				_check_storage_limit(size_t new_cap) const
+			void				_check_storage_limit(size_type new_cap) const
 								{
 									if (new_cap > this->max_size())
 										throw std::length_error("new_cap over max_size() !");
 								}
 
-			void				_check_range_limit(size_t pos) const
+			void				_check_range_limit(size_type pos) const
 								{
-									if (pos > this->size())
+									if (pos >= this->_size)
 										throw std::out_of_range("pos out of range !");
 								}
 
@@ -77,7 +79,7 @@ namespace ft {
 										n++;
 									return (n);
 								}
-			void				_allocate(size_t new_cap)
+			void				_allocate(size_type new_cap)
 								{
 									    try {
 											this->_base = this->_alloc.allocate(new_cap);
@@ -247,15 +249,28 @@ namespace ft {
 /**
 *** Element access
 **/
- 		reference 				at(size_type pos) const
-								{
-									this->_check_range_limit(pos);
-									return ((this->_base[pos]));
-								}
- 		reference 				operator[](size_type pos) const
-								{
-									return ((this->_base[pos]));
-								}
+
+									reference operator[] (size_type n) {
+
+		return (this->_base[n]);
+	}
+
+	const_reference operator[] (size_type n) const {
+
+		return (this->_base[n]);
+	}
+
+	reference at (size_type n) {
+
+		this->_check_range_limit(n);
+		return (this->_base[n]);
+	}
+
+	const_reference at (size_type n) const {
+
+this->_check_range_limit(n);
+		return (this->_base[n]);
+	}
  		reference 				front()
 								{
 									return (*this->begin());
@@ -347,7 +362,7 @@ namespace ft {
 									
 								}*/
 					
-	/*					friend		void swap (vector<T,Allocator>& lhs, vector<T,Allocator>& rhs) {lhs.swap(rhs);}
+					/*friend		void swap (vector<T,Allocator>& lhs, vector<T,Allocator>& rhs) {lhs.swap(rhs);}
 							
 						friend		bool operator==(const vector<T,Allocator>& lhs,const vector<T,Allocator>& rhs) {lhs == rhs ? true : false;}
 								
@@ -361,20 +376,71 @@ namespace ft {
 								
 						friend		bool operator<=(const vector<T,Allocator>& lhs,const vector<T,Allocator>& rhs) {return (lhs <= rhs);}*/
 	};
-								template <class T, class Alloc>
-								void swap (vector<T,Alloc>& lhs, vector<T,Alloc>& rhs) {lhs.swap(rhs);}
-								template<class T, class Alloc>
-								bool operator==(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs == rhs);}
-								template<class T, class Alloc>
-								bool operator!=(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs != rhs);}
-								template<class T, class Alloc>
-								bool operator>(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs > rhs);}
-								template<class T, class Alloc>
-								bool operator<(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs < rhs);}
-								template<class T, class Alloc>
-								bool operator>=(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs >= rhs);}
-								template<class T, class Alloc>
-								bool operator<=(const vector<T,Alloc>& lhs,const vector<T,Alloc>& rhs) {return (lhs <= rhs);}
+	template <class T, class Allocator>
+	bool operator== (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
+
+		if (lhs.size() == rhs.size()) {
+
+			return (equal(lhs.begin(), lhs.end(), rhs.begin()));
+		}
+		return (false);
+	}
+
+	// Operator !=
+	// a!=b -> !(a==b)
+	template <class T, class  Allocator>
+	bool operator!= (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
+
+		return (!(lhs == rhs));
+	}
+
+	// Operator <
+	template <class T, class  Allocator>
+	bool operator<  (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
+
+		if (lhs != rhs) {
+			return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		}
+		return (false);
+	}
+
+	// Operator <=
+	// a<=b -> !(b<a)
+	template <class T, class  Allocator>
+	bool operator<= (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
+
+		if (lhs == rhs)
+			return (true);
+		return (!(rhs < lhs));
+	}
+
+	// Operator >
+	// a>b -> b<a
+	template <class T, class  Allocator>
+	bool operator>  (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
+
+		if (lhs == rhs)
+			return (false);
+		return (rhs < lhs);
+	}
+
+	// Operator >=
+	// a>=b -> !(a<b)
+	template <class T, class  Allocator>
+	bool operator>= (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
+
+		if (lhs == rhs)
+			return (true);
+		return (!(lhs < rhs));
+	}
+
+	// No member Swap overload
+	template <class T, class  Allocator>
+	void swap (vector<T, Allocator>& x, vector<T, Allocator>& y) {
+
+		x.swap(y);
+	}
+
 }
 
 

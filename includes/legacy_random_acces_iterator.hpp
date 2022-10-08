@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 02:23:04 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/08 07:40:40 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/08 16:14:05 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ namespace ft {
     							vector_iterator(const vector_iterator & other) : _ptr(other._ptr) {}
 								~vector_iterator() {}
 
-			operator			vector_iterator<const value_type>() const 
+			const vector_iterator			base() const 
 								{
 
-									return (vector_iterator<const value_type>(this->_ptr));
+									return (this->_ptr);
 								}
 			vector_iterator &	operator=(const vector_iterator & other) 
 								{
@@ -67,7 +67,7 @@ namespace ft {
 								}										
 			vector_iterator	& 	operator--(void) 
 								{
-									--(this->ptr);
+									--(this->_ptr);
 									return (*this);
 								}
 			vector_iterator 	operator--(int) 
@@ -123,7 +123,7 @@ namespace ft {
 								{
 									return (!(lhs._ptr == other._ptr));
 								}
-	/*friend		bool 				operator>(const vector_iterator & lhs, const vector_iterator & other)
+	friend		bool 				operator>(const vector_iterator & lhs, const vector_iterator & other)
 								{
 									return (lhs._ptr > other._ptr);
 								}
@@ -138,8 +138,112 @@ namespace ft {
 	friend		bool 				operator<=(const vector_iterator & lhs, const vector_iterator & other) 
 								{
 									return (lhs._ptr <= other._ptr);
-								}*/
+								}
 	};
+/*template <typename ItL, typename ItR>
+inline bool operator==(const vector_iterator<ItL>& lhs,
+                       const vector_iterator<ItR>& rhs)
+{
+    return lhs.base() == rhs.base();
 }
 
+template <typename T>
+inline bool operator==(const vector_iterator<T>& lhs,
+                      const vector_iterator<T>& rhs)
+{
+    return lhs.base() == rhs.base();
+}
+
+template <typename ItL, typename ItR>
+inline bool operator!=(const vector_iterator<ItL>& lhs,
+                       const vector_iterator<ItR>& rhs)
+{
+    return lhs.base() != rhs.base();
+}
+
+template <typename T>
+inline bool operator!=(const vector_iterator<T>& lhs,
+                      const vector_iterator<T>& rhs)
+{
+    return lhs.base() != rhs.base();
+}
+
+template <typename ItL, typename ItR>
+inline bool operator>(const vector_iterator<ItL >& lhs,
+                      const vector_iterator<ItR >& rhs)
+{
+    return lhs.base() > rhs.base();
+}
+
+template <typename T>
+inline bool operator>(const vector_iterator<T>& lhs,
+                      const vector_iterator<T>& rhs)
+{
+    return lhs.base() > rhs.base();
+}
+
+template <typename ItL, typename ItR>
+inline bool operator<(const vector_iterator<ItL  >& lhs,
+                      const vector_iterator<ItR >& rhs)
+{
+    return lhs.base() < rhs.base();
+}
+
+template <typename It>
+inline bool operator<(const vector_iterator<It>& lhs,
+                      const vector_iterator<It>& rhs)
+{
+    return lhs.base() < rhs.base();
+}
+
+template <typename ItL, typename ItR>
+inline bool operator>=(const vector_iterator<ItL>& lhs,
+                       const vector_iterator<ItR>& rhs)
+{
+    return lhs.base() >= rhs.base();
+}
+
+template <typename It>
+inline bool operator>=(const vector_iterator<It>& lhs,
+                       const vector_iterator<It>& rhs)
+{
+    return lhs.base() >= rhs.base();
+}
+
+template <typename ItL, typename ItR>
+inline bool operator<=(const vector_iterator<ItL >& lhs,
+                       const vector_iterator<ItR >& rhs)
+{
+    return lhs.base() <= rhs.base();
+}
+
+template <typename It>
+inline bool operator<=(const vector_iterator<It >& lhs,
+                       const vector_iterator<It >& rhs)
+{
+    return lhs.base() <= rhs.base();
+}
+
+template <typename ItL, typename ItR>
+inline typename vector_iterator<ItL >::difference_type
+operator-(const vector_iterator<ItL >& lhs, const vector_iterator<ItR >& rhs)
+{
+    return lhs.base() - rhs.base();
+}
+
+template <typename It>
+inline typename vector_iterator<It >::difference_type
+operator-(const vector_iterator<It >& lhs, const vector_iterator<It >& rhs)
+{
+    return lhs.base() - rhs.base();
+}
+
+template <typename It>
+inline vector_iterator<It >
+operator+(typename vector_iterator<It >::difference_type n,
+          const vector_iterator<It >& it)
+{
+    return vector_iterator<It >(it.base() + n);
+}*/
+}
 #endif

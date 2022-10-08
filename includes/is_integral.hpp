@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:10:35 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/05 11:06:21 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/08 16:47:50 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace ft {
     	typedef 			T  						value_type;
     	typedef 			integral_constant<T,v>	type;
 
-   		operator 			value_type() const  {return v;}
+   		operator 			value_type() const  {return (v);}
 	};
 
 	typedef 				integral_constant<bool, true> 	true_type;
