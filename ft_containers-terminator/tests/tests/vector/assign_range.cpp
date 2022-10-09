@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 17:56:15 by mleblanc          #+#    #+#             */
-/*   Updated: 2022/10/08 17:48:01 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/09 20:44:00 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void vec_test_assign_range()
 
         CHECK_AND_PRINT_ALL(v);
 
-        v.push_back(64);
+       // v.push_back(64);
         v.assign(v.begin(), v.begin() + 21);
 
         CHECK_AND_PRINT_ALL(v);

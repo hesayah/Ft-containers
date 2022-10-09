@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 03:29:36 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/08 01:27:09 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/09 20:12:02 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,11 @@
 *** https://en.cppreference.com/w/cpp/iterator/iterator
 *** https://cplusplus.com/reference/iterator/iterator_traits/
 *** https://cplusplus.com/reference/iterator/iterator/
+*** https://www.fluentcpp.com/2018/05/08/std-iterator-deprecated/
 **/
 
 #ifndef __ITERATOR_TRAITS_HPP__
 # define __ITERATOR_TRAITS_HPP__
-
-# include <cstddef>
 
 namespace ft {
 
@@ -30,7 +29,7 @@ namespace ft {
 	struct					bidirectional_iterator_tag : public forward_iterator_tag {};
 	struct					random_access_iterator_tag : public bidirectional_iterator_tag {};
 
-							template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
+							template <class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T*, class Reference = T&>
   	struct 					iterator 
 	{
 		typedef 			T								value_type;
