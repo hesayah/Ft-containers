@@ -18,7 +18,6 @@ std::ostream& operator<<(std::ostream& s, const ft::vector<T>& v)
  
 int main() 
 {
-    // C++11 initializer list syntax:
     ft::vector<std::string> words1(5, "Mo");
     std::cout << "words1: " << words1 << '\n';
  
@@ -31,5 +30,6 @@ int main()
     std::cout << "words3: " << words3 << '\n';
 
     ft::vector<std::string> words5 = words3;
-	std::cout << "words3:  cap" << words5.capacity() << '\n';
+	std::cout << "words3:  cap" << words1.capacity() << '\n';
+   // std::cout << "words3:  size" << words1.max_size() << '\n';
 }

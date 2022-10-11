@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/11 03:43:39 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/11 05:02:00 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ namespace ft {
 								{
 									assign(first, last);
 								}
-								vector(const vector& other)
+								vector(const vector& other) : _alloc(other._alloc), _capacity(0), _size(0) , _base(NULL)
 								{
 									*this = other;
 								}
@@ -153,32 +153,15 @@ namespace ft {
 								}								
 		void 					assign(size_type count, const T& value)
 								{
-									/*pointer		ptr;
-
-									if (!count)
-										return ;
-									this->clear();
-									if (count > _capacity)
-									{
-										this->_deallocate();
-										this->_capacity = count;
-										this->_check_storage_limit(count);
-										this->_allocate(count);
-									}	
-									ptr = this->_base;
-									this->_size = count;*/
-									_clear();
+									this->_check_storage_limit(count);
+									this->_clear();
 									for(size_type i = 0; i < count; i++)
 										push_back(value);
-									//this->resize(count, value);
-
 								}
  								template<typename InputIt>
  		void 					assign(InputIt first, typename enable_if<!is_integral<InputIt>::value, InputIt>::type last)
 								{
-									this->clear();
-									/*typedef typename iterator_traits<InputIt>::iterator_category category;
-									this->_range_assign(first, last, category());*/
+									this->_clear();
 									for (; first != last; ++first) 
            								push_back(*first);
 								}
@@ -189,52 +172,22 @@ namespace ft {
 /**
 *** 							Iterators
 **/
- 		/*iterator				begin() const
+ 		iterator				begin()
 								{
 									return (this->_base);
 								}
- 		const_iterator			begin() const 
+ 		const_iterator			begin() const
 								{
-									return (const_iterator(this->_base));
+									return (this->_base);
 								}
-		iterator				end() const
+		iterator				end()
 								{
 									return (this->_base + this->_size);
 								}
 		const_iterator			end() const 
 								{
-									pointer end;
-
-									end = (&(this->_base[this->_size]));
-									return (const_iterator(end));
-								}*/
-								
-    iterator begin()
-    {
-        return iterator(_base);
-    }
-
-    const_iterator begin() const
-    {
-        return const_iterator(_base);
-    }
-
-    iterator end()
-    {
-        return iterator(_base + _size);
-    }
-
-    const_iterator end() const
-    {
-        return const_iterator(_base + _size);
-    }
-//		reverse_std::		rbegin();
-// 		const_reverse_std::	rbegin() const;
-// 		reverse_iterator		rend();
-// 		const_reverse_iterator	rend() const;
-/**
-*** 							Capacity
-**/
+									return (this->_base + this->_size);
+								}
  		bool 					empty() const 
 								{
 									return (begin() == end());
@@ -270,7 +223,7 @@ namespace ft {
 								{
 									return (this->_alloc.max_size());
 								}
- 		size_type 				capacity() const 
+ 		size_type 				capacity() const
 								{
 									return (this->_capacity);
 								}
@@ -321,19 +274,17 @@ namespace ft {
 								}
 		void 					push_back(const T& value)
 								{
-									if (!this->_capacity)
-										this->_allocate(1);
-									else if (this->size() + 1 > this->capacity())
-										this->reserve(this->capacity() * 2);
+									if ((this->_size + 1) > this->_capacity)
+										this->reserve((this->_capacity * 2) + 1);
 									this->_alloc.construct(this->_base + this->_size, value);
-									this->_size += 1;
+									++this->_size;
 								}
 		void 					pop_back()
 								{
 									if (!this->_size)
 										return ;
 									this->_alloc.destroy(this->_base + this->_size - 1);
-									this->_size -= 1; 
+									--this->_size; 
 								}
 		void 					resize(size_type count, T value = T())
 								{
