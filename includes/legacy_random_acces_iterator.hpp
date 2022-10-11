@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 02:23:04 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/11 01:23:13 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/10 07:11:44 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ namespace ft {
 	
    
     	protected:
-      							iterator 											_iter;
+      							pointer											_iter;
 		public :
     							vector_iterator() : _iter(iterator()) {};
-								vector_iterator(const iterator & iter) : _iter(iter) {}
+								vector_iterator(const pointer & iter) : _iter(iter) {}
     							vector_iterator(const vector_iterator & other) : _iter(other._iter) {}
 								~vector_iterator() {}
 
