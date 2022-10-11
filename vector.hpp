@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/11 05:02:00 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/11 05:56:23 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ namespace ft {
     									}
 									this->_capacity = new_cap;
 								}
-
 			void				_deallocate(void)
 								{
 									if (this->_capacity && this->_base)
@@ -105,18 +104,6 @@ namespace ft {
 											this->_alloc.destroy(this->_base + i);
 										this->_size = 0;
 									}
-								}
-/*								template<typename InputIt>
-			void				_range_assign(InputIt first, InputIt last, std::random_access_iterator_tag)
-								{
-									    for (; first != last; ++first) 
-           									push_back(*first);
-								}*/
-								template<typename InputIt>
-			void				_range_assign(InputIt first, InputIt last, std::input_iterator_tag)
-								{
-									    for (; first != last; ++first) 
-           									push_back(*first);
 								}
 			public :
 /** 
@@ -303,19 +290,28 @@ namespace ft {
 									other = *this;
 									*this = tmp_vector;
 								}
-		iterator 				insert(const_iterator pos, const T & value)
+		iterator 				insert(iterator pos, const T & value)
 								{
-									pointer tmp_ptr;
+									iterator tmp_it;
+									value_type tmp_value;
 
-									tmp_ptr = this->_base;
-									for (;tmp_ptr != this->_base + pos; tmp_ptr++)
+									tmp_it = this->_base;
+									this->reserve(this->_size + 1);
+									++this->_size;
+									for (;tmp_it !=  pos;)
+										tmp_it++;
+									tmp_value = *(this->_base + tmp_it);
+									this->_alloc.destroy(this->_base + tmp_it);
+									this->_alloc.construct(this->_base + tmp_it, value);
+									for (size_type i = 0; i < this->_size; i++)
 									{
-										this->_alloc.destroy(tmp_ptr);
-										this->_alloc.construct(tmp_ptr, value);
+										tmp_value = *(this->_base + tmp_it + i);
+										this->_alloc.destroy(this->_base + tmp_it + i);
+										this->_alloc.construct(this->_base + tmp_it + i, value);
 									}
 									return (this->begin());
 								}
-		iterator 				insert(const_iterator pos, size_type count, const T & value)
+		void					insert(iterator pos, size_type count, const T & value)
 								{
 									pointer tmp_ptr;
 
@@ -327,18 +323,21 @@ namespace ft {
 									}
 									return (this->begin());
 								}
-/*								template<class InputIt>
-		iterator 				insert(const_iterator pos, InputIt first, InputIt last)
+								template<class InputIt>
+		void					insert(iterator pos, InputIt first,  typename enable_if<!is_integral<InputIt>::value, InputIt>::type last)
 								{
-									
+									(void)pos;
+									(void)first;
+									(void)last;
+									return (this->begin());
 								}
-		iterator 				erase(iterator pos)
+	/*	iterator 				erase(iterator pos)
 								{
-									
+									return (this->begin());
 								}
 		iterator 				erase(iterator first, iterator last)
 								{
-									
+									return (this->begin());
 								}*/
 
 	};

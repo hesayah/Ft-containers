@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 03:29:36 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/11 02:57:26 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/11 05:36:39 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,9 @@
 #ifndef __ITERATOR_TRAITS_HPP__
 # define __ITERATOR_TRAITS_HPP__
 
-# include <iterator>
-
 namespace ft {
 
-	/*struct					input_iterator_tag {};
+	struct					input_iterator_tag {};
 	struct					output_iterator_tag {};
 	struct					forward_iterator_tag : public input_iterator_tag {};
 	struct					bidirectional_iterator_tag : public forward_iterator_tag {};
@@ -40,7 +38,7 @@ namespace ft {
 		typedef 			Pointer							pointer;
 		typedef 			Reference						reference;
 		typedef 			Category						iterator_category;
-	};*/
+	};
 
 							template<typename Iterator>
 	struct					iterator_traits
@@ -59,7 +57,7 @@ namespace ft {
 		typedef 			T								value_type;
 		typedef 			T*								pointer;
 		typedef 			T&								reference;
-		typedef 			std::random_access_iterator_tag		iterator_category;
+		typedef 			random_access_iterator_tag		iterator_category;
 	};
 
 							template<typename  T>
@@ -69,7 +67,7 @@ namespace ft {
 		typedef				T								value_type;
 		typedef const		T*								pointer;
 		typedef const		T&								reference;
-		typedef				std::random_access_iterator_tag 		iterator_category;
+		typedef				random_access_iterator_tag 		iterator_category;
 	};
 }
 
