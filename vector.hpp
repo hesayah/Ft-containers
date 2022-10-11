@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/09 21:14:20 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/11 03:43:39 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,27 @@
 # include "includes/reverse_iterator.hpp"
 
 namespace ft {
-								template<class T, class Allocator = std::allocator<T> >
-	class						vector 
+	template<class T, class Allocator = std::allocator<T> >
+	class vector 
 	{
 		public :
 			typedef				T											value_type;
-			typedef		 		Allocator									allocator_type;
+			typedef				Allocator									allocator_type;
 			typedef				std::size_t									size_type;
-			typedef	typename	Allocator::difference_type					difference_type;
-			typedef	typename	Allocator::reference						reference;
-			typedef	typename	Allocator::const_reference					const_reference;
+			typedef typename	Allocator::difference_type					difference_type;
+			typedef typename	Allocator::reference						reference;
+			typedef typename	Allocator::const_reference					const_reference;
 			typedef typename	Allocator::pointer							pointer;
 			typedef typename	Allocator::const_pointer					const_pointer;
-			typedef				vector_iterator<T>							iterator;
-			typedef				vector_iterator<const T>					const_iterator;
+			typedef				vector_iterator<pointer>					iterator;
+			typedef				vector_iterator<const_pointer>				const_iterator;
 			typedef typename	std::reverse_iterator<iterator>				reverse_iterator;
 			typedef typename	std::reverse_iterator<const_iterator>		const_reverse_iterator;
 
-			protected :		
+			protected :
 								allocator_type								_alloc;
-								size_type										_capacity;
-								size_type										_size;
+								size_type									_capacity;
+								size_type									_size;
 								pointer										_base;
 			private :
 
@@ -67,8 +67,8 @@ namespace ft {
 										throw std::out_of_range("pos out of range !");
 								}
 
-								template <class InputIt>
-			difference_type 	_distance(InputIt first, InputIt last)
+								template <typename InputIt>
+			difference_type		_distance(InputIt first, InputIt last)
 								{
 									InputIt					tmp_it;
 									difference_type			n;
@@ -106,6 +106,18 @@ namespace ft {
 										this->_size = 0;
 									}
 								}
+/*								template<typename InputIt>
+			void				_range_assign(InputIt first, InputIt last, std::random_access_iterator_tag)
+								{
+									    for (; first != last; ++first) 
+           									push_back(*first);
+								}*/
+								template<typename InputIt>
+			void				_range_assign(InputIt first, InputIt last, std::input_iterator_tag)
+								{
+									    for (; first != last; ++first) 
+           									push_back(*first);
+								}
 			public :
 /** 
 ***								constructors
@@ -116,10 +128,10 @@ namespace ft {
 								{
 									this->assign(count, value);
 								}
-								template <class InputIt>
-								vector(InputIt first, InputIt last, const Allocator& alloc = Allocator(), typename enable_if<!is_integral<InputIt>::value, InputIt>::type* = NULL) : _alloc(alloc), _capacity(0), _size(0) , _base(NULL)
+								template <typename InputIt>
+								vector(InputIt first, typename enable_if<!is_integral<InputIt>::value, InputIt>::type last, const Allocator& alloc = Allocator()) : _alloc(alloc), _capacity(0), _size(0) , _base(NULL)
 								{
-									this->assign(first, last);
+									assign(first, last);
 								}
 								vector(const vector& other)
 								{
@@ -141,7 +153,7 @@ namespace ft {
 								}								
 		void 					assign(size_type count, const T& value)
 								{
-									pointer		ptr;
+									/*pointer		ptr;
 
 									if (!count)
 										return ;
@@ -154,32 +166,21 @@ namespace ft {
 										this->_allocate(count);
 									}	
 									ptr = this->_base;
-									this->_size = count;
+									this->_size = count;*/
+									_clear();
 									for(size_type i = 0; i < count; i++)
-										this->_alloc.construct(ptr++, value);
-								}
- 								template<class InputIt>
- 		void 					assign(InputIt first, InputIt last, typename enable_if<!is_integral<InputIt>::value, InputIt>::type* = NULL)
-								{
-									size_type				dist;
-									pointer					ptr;
+										push_back(value);
+									//this->resize(count, value);
 
+								}
+ 								template<typename InputIt>
+ 		void 					assign(InputIt first, typename enable_if<!is_integral<InputIt>::value, InputIt>::type last)
+								{
 									this->clear();
-									if (first == last)
-										return ;
-									dist = _distance(first, last);
-									if (dist > _capacity)
-									{
-										
-										this->_deallocate();
-										this->_capacity = dist;
-										this->_check_storage_limit(this->_capacity);
-										this->_allocate(this->_capacity);
-									}
-									this->_size = dist;
-									ptr = this->_base;
-									for(; first != last; first++)
-										this->_alloc.construct(ptr++, *first);
+									/*typedef typename iterator_traits<InputIt>::iterator_category category;
+									this->_range_assign(first, last, category());*/
+									for (; first != last; ++first) 
+           								push_back(*first);
 								}
  		allocator_type 			get_allocator() const
 								{
@@ -277,27 +278,24 @@ namespace ft {
 *** Element access
 **/
 
-									reference operator[] (size_type n) {
-
-		return (this->_base[n]);
-	}
-
-	const_reference operator[] (size_type n) const {
-
-		return (this->_base[n]);
-	}
-
-	reference at (size_type n) {
-
-		this->_check_range_limit(n);
-		return (this->_base[n]);
-	}
-
-	const_reference at (size_type n) const {
-
-this->_check_range_limit(n);
-		return (this->_base[n]);
-	}
+		reference 				operator[] (size_type n)
+								{
+									return (this->_base[n]);
+								}
+		const_reference 		operator[] (size_type n) const
+								{
+									return (this->_base[n]);
+								}
+		reference 				at(size_type n) 
+								{
+									this->_check_range_limit(n);
+									return (this->_base[n]);
+								}
+		const_reference 		at (size_type n) const 
+								{
+									this->_check_range_limit(n);
+									return (this->_base[n]);
+								}
  		reference 				front()
 								{
 									return (*this->begin());
@@ -323,13 +321,17 @@ this->_check_range_limit(n);
 								}
 		void 					push_back(const T& value)
 								{
-									if (this->size() + 1 > this->capacity())
+									if (!this->_capacity)
+										this->_allocate(1);
+									else if (this->size() + 1 > this->capacity())
 										this->reserve(this->capacity() * 2);
 									this->_alloc.construct(this->_base + this->_size, value);
 									this->_size += 1;
 								}
 		void 					pop_back()
 								{
+									if (!this->_size)
+										return ;
 									this->_alloc.destroy(this->_base + this->_size - 1);
 									this->_size -= 1; 
 								}
