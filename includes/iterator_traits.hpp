@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 03:29:36 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/11 05:36:39 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/12 10:01:58 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,12 @@ namespace ft {
 		typedef const		T&								reference;
 		typedef				random_access_iterator_tag 		iterator_category;
 	};
+
+	template <class Iterator>
+typename iterator_traits<Iterator>::value_type getValue(Iterator i)
+{
+  return *i;
+}
 }
 
 #endif

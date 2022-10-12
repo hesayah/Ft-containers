@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/11 11:05:36 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/12 09:30:48 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,6 +275,7 @@ namespace ft {
 								}
 		void 					resize(size_type count, T value = value_type())
 								{
+									_check_storage_limit(count);
 									if (count > this->_size)
 										for (; this->_size < count;)
 											this->push_back(value);
