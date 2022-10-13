@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/12 16:45:22 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/13 03:42:48 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # include "includes/reverse_iterator.hpp"
 
 namespace ft {
-	template<class T, class Allocator = std::allocator<T> >
+	template<typename T, class Allocator = std::allocator<T> >
 	class vector 
 	{
 		public :
@@ -43,8 +43,8 @@ namespace ft {
 			typedef typename	Allocator::const_reference					const_reference;
 			typedef typename	Allocator::pointer							pointer;
 			typedef typename	Allocator::const_pointer					const_pointer;
-			typedef				vector_iterator<pointer>					iterator;
-			typedef				vector_iterator<pointer>					const_iterator;
+			typedef	typename	vector_iterator<pointer>::pointer			iterator;
+			typedef	typename	vector_iterator<const_pointer>::pointer			const_iterator;
 			typedef typename	std::reverse_iterator<iterator>				reverse_iterator;
 			typedef typename	std::reverse_iterator<const_iterator>		const_reverse_iterator;
 
