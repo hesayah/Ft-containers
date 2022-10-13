@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/13 03:42:48 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/13 05:42:10 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <memory>
 # include <stdexcept>
 # include <iostream>
-# include <algorithm>
 # include "includes/enable_if.hpp"
 # include "includes/is_integral.hpp"
 # include "includes/equal.hpp"
@@ -44,7 +43,7 @@ namespace ft {
 			typedef typename	Allocator::pointer							pointer;
 			typedef typename	Allocator::const_pointer					const_pointer;
 			typedef	typename	vector_iterator<pointer>::pointer			iterator;
-			typedef	typename	vector_iterator<const_pointer>::pointer			const_iterator;
+			typedef	typename	vector_iterator<const_pointer>::pointer		const_iterator;
 			typedef typename	std::reverse_iterator<iterator>				reverse_iterator;
 			typedef typename	std::reverse_iterator<const_iterator>		const_reverse_iterator;
 
@@ -81,12 +80,12 @@ namespace ft {
 								}
 			void				_allocate(size_type new_cap)
 								{
-									    try {
+										try {
 											this->_base = this->_alloc.allocate(new_cap);
 										}
     									catch (const std::bad_alloc& e) {  
-											std::cout  << e.what() << std::endl;
-    									}
+											std::cout <<  e.what();
+										}
 									this->_capacity = new_cap;
 								}
 			void				_deallocate(void)
@@ -197,7 +196,7 @@ namespace ft {
 										tmp_size = this->_size;
 										this->_clear();
 										this->_deallocate();
-										this->_size =tmp_size;
+										this->_size = tmp_size;
 										this->_capacity = new_cap;
 										this->_base = new_ptr;
 									}
@@ -292,99 +291,89 @@ namespace ft {
 									*this = tmp_vector;
 								}
 		iterator 				insert(iterator pos, const T & value)
-								{									
-									(void)pos;
-						//			(void)count;
-									(void)value;
-									/*difference_type n = _distance(this->begin(), pos);
-									reserve(_size + 1);
-									for (difference_type i = this->_size; i > n; i--)
+								{
+									pointer tmp;
+
+									if (pos++)
+										tmp = pos + 1;
+									else
+										tmp = pos;	
+									resize(_size + 1);
+									for (;tmp != this->_base + _size -1; tmp++)
 									{
-										this->_alloc.construct(_base + i, *(this->_base + i - 1));
-										this->_alloc.destroy(this->_base + i - 1);
+										*tmp = *(tmp + 1);
 									}
-									_alloc.construct(this->_base + n, value);
-									_size++;*/
-									return (this->_base);
+									*(pos) = value;
+									return (pos);
 
 								}
-		void					insert(iterator pos, size_type count, const T & value)
+/*		void					insert(iterator pos, size_type count, const T & value)
 								{
-									(void)pos;
-									(void)count;
-									(void)value;
+									vector		tmp(count, value);
+
+									insert(pos++,tmp.begin(), tmp.end());
 								}
 								template<class InputIt>
 		void					insert(iterator pos, InputIt first,  typename enable_if<!is_integral<InputIt>::value, InputIt>::type last)
 								{
-									(void)pos;
-									(void)first;
-									(void)last;
-								}
-	/*	iterator 				erase(iterator pos)
+									difference_type n;
+									iterator		tmp_it;
+									iterator		tmp_end;
+
+									n = this->_distance(first,last);
+									resize(this->_size + n);
+									tmp_it = pos + n;
+									tmp_end = this->_base + this->_size;
+									for (size_type i = 0;tmp_it != tmp_end; tmp_it++)
+									{
+										*(tmp_it) = *(pos + i);
+										i++;
+									}
+									for (;first != last; first++)
+									{
+										*(pos) = *(first);
+										++pos;
+									}
+								}*/
+		iterator 				erase(iterator pos)
 								{
-									return (this->begin());
+									pointer tmp = pos;
+
+									for (;tmp != this->_base + _size - 1; tmp++)
+									{
+										*tmp = *(tmp + 1);
+									}
+									resize(this->_size - 1);
+									return (pos);
 								}
-		iterator 				erase(iterator first, iterator last)
+		/*iterator 				erase(iterator first, iterator last)
 								{
-									return (this->begin());
+									//tmp_it first_pos;
+
+									return (begin());
 								}*/
 
 	};
-	template <class T, class Allocator>
-	bool operator==(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
+				template <class T, class Allocator>
+	bool 		operator==(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {return  (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));}
 
-		if (lhs.size() == rhs.size()) {
+				template <class T, class  Allocator>
+	bool 		operator!=(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {return (!(lhs == rhs));}
 
-			return (equal(lhs.begin(), lhs.end(), rhs.begin()));
-		}
-		return (false);
-	}
+				template <class T, class  Allocator>
+	bool 		operator<(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));}
 
-	template <class T, class  Allocator>
-	bool operator!=(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
+				template <class T, class  Allocator>
+	bool 		operator<=(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {return (!(rhs < lhs));}
 
-		return (!(lhs == rhs));
-	}
+				template <class T, class  Allocator>
+	bool 		operator>(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {return (rhs < lhs);}
 
-	template <class T, class  Allocator>
-	bool operator<(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
+				template <class T, class  Allocator>
+	bool 		operator>=(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {return (!(lhs < rhs));}
 
-		if (lhs != rhs) {
-			return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
-		}
-		return (false);
-	}
-
-	template <class T, class  Allocator>
-	bool operator<=(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
-
-		if (lhs == rhs)
-			return (true);
-		return (!(rhs < lhs));
-	}
-
-	template <class T, class  Allocator>
-	bool operator>  (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
-
-		if (lhs == rhs)
-			return (false);
-		return (rhs < lhs);
-	}
-
-	template <class T, class  Allocator>
-	bool operator>= (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs) {
-
-		if (lhs == rhs)
-			return (true);
-		return (!(lhs < rhs));
-	}
-
-	template <class T, class  Allocator>
-	void swap(vector<T, Allocator>& x, vector<T, Allocator>& y) {
-
-		x.swap(y);
-	}
+				template <class T, class  Allocator>
+	void		swap(vector<T, Allocator>& x, vector<T, Allocator>& y) {x.swap(y);}
 }
 
 
