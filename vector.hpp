@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/13 05:42:10 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/13 09:32:15 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,18 +340,23 @@ namespace ft {
 									pointer tmp = pos;
 
 									for (;tmp != this->_base + _size - 1; tmp++)
-									{
 										*tmp = *(tmp + 1);
-									}
 									resize(this->_size - 1);
 									return (pos);
 								}
-		/*iterator 				erase(iterator first, iterator last)
+		iterator 				erase(iterator first, iterator last)
 								{
-									//tmp_it first_pos;
-
-									return (begin());
-								}*/
+									vector tmp(begin(), first);
+									vector tmp_two(last, end());
+									difference_type new_size = _size - _distance(first, last);
+									resize(new_size);
+									size_type i = 0;
+									for (; i < tmp.size(); i++)
+										*(_base + i) = *(tmp.begin() + i);
+									for (size_type j = 0 ; j < tmp_two.size(); j++)
+										*(_base + i + j) = *(tmp_two.begin() + j);
+									return (first);
+								}
 
 	};
 				template <class T, class Allocator>
