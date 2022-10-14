@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 03:29:36 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/12 16:25:03 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/14 15:47:20 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ namespace ft {
 		typedef 			T								value_type;
 		typedef 			T*								pointer;
 		typedef 			T&								reference;
-		typedef 			random_access_iterator_tag		iterator_category;
+		typedef 			std::random_access_iterator_tag		iterator_category;
 	};
 
 							template<typename  T>
@@ -67,7 +67,7 @@ namespace ft {
 		typedef				T								value_type;
 		typedef const		T*								pointer;
 		typedef const		T&								reference;
-		typedef				random_access_iterator_tag 		iterator_category;
+		typedef				std::random_access_iterator_tag 		iterator_category;
 	};
 }
 

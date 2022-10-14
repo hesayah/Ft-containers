@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/14 14:24:37 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/14 15:23:32 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,15 @@ namespace ft {
 			typedef typename	Allocator::const_pointer							const_pointer;
 			typedef	typename	vector_iterator<pointer>::pointer					iterator;
 			typedef	typename	vector_iterator<const_pointer>::pointer				const_iterator;
-			typedef typename	ft::reverse_iterator<iterator>						reverse_iterator;
-			typedef	typename 	ft::reverse_iterator<const_iterator>				const_reverse_iterator;
+			typedef	 			reverse_iterator<const_iterator>					const_reverse_iterator;
+			typedef 			reverse_iterator<iterator>							reverse_iterator;
+		
 
 			protected :
-								allocator_type								_alloc;
-								size_type									_capacity;
-								size_type									_size;
-								pointer										_base;
+								allocator_type										_alloc;
+								size_type											_capacity;
+								size_type											_size;
+								pointer												_base;
 			private :
 
 			void				_check_storage_limit(size_type new_cap) const
@@ -175,21 +176,21 @@ namespace ft {
 								{
 									return (this->_base + this->_size);
 								}
-		reverse_iterator		rend()
-								{
-									return (this->_base);
-								}
- 		const_reverse_iterator	rend() const
-								{
-									return (this->_base);
-								}
 		reverse_iterator		rbegin()
 								{
-									return (this->_base + this->_size + 1);
+									return (reverse_iterator(end()));
 								}
 		const_reverse_iterator	rbegin() const 
 								{
-									return (this->_base + this->_size + 1);
+									return (const_reverse_iterator(end()));
+								}
+		reverse_iterator		rend()
+								{
+									return (reverse_iterator(begin()));
+								}
+ 		const_reverse_iterator	rend() const
+								{
+									return (const_reverse_iterator(begin()));
 								}
  		bool 					empty() const 
 								{
@@ -198,7 +199,7 @@ namespace ft {
  		void 					reserve(size_type new_cap)
 								{
 									this->_check_storage_limit(new_cap);
-									if (new_cap > this->_capacity && new_cap <= this->max_size())
+									if (new_cap > this->_capacity)// && new_cap <= this->max_size())
 									{
 										iterator				tmp_it;
 										pointer					tmp_ptr;
@@ -347,12 +348,13 @@ namespace ft {
 								template <class InputIterator>
 				void			insert(iterator pos, InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
 								{
+									vector 			tmp(first, last);
 									difference_type n_pos = _distance(this->begin(), pos);
-									difference_type n_range = _distance(first, last);
 
-									reserve(_size + n_range);
-									for (difference_type i = 0; i < n_range; i++)
-										this->insert(_base + n_pos + i, *(first++));
+									reserve(_size + tmp.size());
+									iterator beg = tmp.begin();
+									for (size_type i = 0; i < tmp.size(); i++)
+										this->insert(_base + n_pos + i, *(beg + i));
 								}
 		iterator 				erase(iterator pos)
 								{
