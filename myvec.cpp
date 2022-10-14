@@ -41,30 +41,15 @@ void	printSize(ft::vector<T> const &vct, bool print_content = true)
 
 int main ()
 {
-	ft::vector<int> foo(3, 15);
-	ft::vector<int> bar(5, 42);
-	
-	ft::vector<int>::iterator it_foo = foo.begin();
-	ft::vector<int>::const_iterator it_bar = bar.begin();
+	ft::vector<char> vct;
+	ft::vector<char>::iterator it = vct.begin();
+	ft::vector<char>::const_iterator cit = vct.begin();
 
-	std::cout << "BEFORE SWAP" << std::endl;
+	ft::vector<char>::reverse_iterator rit(it);
 
-	std::cout << "foo contains:" << std::endl;
-	printSize(foo);
-	std::cout << "bar contains:" << std::endl;
-	printSize(bar);
-
-	foo.swap(bar);
-
-	std::cout << "AFTER SWAP" << std::endl;
-
-	std::cout << "foo contains:" << std::endl;
-	printSize(foo);
-	std::cout << "bar contains:" << std::endl;
-	printSize(bar);
-
-	std::cout << "Iterator validity:" << std::endl;
-	std::cout << (it_foo == bar.begin()) << std::endl;
-	std::cout << (it_bar == foo.begin()) << std::endl;
+	ft::vector<char>::const_reverse_iterator crit(rit);
+	ft::vector<char>::const_reverse_iterator crit_(it);
+	ft::vector<char>::const_reverse_iterator crit_2(cit);
+	std::cout << "OK" << std::endl;
 
 }

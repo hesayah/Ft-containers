@@ -37,6 +37,7 @@ namespace ft {
     	protected:
       							pointer											_ptr;
 		public :
+								vector_iterator() :_ptr(T()) {}
 								vector_iterator(const pointer & iter) : _ptr(iter) {}
     							vector_iterator(const vector_iterator & other) : _ptr(other._ptr) {}
 								~vector_iterator() {}
@@ -59,11 +60,6 @@ namespace ft {
 								{
 									return (this->_ptr);
 								}
-			/*operator			vector_iterator<const pointer>() const
-								{
-									return vector_iterator<const pointer>(vector_iterator(*this));
-								}*/
-
 			reference			operator[](difference_type diff) const 
 								{
 									
@@ -108,7 +104,7 @@ namespace ft {
 									return (this->_ptr - other._ptr);
 								}
 	};
-						template<class T>
+/*						template<class T>
 	vector_iterator<T> 	operator+(const vector_iterator<T> & lhs, typename iterator_traits<T>::difference_type diff)
 						{
 							return (lhs.base() + diff);
@@ -119,12 +115,12 @@ namespace ft {
 							return (lhs.base() - diff);
 						}
 						template<class X, class Y>
-	bool				operator==(const vector_iterator<X> & lhs, const vector_iterator<X> & other)
+	bool				operator==(const vector_iterator<X> & lhs, const vector_iterator<Y> & other)
 						{
 							return (lhs.base() == other.base());
 						}
 						template<class X, class Y>
-	bool				operator!=(const vector_iterator<X> & lhs, const vector_iterator<X> & other)
+	bool				operator!=(const vector_iterator<X> & lhs, const vector_iterator<Y> & other)
 						{
 							return (!(lhs.base() == other.base()));
 						}
@@ -147,7 +143,7 @@ namespace ft {
 	bool 				operator<=(const vector_iterator<X> & lhs, const vector_iterator<Y> & other)
 						{
 							return (lhs.base() <= other.base());
-						}
+						}*/
 }
 
 #endif
