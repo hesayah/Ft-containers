@@ -104,7 +104,7 @@ namespace ft {
 									return (this->_ptr - other._ptr);
 								}
 	};
-/*						template<class T>
+						template<class T>
 	vector_iterator<T> 	operator+(const vector_iterator<T> & lhs, typename iterator_traits<T>::difference_type diff)
 						{
 							return (lhs.base() + diff);
@@ -143,7 +143,7 @@ namespace ft {
 	bool 				operator<=(const vector_iterator<X> & lhs, const vector_iterator<Y> & other)
 						{
 							return (lhs.base() <= other.base());
-						}*/
+						}
 }
 
 #endif

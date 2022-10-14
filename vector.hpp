@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/14 15:23:32 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/14 23:56:57 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ namespace ft {
 			void				_check_storage_limit(size_type new_cap) const
 								{
 									if (new_cap > this->max_size())
-										throw std::length_error("new_cap over max_size() !");
+										throw std::length_error("vector::reserve");
 								}
 
 			void				_check_range_limit(size_type pos) const
@@ -199,7 +199,7 @@ namespace ft {
  		void 					reserve(size_type new_cap)
 								{
 									this->_check_storage_limit(new_cap);
-									if (new_cap > this->_capacity)// && new_cap <= this->max_size())
+									if (new_cap > this->_capacity)
 									{
 										iterator				tmp_it;
 										pointer					tmp_ptr;
@@ -278,8 +278,10 @@ namespace ft {
 								}
 		void 					push_back(const T& value)
 								{
+									if (!_capacity)
+										reserve(1);
 									if ((this->_size + 1) > this->_capacity)
-										this->reserve((this->_capacity * 2) + 1);
+										this->reserve(this->_capacity * 2);
 									this->_alloc.construct(this->_base + this->_size, value);
 									++this->_size;
 								}
@@ -326,8 +328,10 @@ namespace ft {
 				iterator		insert(iterator pos, const value_type& value)
 								{
 									difference_type n_pos = _distance(this->begin(), pos);
-
-									reserve(_size + 1);
+									if (!_capacity)
+										reserve(1);
+									if ((this->_size + 1) > this->_capacity)
+										this->reserve(this->_capacity * 2);
 									for (difference_type i = _size; i > n_pos; i--)
 									{
 										_alloc.construct(_base+ i, *(_base+ i - 1));
@@ -341,7 +345,8 @@ namespace ft {
 								{
 									difference_type n_pos = _distance(this->begin(), pos);
 
-									reserve(_size + count);
+									if (_size + count > _capacity)
+										reserve(_size * 2 > _size + count ? _size * 2 : _size + count);
 									for (size_type i = 0; i < count; i++)
 										this->insert(_base + n_pos + i, value);
 								}
@@ -351,6 +356,8 @@ namespace ft {
 									vector 			tmp(first, last);
 									difference_type n_pos = _distance(this->begin(), pos);
 
+									if (_size + tmp.size() > _capacity)
+										reserve(_size * 2 > _size + tmp.size() ? _size * 2 : _size + tmp.size());
 									reserve(_size + tmp.size());
 									iterator beg = tmp.begin();
 									for (size_type i = 0; i < tmp.size(); i++)
