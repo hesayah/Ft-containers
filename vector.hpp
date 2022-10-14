@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/14 07:59:53 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/14 14:24:37 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,59 +322,37 @@ namespace ft {
 									this->_base = other._base;
 									other._base = ptr;
 								}
-				iterator insert(iterator position, const value_type& val)
-				{
-					difference_type pos = _distance(this->begin(), position);
-					if (_size + 1 > _capacity)
-						reserve((_size * 2 != 0) ? _size * 2 : 1);
-					
-					for (difference_type i = _size; i > pos; i--)
-					{
-						_alloc.construct(_base+ i, *(_base+ i - 1));
-						_alloc.destroy(_base+ i - 1);
-					}
-					_alloc.construct(_base+ pos, val);
-					_size++;
-					return (_base+ pos);
-				}
-				void insert(iterator position, size_type n, const value_type& val)
-				{
-					difference_type pos = _distance(this->begin(), position);
-
-					if (_size + n > _capacity)
-						reserve(_size * 2 > _size + n ? _size * 2 : _size + n);
-					for (size_type i = 0; i < n; i++)
-						this->insert(iterator(_base+ pos + i), val);
-				}
-				/*template <class InputIterator>
-				void insert(iterator position, InputIterator first,
-				typename enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* last)
-				{
-					difference_type pos = _distance(this->begin(), position);
-					difference_type n = _distance(first, last);
-					if (_size + n > _capacity)
-						reserve(_size * 2 > _size + n ? _size * 2 : _size + n);
-					for (difference_type i = 0; i < n; i++)
-						this->insert(_base+ pos + i, *(first++));
-				}*/
-							template<class InputIt>
-		void					insert(iterator pos, InputIt first,  typename enable_if<!is_integral<InputIt>::value, InputIt>::type last)
+				iterator		insert(iterator pos, const value_type& value)
 								{
-									vector tmp_one(begin(), pos);
-									vector tmp_two(first, last);
-									vector tmp_tree(pos, end());
+									difference_type n_pos = _distance(this->begin(), pos);
 
-									size_type new_size = _size + tmp_two.size();
-									resize(new_size);
-									size_type i = 0;
-									for (; i < tmp_one.size(); i++)
-										*(_base + i) = *(tmp_one.begin() + i);
-									size_type j = 0;
-									for (; j < tmp_two.size(); j++)
-										*(_base + i  + j) = *(tmp_two.begin() + j);
-									size_type k = 0;
-									for (; k < tmp_tree.size(); k++)
-										*(_base + i + j + k) = *(tmp_tree.begin() + k);
+									reserve(_size + 1);
+									for (difference_type i = _size; i > n_pos; i--)
+									{
+										_alloc.construct(_base+ i, *(_base+ i - 1));
+										_alloc.destroy(_base+ i - 1);
+									}
+									_alloc.construct(_base+ n_pos, value);
+									_size++;
+									return (_base + n_pos);
+								}
+				void 			insert(iterator pos, size_type count, const value_type& value)
+								{
+									difference_type n_pos = _distance(this->begin(), pos);
+
+									reserve(_size + count);
+									for (size_type i = 0; i < count; i++)
+										this->insert(_base + n_pos + i, value);
+								}
+								template <class InputIterator>
+				void			insert(iterator pos, InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
+								{
+									difference_type n_pos = _distance(this->begin(), pos);
+									difference_type n_range = _distance(first, last);
+
+									reserve(_size + n_range);
+									for (difference_type i = 0; i < n_range; i++)
+										this->insert(_base + n_pos + i, *(first++));
 								}
 		iterator 				erase(iterator pos)
 								{
