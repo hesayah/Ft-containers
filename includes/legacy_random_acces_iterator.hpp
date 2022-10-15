@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   legacy_random_acces_ptrator.hpp                   :+:      :+:    :+:   */
+/*   legacy_random_acces_itator.hpp                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,95 +14,97 @@
  * https://cplusplus.com/reference/iterator/RandomAccessIterator/
 **/
 
-#ifndef __LEGACY_RANDOM_ACCESS_ptrATOR_HPP__
-# define __LEGACY_RANDOM_ACCESS_ptrATOR_HPP__
-
+#ifndef __LEGACY_RANDOM_ACCESS_itATOR_HPP__
+# define __LEGACY_RANDOM_ACCESS_itATOR_HPP__
 
 # include "iterator_traits.hpp"
 
 namespace ft {
 
-	template <typename T>
+								template <typename T>
 	class						vector_iterator
 	{
 		public :
 
-    	typedef	typename		iterator_traits<T>::difference_type			difference_type;
-		typedef	typename		iterator_traits<T>::value_type				value_type;
-    	typedef	typename		iterator_traits<T>::pointer					pointer;
-   		typedef	typename		iterator_traits<T>::reference				reference;
-    	typedef	typename		iterator_traits<T>::iterator_category		iterator_category;
+			typedef					T													iterator;
+    		typedef	typename		iterator_traits<T>::difference_type					difference_type;
+			typedef	typename		iterator_traits<T>::value_type						value_type;
+    		typedef	typename		iterator_traits<T>::pointer							pointer;
+   			typedef	typename		iterator_traits<T>::reference						reference;
+    		typedef	typename		iterator_traits<T>::iterator_category				iterator_category;
 	
-   
     	protected:
-      							pointer											_ptr;
+      								iterator											_it;
 		public :
-								vector_iterator() :_ptr(T()) {}
-								vector_iterator(const pointer & iter) : _ptr(iter) {}
-    							vector_iterator(const vector_iterator & other) : _ptr(other._ptr) {}
-								~vector_iterator() {}
+									vector_iterator() :_it(iterator()) {}
+									vector_iterator(const pointer & ptr) : _it(ptr) {}
+									vector_iterator(const vector_iterator<iterator> & other) : _it(other._it) {}
+									~vector_iterator() {}
+			/*operator				vector_iterator() const
+									{
+										return (vector_iterator(*this));
+									}*/
+  			operator const vector_iterator<iterator_traits<T> >() const {return vector_iterator<iterator_traits<T> >(_it);}
 
-			vector_iterator &	operator=(const vector_iterator & other) 
-								{
-									this->_ptr = other._ptr;
-									return (*this);
-								}
-			pointer				base() const 
-								{
-
-									return (this->_ptr);
-								}			
-			reference 			operator*() const 
-								{
-									return (*this->_ptr);
-								}
-			pointer 			operator->() 
-								{
-									return (this->_ptr);
-								}
-			reference			operator[](difference_type diff) const 
-								{
-									
-									return (*(this->_ptr + diff));
-								}
-			vector_iterator	& 	operator++(void)
-								{
-									++this->_ptr;
-									return (*this);
-								}
-			vector_iterator 	operator++(int)
-								{
-									this->_ptr++;
-									return (*this);
-								}										
-			vector_iterator	& 	operator--(void) 
-								{
-									--this->_ptr;
-									return (*this);
-								}
-			vector_iterator 	operator--(int) 
-								{
-									this->_ptr--;
-									return (*this);
-								}
-			vector_iterator	& 	operator+=(difference_type diff) 
-								{
-									this->_ptr += diff;
-									return (*this);
-								}
-			vector_iterator	& 	operator-=(difference_type diff)
-								{
-									this->_ptr -= diff;
-									return (*this);
-								}
-			difference_type		operator+(const vector_iterator& other)
-								{
-									return (this->_ptr + other._ptr);
-								}
-			difference_type 	operator-(const vector_iterator & other)
-								{
-									return (this->_ptr - other._ptr);
-								}
+			vector_iterator<iterator> &	operator=(const vector_iterator & other) 
+									{
+										this->_it = other._it;
+										return (*this);
+									}
+			pointer					base() const 
+									{
+										return (this->_it);
+									}			
+			reference 				operator*() const 
+									{
+										return (*this->_it);
+									}
+			pointer 				operator->() 
+									{
+										return (this->_it);
+									}
+			reference				operator[](difference_type diff) const 
+									{	
+										return (*(this->_it + diff));
+									}
+			vector_iterator	& 		operator++(void)
+									{
+										++this->_it;
+										return (*this);
+									}
+			vector_iterator 		operator++(int)
+									{
+										this->_it++;
+										return (*this);
+									}										
+			vector_iterator	& 		operator--(void) 
+									{
+										--this->_it;
+										return (*this);
+									}
+			vector_iterator 		operator--(int) 
+									{
+										this->_it--;
+										return (*this);
+									}
+			vector_iterator	& 		operator+=(difference_type diff) 
+									{
+										this->_it += diff;
+										return (*this);
+									}
+			vector_iterator	& 		operator-=(difference_type diff)
+									{
+										this->_it -= diff;
+										return (*this);
+									}
+			difference_type			operator+(const vector_iterator& other)
+									{
+										return (this->_it + other._it);
+									}
+			difference_type 		operator-(const vector_iterator & other)
+									{
+										return (this->_it - other._it);
+									}
 	};
 						template<class T>
 	vector_iterator<T> 	operator+(const vector_iterator<T> & lhs, typename iterator_traits<T>::difference_type diff)

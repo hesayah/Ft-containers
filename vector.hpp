@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/14 23:56:57 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/15 23:45:42 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ namespace ft {
 			typedef typename	Allocator::const_reference							const_reference;
 			typedef typename	Allocator::pointer									pointer;
 			typedef typename	Allocator::const_pointer							const_pointer;
-			typedef	typename	vector_iterator<pointer>::pointer					iterator;
-			typedef	typename	vector_iterator<const_pointer>::pointer				const_iterator;
-			typedef	 			reverse_iterator<const_iterator>					const_reverse_iterator;
-			typedef 			reverse_iterator<iterator>							reverse_iterator;
+			typedef				vector_iterator<value_type*>						iterator;
+			typedef				vector_iterator<const value_type*>					const_iterator;
+//			typedef	 			reverse_iterator<const_iterator>					const_reverse_iterator;
+//			typedef 			reverse_iterator<iterator>							reverse_iterator;
 		
 
 			protected :
@@ -170,13 +170,15 @@ namespace ft {
 								}
 		iterator				end()
 								{
-									return (this->_base + this->_size);
+									pointer ptr = this->_base + this->_size;
+									return (ptr);
 								}
 		const_iterator			end() const 
 								{
-									return (this->_base + this->_size);
+									pointer ptr = this->_base + this->_size;
+									return (ptr);
 								}
-		reverse_iterator		rbegin()
+	/*	reverse_iterator		rbegin()
 								{
 									return (reverse_iterator(end()));
 								}
@@ -191,7 +193,7 @@ namespace ft {
  		const_reverse_iterator	rend() const
 								{
 									return (const_reverse_iterator(begin()));
-								}
+								}*/
  		bool 					empty() const 
 								{
 									return (begin() == end());
@@ -365,9 +367,10 @@ namespace ft {
 								}
 		iterator 				erase(iterator pos)
 								{
-									pointer tmp = pos;
+									iterator tmp = pos;
+									iterator end = _base + _size -1;
 
-									for (;tmp != this->_base + _size - 1; tmp++)
+									for (;tmp != end;tmp++)
 										*tmp = *(tmp + 1);
 									resize(this->_size - 1);
 									return (pos);

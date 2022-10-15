@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 08:55:48 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/14 22:54:21 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/15 21:46:35 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 namespace ft {
 template <typename It>
 class reverse_iterator
-    : public std::iterator<
+    : public iterator<
           typename iterator_traits<It>::iterator_category, typename iterator_traits<It>::value_type,
           typename iterator_traits<It>::difference_type, typename iterator_traits<It>::pointer,
           typename iterator_traits<It>::reference>
