@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/15 23:45:42 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/16 13:57:32 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,16 @@ namespace ft {
 		public :
 			typedef				T													value_type;
 			typedef				Allocator											allocator_type;
-			typedef				std::size_t											size_type;
+			typedef	typename	std::size_t											size_type;
 			typedef typename	Allocator::difference_type							difference_type;
 			typedef typename	Allocator::reference								reference;
 			typedef typename	Allocator::const_reference							const_reference;
 			typedef typename	Allocator::pointer									pointer;
 			typedef typename	Allocator::const_pointer							const_pointer;
-			typedef				vector_iterator<value_type*>						iterator;
-			typedef				vector_iterator<const value_type*>					const_iterator;
-//			typedef	 			reverse_iterator<const_iterator>					const_reverse_iterator;
-//			typedef 			reverse_iterator<iterator>							reverse_iterator;
+			typedef				vector_iterator<value_type>							iterator;
+			typedef				vector_iterator<const value_type>					const_iterator;
+			typedef	typename			std::reverse_iterator<const_iterator>				const_reverse_iterator;
+			typedef typename		std::reverse_iterator<iterator>						reverse_iterator;
 		
 
 			protected :
@@ -178,7 +178,7 @@ namespace ft {
 									pointer ptr = this->_base + this->_size;
 									return (ptr);
 								}
-	/*	reverse_iterator		rbegin()
+		reverse_iterator		rbegin()
 								{
 									return (reverse_iterator(end()));
 								}
@@ -193,7 +193,7 @@ namespace ft {
  		const_reverse_iterator	rend() const
 								{
 									return (const_reverse_iterator(begin()));
-								}*/
+								}
  		bool 					empty() const 
 								{
 									return (begin() == end());
