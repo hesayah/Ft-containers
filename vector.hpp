@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:09:54 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/16 13:57:32 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/16 17:40:13 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ namespace ft {
 			typedef typename	Allocator::const_pointer							const_pointer;
 			typedef				vector_iterator<value_type>							iterator;
 			typedef				vector_iterator<const value_type>					const_iterator;
-			typedef	typename			std::reverse_iterator<const_iterator>				const_reverse_iterator;
-			typedef typename		std::reverse_iterator<iterator>						reverse_iterator;
+			typedef				reverse_iterator<const_iterator>					const_reverse_iterator;
+			typedef 			reverse_iterator<iterator>							reverse_iterator;
 		
 
 			protected :

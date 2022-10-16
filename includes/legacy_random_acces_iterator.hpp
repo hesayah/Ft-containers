@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 /**
- * https://cplusplus.com/reference/iterator/RandomAccessIterator/
+*** https://cplusplus.com/reference/iterator/RandomAccessIterator/
+*** https://stackoverflow.com/questions/3582608/how-to-correctly-implement-custom-iterators-and-const-iterators
+*** https://www.enseignement.polytechnique.fr/informatique/INF478/docs/Cpp/en/cpp/iterator/reverse_iterator.html
 **/
 
 #ifndef __LEGACY_RANDOM_ACCESS_itATOR_HPP__
@@ -21,8 +23,8 @@
 
 namespace ft {
 
-								template <typename T>
-	class						vector_iterator : public std::iterator<std::random_access_iterator_tag, T>
+									template <typename T>
+	class							vector_iterator : public std::iterator<std::random_access_iterator_tag, T>
 	{
 		public :
 

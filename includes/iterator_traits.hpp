@@ -6,23 +6,19 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 03:29:36 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/16 13:45:11 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/16 16:55:49 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
 *** https://en.cppreference.com/w/cpp/iterator/iterator_tags
-*** https://en.cppreference.com/w/cpp/iterator/iterator
 *** https://cplusplus.com/reference/iterator/iterator_traits/
-*** https://cplusplus.com/reference/iterator/iterator/
-*** https://www.fluentcpp.com/2018/05/08/std-iterator-deprecated/
-*** https://forum.hardware.fr/hfr/Programmation/C-2/conception-iterator-introduction-sujet_63686_1.htm
 **/
 
 #ifndef __ITERATOR_TRAITS_HPP__
 # define __ITERATOR_TRAITS_HPP__
 
-# include <cstddef>
+# include <iterator>
 
 namespace ft {
 							template<typename Iterator>
