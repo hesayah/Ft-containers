@@ -1,30 +1,18 @@
-#include "stack.hpp"
-#include <iostream>
+#include "includes/red_black_tree.hpp"
+#include <vector>
  
-void reportStackSize(const ft::stack<int>& s)
-{
-    std::cout << s.size() << " elements on stack\n";
-}
- 
-void reportStackTop(const ft::stack<int>& s)
-{
-    // Leaves element on stack
-    std::cout << "Top element: " << s.top() << '\n';
-}
- 
-int main()
-{
-    ft::stack<int> s;
-    s.push(2);
-    s.push(6);
-    s.push(51);
- 
-    reportStackSize(s);
-    reportStackTop(s);
- 
-    reportStackSize(s);
-    s.pop();
- 
-    reportStackSize(s);
-    reportStackTop(s);
+int main() {
+  RedBlackTree<int> bst;
+  bst.insert(55);
+  bst.insert(40);
+  bst.insert(65);
+  bst.insert(60);
+  bst.insert(75);
+  bst.insert(57);
+
+  bst.printTree();
+  cout << endl
+     << "After deleting" << endl;
+  bst.deleteNode(40);
+  bst.printTree();
 }

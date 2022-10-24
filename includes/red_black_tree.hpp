@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/15 19:51:25 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/15 23:06:20 by hesayah          ###   ########.fr       */
+/*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
+/*   Updated: 2022/10/24 22:17:34 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,88 +14,81 @@
 # define __RED_BLACK_TREE_HPP
 
 /**
-*** https://www.geeksforgeeks.org/red-black-tree-set-1-introduction-2/
+*** https://www.geeksforgeeks.org/red-black-tree-set-true-introduction-2/
 *** https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
 *** https://www.programiz.com/dsa/red-black-tree
 **/
+// Implementing Red-Black Tree in C++
 
-# include <iostream>
-
-namespace  ft {
-
+#include <iostream>
 using namespace std;
 
-	struct Node 
-	{
-		int			data;
-		Node 		*parent;
-		Node		*left;
-		Node		*right;
-		int			color;
-	};
+template<class T>
+struct Node {
+  T data;
+  Node *parent;
+  Node *left;
+  Node *right;
+  int color;
+};
 
-	typedef Node *NodePtr;
+template<class T>
+class RedBlackTree {
 
-	template<typename T>
-	class RedBlackTree 
-	{
-		private:
-			NodePtr root;
-  			NodePtr TNULL;
+   private:
+				typedef Node<T> *NodePtr;
+  NodePtr root;
+  NodePtr TNULL;
 
-  		void	initializeNULLNode(NodePtr node, NodePtr parent) 
-				{
-    				node->data = 0;
-    				node->parent = parent;
-    				node->left = NULL;
-    				node->right = NULL;
-    				node->color = 0;
- 				 }
+  void initializeNULLNode(NodePtr node, NodePtr parent) {
+    node->data = 0;
+    node->parent = parent;
+    node->left = nullptr;
+    node->right = nullptr;
+    node->color = 0;
+  }
 
-				// Preorder
-		void	preOrderHelper(NodePtr node) 
-				{
-    				if (node != TNULL) 
-					{
-      					cout << node->data << " ";
-      					preOrderHelper(node->left);
-     					preOrderHelper(node->right);
-    				}
-  				}
-  				// Inorder
-  		void	inOrderHelper(NodePtr node) 
-				{
-    				if (node != TNULL) 
-					{
-      					inOrderHelper(node->left);
-      						cout << node->data << " ";
-      					inOrderHelper(node->right);
-					}
-				}
+  // Preorder
+  void preOrderHelper(NodePtr node) {
+    if (node != TNULL) {
+      cout << node->data << " ";
+      preOrderHelper(node->left);
+      preOrderHelper(node->right);
+    }
+  }
 
-  				// Post order
-		void	postOrderHelper(NodePtr node)
-				{
-    				if (node != TNULL)
-					{
-      					postOrderHelper(node->left);
-      					postOrderHelper(node->right);
-      					cout << node->data << " ";
-    				}
-  				}
-		NodePtr searchTreeHelper(NodePtr node, T key)
-				{
-    				if (node == TNULL || key == node->data)
-						return node;
-    				if (key < node->data) 
-      					return searchTreeHelper(node->left, key);
-    				return searchTreeHelper(node->right, key);
-  				}
+  // Inorder
+  void inOrderHelper(NodePtr node) {
+    if (node != TNULL) {
+      inOrderHelper(node->left);
+      cout << node->data << " ";
+      inOrderHelper(node->right);
+    }
+  }
 
- 				 // For balancing the tree after deletion
-		void	deleteFix(NodePtr x)
-		{
-    			NodePtr s;
+  // Post order
+  void postOrderHelper(NodePtr node) {
+    if (node != TNULL) {
+      postOrderHelper(node->left);
+      postOrderHelper(node->right);
+      cout << node->data << " ";
+    }
+  }
+
+  NodePtr searchTreeHelper(NodePtr node, int key) {
+    if (node == TNULL || key == node->data) {
+      return node;
+    }
+
+    if (key < node->data) {
+      return searchTreeHelper(node->left, key);
+    }
+    return searchTreeHelper(node->right, key);
+  }
+
+  // For balancing the tree after deletion
+  void deleteFix(NodePtr x) {
+    NodePtr s;
     while (x != root && x->color == 0) {
       if (x == x->parent->left) {
         s = x->parent->right;
@@ -155,7 +148,7 @@ using namespace std;
   }
 
   void rbTransplant(NodePtr u, NodePtr v) {
-    if (u->parent == NULL) {
+    if (u->parent == nullptr) {
       root = v;
     } else if (u == u->parent->left) {
       u->parent->left = v;
@@ -165,7 +158,7 @@ using namespace std;
     v->parent = u->parent;
   }
 
-  void deleteNodeHelper(NodePtr node, T key) {
+  void deleteNodeHelper(NodePtr node, int key) {
     NodePtr z = TNULL;
     NodePtr x, y;
     while (node != TNULL) {
@@ -281,12 +274,13 @@ using namespace std;
 
    public:
   RedBlackTree() {
-    TNULL = new Node;
+    TNULL = new Node<T>;
     TNULL->color = 0;
-    TNULL->left = NULL;
-    TNULL->right = NULL;
+    TNULL->left = nullptr;
+    TNULL->right = nullptr;
     root = TNULL;
   }
+  ~RedBlackTree() {}
 
   void preorder() {
     preOrderHelper(this->root);
@@ -352,7 +346,7 @@ using namespace std;
       y->left->parent = x;
     }
     y->parent = x->parent;
-    if (x->parent == NULL) {
+    if (x->parent == nullptr) {
       this->root = y;
     } else if (x == x->parent->left) {
       x->parent->left = y;
@@ -370,7 +364,7 @@ using namespace std;
       y->right->parent = x;
     }
     y->parent = x->parent;
-    if (x->parent == NULL) {
+    if (x->parent == nullptr) {
       this->root = y;
     } else if (x == x->parent->right) {
       x->parent->right = y;
@@ -382,15 +376,15 @@ using namespace std;
   }
 
   // Inserting a node
-  void insert(T key) {
-    NodePtr node = new Node;
-    node->parent = NULL;
+  void insert(int key) {
+    NodePtr node = new Node<T>;
+    node->parent = nullptr;
     node->data = key;
     node->left = TNULL;
     node->right = TNULL;
     node->color = 1;
 
-    NodePtr y = NULL;
+    NodePtr y = nullptr;
     NodePtr x = this->root;
 
     while (x != TNULL) {
@@ -403,7 +397,7 @@ using namespace std;
     }
 
     node->parent = y;
-    if (y == NULL) {
+    if (y == nullptr) {
       root = node;
     } else if (node->data < y->data) {
       y->left = node;
@@ -411,12 +405,12 @@ using namespace std;
       y->right = node;
     }
 
-    if (node->parent == NULL) {
+    if (node->parent == nullptr) {
       node->color = 0;
       return;
     }
 
-    if (node->parent->parent == NULL) {
+    if (node->parent->parent == nullptr) {
       return;
     }
 
@@ -437,33 +431,5 @@ using namespace std;
     }
   }
 };
-
-int main() {
-  RedBlackTree bst;
-  bst.insert(55);
-  bst.insert(40);
-  bst.insert(65);
-  bst.insert(60);
-  bst.insert(75);
-  bst.insert(57);
-
-  bst.printTree();
-  cout << endl
-     << "After deleting" << endl;
-  bst.deleteNode(40);
-  bst.printTree();
-}
-	template<typename T>
-	class red_black_tree
-	{
-		private :	
-			size_t		color
-			key
-leftChild
-rightChild
-parent (except root node)
-	}
-	
-}
 
 #endif
