@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:26:46 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/28 01:53:47 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/28 21:27:16 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,16 @@
 
 namespace ft {
 								template <typename T>
-	class						bidir_iterator
+	class							bidir_iterator : public std::iterator<std::bidirectional_iterator_tag, T>
 	{
 		public :
 
-    	typedef	typename		iterator_traits<T>::difference_type				difference_type;
-		typedef	typename		iterator_traits<T>::value_type					value_type;
-    	typedef	typename		iterator_traits<T>::pointer						pointer;
-   		typedef	typename		iterator_traits<T>::reference					reference;
-    	typedef	typename		iterator_traits<T>::iterator_category			iterator_category;
+    		typedef	typename		std::iterator<std::bidirectional_iterator_tag, T>::difference_type						difference_type;
+			typedef	typename		std::iterator<std::bidirectional_iterator_tag, T>::value_type							value_type;
+    		typedef	typename		std::iterator<std::bidirectional_iterator_tag, T>::pointer								pointer;
+   			typedef	typename		std::iterator<std::bidirectional_iterator_tag, T>::reference							reference;
+    		typedef	typename		std::iterator<std::bidirectional_iterator_tag, T>::iterator_category					iterator_category;
+	
 	
    
     	protected:

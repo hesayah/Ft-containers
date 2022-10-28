@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/28 02:19:46 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/29 01:06:54 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@
 # include <memory>
 # include "bidir_iterator.hpp"
 # include "reverse_iterator.hpp"
+# include <memory>
+# include <functional>
+# include "pair.hpp"
+# include "bidir_iterator.hpp"
+# include "reverse_iterator.hpp"
 
 namespace ft {
 
@@ -34,6 +39,7 @@ namespace ft {
   			Node 																*left;
   			Node 																*right;
   			int 																color;
+			Node(const T & other) : data(other){}
 		};
 
 		template <class T, class compare, class alloc>
@@ -42,16 +48,17 @@ namespace ft {
 			public :
 				typedef 			T								 			value_type;
 				typedef 			compare										key_compare;
-				typedef				alloc										allocator_type;
-				typedef	typename	allocator_type::reference					reference;
+				typedef typename 	alloc::template rebind<Node<T> >::other		allocator_type;
+				/*typedef	typename	allocator_type::reference				reference;
 				typedef	typename	allocator_type::const_reference				const_reference;
 				typedef	typename	allocator_type::pointer						pointer;
 				typedef	typename	allocator_type::const_pointer				const_pointer;
 				typedef	typename	iterator_traits<pointer>::difference_type	difference_type;
 				typedef				bidir_iterator<value_type>					iterator;
-				typedef				bidir_iterator<const value_type>			const_iterator;
+				typedef				bidir_iterator<const value_type>			const_iterator;*/
 				typedef				size_t										size_type;
-				typedef 			Node<value_type> 							*NodePtr;
+				typedef 			Node<value_type> 							nd;
+				typedef				nd*											NodePtr;
 
     	protected :
 									allocator_type								_alloc;
@@ -295,6 +302,7 @@ namespace ft {
    public:
   RedBlackTree() {
     _TNULL = _alloc.allocate(1);
+	_alloc.construct(_TNULL, 1);
     _TNULL->color = 0;
     _TNULL->left = NULL;
     _TNULL->right = NULL;
@@ -397,6 +405,7 @@ namespace ft {
   // Inserting a node
   void insert(T key) {
     NodePtr node = _alloc.allocate(1);
+	_alloc.construct(node, key);
     node->parent = NULL;
     node->data = key;
     node->left = _TNULL;

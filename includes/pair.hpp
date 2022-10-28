@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:11:02 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/28 02:00:07 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/28 21:53:02 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,16 @@ namespace ft {
 
 			typedef T1 			template_one;
 			typedef T2 			template_two;
+		protected :
 
 			template_one 		_value_one;
 			template_two		_value_two;
 
 		public :
-			pair() : _value_one(), _value_two() {}
-			pair(const T1& x, const T2& y) : _value_one(x), _value_two(y) {}
-			template<class U1, class U2>
-			pair(const pair<U1, U2>& p) : _value_one(p._value_one), _value_two(p._value_two) {}
+
+				pair();	
+				pair(const pair<T1,T2>& pr) {*this = pr;}
+				pair(const template_one& a, const template_two& b) : _value_one(a), _value_two(b) {}
 			~pair() {}
 
 			pair& 				operator=(const pair& other) 
@@ -61,7 +62,7 @@ namespace ft {
 							template<class T1, class T2>
 		bool 				operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs);
 							template<class T1, class T2>
-		pair<T1, T2> 		make_pair(T1 t, T2 u);
+		pair<T1, T2> 		make_pair(T1 x, T2 y) {return (pair<T1,T2>(x,y));}
 }
 
 #endif 

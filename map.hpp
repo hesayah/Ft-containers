@@ -6,16 +6,16 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:10:58 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/28 02:19:42 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/29 00:45:41 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __MAP_HPP__
 # define __MAP_HPP__
 
-# include <functional>
 # include <memory>
-# include "includes/pair.hpp"
+# include <functional>
+# include <bits/stl_pair.h>
 # include "includes/bidir_iterator.hpp"
 # include "includes/red_black_tree.hpp"
 # include "includes/reverse_iterator.hpp"
@@ -23,12 +23,12 @@
 namespace ft {
 
     template <class key, class T, class compare = std::less<key> , class alloc = std::allocator<pair<const key,T> > > 
-    class map : public RedBlackTree<pair<key, T>,compare, alloc>
+    class map
 	{
 		public :
 			typedef 			key											key_type;
 			typedef 			T											mapped_type;
-			typedef 			pair<const key_type, mapped_type>  			value_type;
+			typedef 			std::pair<const key, T>						value_type;
 			typedef 			compare										key_compare;
 			typedef				alloc										allocator_type;
 			typedef	typename	allocator_type::reference					reference;
@@ -39,11 +39,12 @@ namespace ft {
 			typedef				bidir_iterator<value_type>					iterator;
 			typedef				bidir_iterator<const value_type>			const_iterator;		
 			typedef				size_t										size_type;
+			typedef				RedBlackTree<value_type, compare, alloc>*	rbtree;	
 
     	protected :
 								allocator_type								_alloc;
 								size_type									_size;
-								pointer										_base;
+								rbtree										_base;
 		private :
 
 			void				_check_storage_limit(size_type new_cap) const
@@ -100,7 +101,7 @@ namespace ft {
 /** 
 ***								constructors
 **/
-			explicit			map(const alloc& allocator = allocator_type()) :  _alloc(allocator), _size(0) , _base(RedBlackTree())
+			explicit			map(const alloc& allocator = allocator_type()) :  _alloc(allocator), _size(0)
 								{}
 			/*explicit 			map(size_type count, const_reference value = value_type(), const Allocator& alloc = allocator_type()) :  _alloc(alloc),_size(0) , _base(NULL)
 								{
@@ -205,18 +206,19 @@ namespace ft {
 /**
 *** 							Modifiers
 **/
-		pair<iterator,bool> 	insert(const value_type& val)
+							
+		void					insert(const value_type & val)
 		{
-								_base.insert(val);
-								return (val);
+								_base->insert(val);
+								
 		}
 
-		iterator 				insert(iterator position, const value_type& val);
+		/*iterator 				insert(iterator position, const value_type& val);
 								template <class InputIterator> 
 		void 					insert (InputIterator first, InputIterator last);
 		void 					erase(iterator position);
 		size_type				erase(const key_type& k);
-		void					erase(iterator first, iterator last);
+		void					erase(iterator first, iterator last);*/
 		void 					clear()
 								{
 									this->_clear();
