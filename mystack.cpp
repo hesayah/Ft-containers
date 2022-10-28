@@ -1,18 +1,17 @@
-#include "includes/red_black_tree.hpp"
-#include <vector>
+#include "map.hpp"
  
 int main() {
-  RedBlackTree<int> bst;
-  bst.insert(55);
-  bst.insert(40);
-  bst.insert(65);
-  bst.insert(60);
-  bst.insert(75);
-  bst.insert(57);
+ft::map<int, int> bst;
+  bst.insert(55, 55);
+  bst.insert(40, 50);
+  bst.insert(65, 40);
+  bst.insert(60, 97);
+  bst.insert(75, 70);
+  bst.insert(57, 56);
 
-  bst.printTree();
+  /*bst.printTree();
   cout << endl
      << "After deleting" << endl;
   bst.deleteNode(40);
-  bst.printTree();
+  bst.printTree();*/
 }

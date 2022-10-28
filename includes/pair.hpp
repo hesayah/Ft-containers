@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 01:11:02 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/16 16:56:07 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/28 02:00:07 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace ft {
 			template_two		_value_two;
 
 		public :
-			pair() : _value_one(), _value_two {}
+			pair() : _value_one(), _value_two() {}
 			pair(const T1& x, const T2& y) : _value_one(x), _value_two(y) {}
 			template<class U1, class U2>
 			pair(const pair<U1, U2>& p) : _value_one(p._value_one), _value_two(p._value_two) {}
