@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/29 01:06:54 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/29 02:10:39 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ namespace ft {
   			Node 																*right;
   			int 																color;
 			Node(const T & other) : data(other){}
+			std::ostream&  operator<<(std::ostream& out){out << data; return (out);}
 		};
 
 		template <class T, class compare, class alloc>
@@ -67,7 +68,7 @@ namespace ft {
 
 				void 				initializeNULLNode(NodePtr node, NodePtr parent)
 									{
-    									node->data = 0;
+    									//node->data = 0;
     									node->parent = parent;
     									node->left = NULL;
     									node->right = NULL;
@@ -293,7 +294,7 @@ namespace ft {
       }
 
       std::string sColor = _root->color ? "RED" : "BLACK";
-     std::cout << _root->data << "(" << sColor << ")" << std::endl;
+     	std::cout << _root->data << "(" << sColor << ")" << std::endl;
       printHelper(_root->left, indent, false);
       printHelper(_root->right, indent, true);
     }
@@ -302,11 +303,13 @@ namespace ft {
    public:
   RedBlackTree() {
     _TNULL = _alloc.allocate(1);
-	_alloc.construct(_TNULL, 1);
     _TNULL->color = 0;
     _TNULL->left = NULL;
     _TNULL->right = NULL;
     _root = _TNULL;
+  }
+    ~RedBlackTree() {
+		//_alloc.destruct(_TNULL, 1);
   }
 
   void preorder() {
@@ -407,7 +410,6 @@ namespace ft {
     NodePtr node = _alloc.allocate(1);
 	_alloc.construct(node, key);
     node->parent = NULL;
-    node->data = key;
     node->left = _TNULL;
     node->right = _TNULL;
     node->color = 1;
@@ -458,6 +460,7 @@ namespace ft {
       printHelper(this->_root, "", true);
     }
   }
+  friend std::ostream&  operator<<(std::ostream& out, Node<T> & rot){out << rot.data; return (out);}
 };
 
 }

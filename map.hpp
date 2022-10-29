@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:10:58 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/29 00:45:41 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/29 02:04:41 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,22 @@ namespace ft {
 			typedef				bidir_iterator<value_type>					iterator;
 			typedef				bidir_iterator<const value_type>			const_iterator;		
 			typedef				size_t										size_type;
-			typedef				RedBlackTree<value_type, compare, alloc>*	rbtree;	
-
-    	protected :
+			typedef				RedBlackTree<value_type, compare, alloc>	rbtree;
+								class 										value_compare 
+								{
+									protected	:
+  										compare 							_c;
+  										value_compare(compare c) : _c(c) {}
+									public	:
+  										typedef bool						result_type;
+  										typedef value_type 					first_argument_type;
+  										typedef value_type					second_argument_type;
+  										bool 	operator() (const value_type& x, const value_type& y) const
+												{
+    												return _c(x.first, y.first);
+												}
+								};
+		protected :
 								allocator_type								_alloc;
 								size_type									_size;
 								rbtree										_base;
@@ -101,8 +114,7 @@ namespace ft {
 /** 
 ***								constructors
 **/
-			explicit			map(const alloc& allocator = allocator_type()) :  _alloc(allocator), _size(0)
-								{}
+			explicit			map() {}
 			/*explicit 			map(size_type count, const_reference value = value_type(), const Allocator& alloc = allocator_type()) :  _alloc(alloc),_size(0) , _base(NULL)
 								{
 									this->assign(count, value);
@@ -118,8 +130,8 @@ namespace ft {
 								}*/
 			 					~map(void)
 								{
-									this->clear();
-									this->_deallocate();
+									/*this->clear();
+									this->_deallocate();*/
 								}
 /**
 ***								Member functions 
@@ -209,7 +221,8 @@ namespace ft {
 							
 		void					insert(const value_type & val)
 		{
-								_base->insert(val);
+								_base.insert(val);
+								_base.printTree();
 								
 		}
 
