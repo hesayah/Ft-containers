@@ -3,11 +3,11 @@ int main()
 {
 	ft::map<int, int> 	bst;
 	bst.insert(std::pair<int,int>(1,100));
-  	/*bst.insert(40, 50);
-	bst.insert(65, 40);
-	bst.insert(60, 97);
-	bst.insert(75, 70);
-	bst.insert(57, 56);*/
+  	bst.insert(std::pair<int,int>(2,100));
+	bst.insert(std::pair<int,int>(3,100));
+	bst.insert(std::pair<int,int>(6,100));
+	bst.insert(std::pair<int,int>(7,100));
+	bst.insert(std::pair<int,int>(5,100));
 
   /*bst.printTree();
   cout << endl

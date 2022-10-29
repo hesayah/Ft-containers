@@ -6,12 +6,12 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/29 02:10:39 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/29 19:43:52 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __RED_BLACK_TREE_HPP__
-# define __RED_BLACK_TREE_HPP
+# define __RED_BLACK_TREE_HPP__
 
 /**
 *** https://www.geeksforgeeks.org/red-black-tree-set-true-introduction-2/
@@ -40,8 +40,7 @@ namespace ft {
   			Node 																*right;
   			int 																color;
 			Node(const T & other) : data(other){}
-			std::ostream&  operator<<(std::ostream& out){out << data; return (out);}
-		};
+			};
 
 		template <class T, class compare, class alloc>
 		class RedBlackTree 
@@ -50,16 +49,11 @@ namespace ft {
 				typedef 			T								 			value_type;
 				typedef 			compare										key_compare;
 				typedef typename 	alloc::template rebind<Node<T> >::other		allocator_type;
-				/*typedef	typename	allocator_type::reference				reference;
-				typedef	typename	allocator_type::const_reference				const_reference;
-				typedef	typename	allocator_type::pointer						pointer;
-				typedef	typename	allocator_type::const_pointer				const_pointer;
-				typedef	typename	iterator_traits<pointer>::difference_type	difference_type;
 				typedef				bidir_iterator<value_type>					iterator;
-				typedef				bidir_iterator<const value_type>			const_iterator;*/
+				typedef				bidir_iterator<const value_type>			const_iterator;
 				typedef				size_t										size_type;
-				typedef 			Node<value_type> 							nd;
-				typedef				nd*											NodePtr;
+				typedef 			Node<value_type>* 							NodePtr;
+				//typedef				nd*											NodePtr;
 
     	protected :
 									allocator_type								_alloc;
@@ -89,7 +83,7 @@ namespace ft {
   void inOrderHelper(NodePtr node) {
     if (node != _TNULL) {
       inOrderHelper(node->left);
-      std::cout << node->data << " ";
+      std::cout << node->data.first << " ";
       inOrderHelper(node->right);
     }
   }
@@ -99,7 +93,7 @@ namespace ft {
     if (node != _TNULL) {
       postOrderHelper(node->left);
       postOrderHelper(node->right);
-     std::cout << node->data << " ";
+     std::cout << node->data.first << " ";
     }
   }
 
@@ -294,7 +288,7 @@ namespace ft {
       }
 
       std::string sColor = _root->color ? "RED" : "BLACK";
-     	std::cout << _root->data << "(" << sColor << ")" << std::endl;
+     	std::cout << _root->data.first << "(" << sColor << ")" << std::endl;
       printHelper(_root->left, indent, false);
       printHelper(_root->right, indent, true);
     }
