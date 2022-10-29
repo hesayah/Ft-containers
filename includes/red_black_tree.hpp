@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/29 19:43:52 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/29 23:48:48 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,7 @@
 
 # include <iostream>
 # include <memory>
-# include "bidir_iterator.hpp"
-# include "reverse_iterator.hpp"
-# include <memory>
 # include <functional>
-# include "pair.hpp"
 # include "bidir_iterator.hpp"
 # include "reverse_iterator.hpp"
 
@@ -40,7 +36,7 @@ namespace ft {
   			Node 																*right;
   			int 																color;
 			Node(const T & other) : data(other){}
-			};
+		};
 
 		template <class T, class compare, class alloc>
 		class RedBlackTree 
@@ -49,25 +45,25 @@ namespace ft {
 				typedef 			T								 			value_type;
 				typedef 			compare										key_compare;
 				typedef typename 	alloc::template rebind<Node<T> >::other		allocator_type;
-				typedef				bidir_iterator<value_type>					iterator;
-				typedef				bidir_iterator<const value_type>			const_iterator;
 				typedef				size_t										size_type;
 				typedef 			Node<value_type>* 							NodePtr;
-				//typedef				nd*											NodePtr;
+				typedef				bidir_iterator<NodePtr>						iterator;
+				typedef				bidir_iterator<const NodePtr>				const_iterator;
 
-    	protected :
+    	/*protected :*/
 									allocator_type								_alloc;
+									size_type									_size;
   									NodePtr										_root;
   									NodePtr 									_TNULL;
 
-				void 				initializeNULLNode(NodePtr node, NodePtr parent)
+				/*void 				initializeNULLNode(NodePtr node, NodePtr parent)
 									{
     									//node->data = 0;
     									node->parent = parent;
     									node->left = NULL;
     									node->right = NULL;
     									node->color = 0;
-  									}
+  									}*/
   // Preorder
 				void				preOrderHelper(NodePtr node)
 									{
@@ -170,7 +166,7 @@ namespace ft {
   }
 
   void rbTransplant(NodePtr u, NodePtr v) {
-    if (u->parent == nullptr) {
+    if (u->parent == NULL) {
       _root = v;
     } else if (u == u->parent->left) {
       u->parent->left = v;
@@ -370,7 +366,7 @@ namespace ft {
       y->left->parent = x;
     }
     y->parent = x->parent;
-    if (x->parent == nullptr) {
+    if (x->parent == NULL) {
       this->_root = y;
     } else if (x == x->parent->left) {
       x->parent->left = y;
@@ -388,7 +384,7 @@ namespace ft {
       y->right->parent = x;
     }
     y->parent = x->parent;
-    if (x->parent == nullptr) {
+    if (x->parent == NULL) {
       this->_root = y;
     } else if (x == x->parent->right) {
       x->parent->right = y;
@@ -408,7 +404,7 @@ namespace ft {
     node->right = _TNULL;
     node->color = 1;
 
-    NodePtr y = nullptr;
+    NodePtr y = NULL;
     NodePtr x = this->_root;
 
     while (x != _TNULL) {
@@ -421,7 +417,7 @@ namespace ft {
     }
 
     node->parent = y;
-    if (y == nullptr) {
+    if (y == NULL) {
       _root = node;
     } else if (node->data < y->data) {
       y->left = node;
@@ -429,12 +425,12 @@ namespace ft {
       y->right = node;
     }
 
-    if (node->parent == nullptr) {
+    if (node->parent == NULL) {
       node->color = 0;
       return;
     }
 
-    if (node->parent->parent == nullptr) {
+    if (node->parent->parent == NULL) {
       return;
     }
 
@@ -454,7 +450,6 @@ namespace ft {
       printHelper(this->_root, "", true);
     }
   }
-  friend std::ostream&  operator<<(std::ostream& out, Node<T> & rot){out << rot.data; return (out);}
 };
 
 }

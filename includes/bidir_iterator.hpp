@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:26:46 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/28 21:27:16 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/29 23:38:41 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "iterator_traits.hpp"
 
 namespace ft {
-								template <typename T>
+									template <typename T>
 	class							bidir_iterator : public std::iterator<std::bidirectional_iterator_tag, T>
 	{
 		public :

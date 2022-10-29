@@ -9,8 +9,8 @@ int main()
 	bst.insert(std::pair<int,int>(7,100));
 	bst.insert(std::pair<int,int>(5,100));
 
-  /*bst.printTree();
-  cout << endl
+  	bst.printTree();
+  /*cout << endl
      << "After deleting" << endl;
   bst.deleteNode(40);
   bst.printTree();*/

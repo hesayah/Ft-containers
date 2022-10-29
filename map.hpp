@@ -6,73 +6,71 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:10:58 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/29 19:39:02 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/29 23:48:07 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __MAP_HPP__
 # define __MAP_HPP__
 
-# include <memory>
-# include <functional>
-# include <bits/stl_pair.h>
-# include "includes/bidir_iterator.hpp"
-# include "includes/red_black_tree.hpp"
+# include "includes/pair.hpp"
 # include "includes/reverse_iterator.hpp"
+# include "includes/red_black_tree.hpp"
 
 namespace ft {
 
-    template <class key, class T, class compare = std::less<key> , class alloc = std::allocator<pair<const key,T> > > 
-    class map
+    							template <class key, class T, class compare = std::less<key> , class alloc = std::allocator<pair<const key,T> > > 
+    class 						map
 	{
 		public :
-			typedef 			key											key_type;
-			typedef 			T											mapped_type;
-			typedef 			std::pair<const key, T>						value_type;
-			typedef 			compare										key_compare;
-			typedef				alloc										allocator_type;
-			typedef	typename	allocator_type::reference					reference;
-			typedef	typename	allocator_type::const_reference				const_reference;
-			typedef	typename	allocator_type::pointer						pointer;
-			typedef	typename	allocator_type::const_pointer				const_pointer;
-			typedef	typename	iterator_traits<pointer>::difference_type	difference_type;
-			typedef				bidir_iterator<value_type>					iterator;
-			typedef				bidir_iterator<const value_type>			const_iterator;		
-			typedef				size_t										size_type;
-			typedef				RedBlackTree<value_type, compare, alloc>	rbtree;
-								class 										value_compare 
-								{
-									protected	:
-  										compare 							_c;
-  										value_compare(compare c) : _c(c) {}
-									public	:
-  										typedef bool						result_type;
-  										typedef value_type 					first_argument_type;
-  										typedef value_type					second_argument_type;
-  										bool 	operator() (const value_type& x, const value_type& y) const
-												{
-    												return _c(x.first, y.first);
-												}
-								};
+			typedef 			std::pair<const key, T>										value_type;
+			class 				value_compare 
+				{
+					protected	:
+								compare 													_c;
+								value_compare(compare c) : _c(c) {}
+					public	:
+						typedef bool														result_type;
+						typedef value_type													first_argument_type;
+						typedef value_type													second_argument_type;
+						bool																operator() (const value_type& x, const value_type& y) const
+																							{
+																								return _c(x.first, y.first);
+																							}
+				};
+			typedef 			key															key_type;
+			typedef 			T															mapped_type;
+			typedef 			compare														key_compare;
+			typedef				alloc														allocator_type;
+			typedef	typename	allocator_type::reference									reference;
+			typedef	typename	allocator_type::const_reference								const_reference;
+			typedef	typename	allocator_type::pointer										pointer;
+			typedef	typename	allocator_type::const_pointer								const_pointer;
+			typedef	typename	iterator_traits<pointer>::difference_type					difference_type;
+			typedef				RedBlackTree<value_type, compare, alloc>					rbtree;
+			typedef	typename	rbtree::iterator											iterator;
+			typedef	typename	rbtree::const_iterator										const_iterator;
+			typedef				reverse_iterator<pointer>									const_reverse_iterator;
+			typedef				reverse_iterator<pointer>									reverse_iterator;
+			typedef				size_t														size_type;
+			typedef				RedBlackTree<value_type, compare, alloc>					rbtree;
 		protected :
-								allocator_type								_alloc;
-								size_type									_size;
-								rbtree										_base;
+								rbtree														_base;
 		private :
 
-			void				_check_storage_limit(size_type new_cap) const
+		/*	void				_check_storage_limit(size_type new_cap) const
 								{
 									if (new_cap > this->max_size())
 										throw std::length_error("map::reserve");
 								}
-
+		*/
 			void				_check_range_limit(size_type pos) const
 								{
 									if (pos >= this->_size)
 										throw std::out_of_range("pos out of range !");
 								}
 
-								template <typename InputIt>
+		/*						template <typename InputIt>
 			difference_type		_distance(InputIt first, InputIt last)
 								{
 									InputIt					tmp_it;
@@ -84,32 +82,7 @@ namespace ft {
 										n++;
 									return (n);
 								}
-			void				_allocate(size_type new_cap)
-								{
-										try {
-											this->_base = this->_alloc.allocate(new_cap);
-										}
-    									catch (const std::bad_alloc& e) {  
-											std::cout <<  e.what();
-										}
-									this->_capacity = new_cap;
-								}
-			void				_deallocate(void)
-								{
-									/*if (this->_capacity && this->_base)
-										this->_alloc.deallocate(this->_base, this->_capacity);
-									this->_capacity = 0;
-									this->_base = NULL;*/
-								}
-			void				_clear(void)
-								{
-									/*if (this->_size)
-									{
-										for (size_type i = 0; i < this->_size; i++)
-											this->_alloc.destroy(this->_base + i);
-										this->_size = 0;
-									}*/
-								}
+		*/
 			public :
 /** 
 ***								constructors
@@ -136,34 +109,32 @@ namespace ft {
 /**
 ***								Member functions 
 **/
- 		map	& 					operator=(const map& other)
+ 		/*map	& 					operator=(const map& other)
 								{
-									if (this != &other)
-										this->assign(other.begin(), other.end());
-									return (*this);
-								}								
+
+								}							*/	
  		allocator_type 			get_allocator() const
 								{
-									return (this->_alloc);
+									return (this->_base._alloc);
 								}
 /**
 *** 							Iterators
 **/
  		iterator				begin()
 								{
-									return (this->_base);
+									return (this->_base._TNULL);
 								}
  		const_iterator			begin() const
 								{
-									return (this->_base);
+									return (this->_base._TNULL);
 								}
 		iterator				end()
 								{
-									return (this->_base + this->_size);
+									return (this->_base._TNULL + this->_base._size);
 								}
 		const_iterator			end() const 
 								{
-									return (this->_base + this->_size);
+									return (this->_base._TNULL + this->_base._size);
 								}
 		/*reverse_iterator		rbegin()
 								{
@@ -187,17 +158,17 @@ namespace ft {
 								}
  		size_type 				size() const 
 								{
-									return (this->_size);
+									return (this->_base._size);
 								}
  		size_type 				max_size() const 
 								{
-									return (this->_alloc.max_size());
+									return (_base._alloc.max_size());
 								}
 /**
 *** Element access
 **/
 
-		reference 				operator[] (size_type n)
+		/*reference 				operator[] (size_type n)
 								{
 									return (this->_base[n]);
 								}
@@ -214,6 +185,10 @@ namespace ft {
 								{
 									this->_check_range_limit(n);
 									return (this->_base[n]);
+								}*/
+		void					printTree()
+								{
+									_base.printTree();
 								}
 /**
 *** 							Modifiers
@@ -221,9 +196,7 @@ namespace ft {
 							
 		void					insert(const value_type & val)
 		{
-								_base.insert(val);
-								_base.printTree();
-								
+								_base.insert(val);			
 		}
 
 		/*iterator 				insert(iterator position, const value_type& val);
@@ -234,26 +207,11 @@ namespace ft {
 		void					erase(iterator first, iterator last);*/
 		void 					clear()
 								{
-									this->_clear();
+									//this->_base._clear();
 								}
-		void 					swap(map	& other)
-								{
-									allocator_type	allo;
-									size_type		size;
-									pointer			ptr;
-
-									allo = this->_alloc;
-									this->_alloc = other._alloc;
-									other._alloc = allo;
-
-									size = this->_size;
-									this->_size = other._size;
-									other._size = size;
-
-									ptr = this->_base;
-									this->_base = other._base;
-									other._base = ptr;
-								}
+		//void 					swap(map	& other)
+		//						{
+		//						}
 		/*iterator 				erase(iterator pos)
 								{
 									pointer tmp = pos;
@@ -279,15 +237,18 @@ namespace ft {
 /**
 *** 							Observe
 **/
-		/*key_compare 						key_comp() const;
-		value_compare 						value_comp() const;*/
+		key_compare 						key_comp() const;
+		value_compare 						value_comp() const;
 /**
 *** 							Operations
 **/
-    	iterator							find(const key_type& k);const_iterator find (const key_type& k) const;
+    	iterator							find(const key_type& k);
+		const_iterator						find (const key_type& k) const;
 		size_type							count(const key_type& k) const;
-		iterator							lower_bound(const key_type& k);const_iterator lower_bound (const key_type& k) const;
-		iterator							upper_bound(const key_type& k);const_iterator upper_bound (const key_type& k) const;
+		iterator							lower_bound(const key_type& k);
+		const_iterator 						lower_bound (const key_type& k) const;
+		iterator							upper_bound(const key_type& k);
+		const_iterator 						upper_bound (const key_type& k) const;
 		pair<const_iterator,const_iterator> equal_range(const key_type& k) const;
 		pair<iterator,iterator>             equal_range(const key_type& k);
 	};
