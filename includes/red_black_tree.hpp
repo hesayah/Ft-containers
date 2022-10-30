@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/30 02:09:21 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/30 18:24:52 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ namespace ft {
 				typedef typename 	alloc::template rebind<Node<T> >::other		allocator_type;
 				typedef				size_t										size_type;
 				typedef 			Node<value_type>* 							NodePtr;
-				typedef				rbtree_iterator<NodePtr>						iterator;
+				typedef				rbtree_iterator<NodePtr>					iterator;
 				typedef				rbtree_iterator<const NodePtr>				const_iterator;
 
     	/*protected :*/
