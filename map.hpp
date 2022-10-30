@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:10:58 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/29 23:48:07 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/30 02:59:12 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,8 @@ namespace ft {
 			typedef	typename	allocator_type::pointer										pointer;
 			typedef	typename	allocator_type::const_pointer								const_pointer;
 			typedef	typename	iterator_traits<pointer>::difference_type					difference_type;
-			typedef				RedBlackTree<value_type, compare, alloc>					rbtree;
-			typedef	typename	rbtree::iterator											iterator;
-			typedef	typename	rbtree::const_iterator										const_iterator;
-			typedef				reverse_iterator<pointer>									const_reverse_iterator;
-			typedef				reverse_iterator<pointer>									reverse_iterator;
+			typedef	typename	RedBlackTree<value_type, compare, alloc>::iterator			iterator;
+			typedef	typename	RedBlackTree<value_type, compare, alloc>::const_iterator	const_iterator;
 			typedef				size_t														size_type;
 			typedef				RedBlackTree<value_type, compare, alloc>					rbtree;
 		protected :
@@ -152,9 +149,9 @@ namespace ft {
 								{
 									return (const_reverse_iterator(begin()));
 								}*/
- 		bool 					empty() const 
+ 		bool 					empty() const
 								{
-									return (begin() == end());
+									//return (begin() == end());
 								}
  		size_type 				size() const 
 								{

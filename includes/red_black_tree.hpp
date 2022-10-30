@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/29 23:48:48 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/10/30 02:09:21 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <iostream>
 # include <memory>
 # include <functional>
-# include "bidir_iterator.hpp"
+# include "rbtree_iterator.hpp"
 # include "reverse_iterator.hpp"
 
 namespace ft {
@@ -47,8 +47,8 @@ namespace ft {
 				typedef typename 	alloc::template rebind<Node<T> >::other		allocator_type;
 				typedef				size_t										size_type;
 				typedef 			Node<value_type>* 							NodePtr;
-				typedef				bidir_iterator<NodePtr>						iterator;
-				typedef				bidir_iterator<const NodePtr>				const_iterator;
+				typedef				rbtree_iterator<NodePtr>						iterator;
+				typedef				rbtree_iterator<const NodePtr>				const_iterator;
 
     	/*protected :*/
 									allocator_type								_alloc;
@@ -93,14 +93,12 @@ namespace ft {
     }
   }
 
-  NodePtr searchTreeHelper(NodePtr node, int key) {
-    if (node == _TNULL || key == node->data) {
+  NodePtr searchTreeHelper(NodePtr node, int key) 
+  {
+    if (node == _TNULL || key == node->data)
       return node;
-    }
-
-    if (key < node->data) {
+    if (key < node->data)
       return searchTreeHelper(node->left, key);
-    }
     return searchTreeHelper(node->right, key);
   }
 
@@ -272,6 +270,16 @@ namespace ft {
     _root->color = 0;
   }
 
+    void clear(NodePtr _root) {
+    if (_root != _TNULL) 
+	{
+      	clear(_root->left);
+     	clear(_root->right);
+	  	_alloc.destroy(_root);
+		_alloc.deallocate(_root, 1);
+    }
+	}
+
   void printHelper(NodePtr _root, std::string indent, bool last) {
     if (_root != _TNULL) {
      std::cout << indent;
@@ -299,48 +307,54 @@ namespace ft {
     _root = _TNULL;
   }
     ~RedBlackTree() {
-		//_alloc.destruct(_TNULL, 1);
+		clear(_root);
+		_alloc.destroy(_TNULL);
+		_alloc.deallocate(_TNULL, 1);
   }
 
-  void preorder() {
+  void preorder()
+  {
     preOrderHelper(this->_root);
   }
 
-  void inorder() {
+  void inorder()
+  {
     inOrderHelper(this->_root);
   }
 
-  void postorder() {
+  void postorder()
+  {
     postOrderHelper(this->_root);
   }
 
-  NodePtr searchTree(T k) {
+  NodePtr searchTree(T k) 
+  {
     return searchTreeHelper(this->_root, k);
   }
 
-  NodePtr minimum(NodePtr node) {
-    while (node->left != _TNULL) {
+  NodePtr minimum(NodePtr node) 
+  {
+    while (node->left != _TNULL)
       node = node->left;
-    }
     return node;
   }
 
-  NodePtr maximum(NodePtr node) {
-    while (node->right != _TNULL) {
+  NodePtr maximum(NodePtr node) 
+  {
+    while (node->right != _TNULL)
       node = node->right;
-    }
     return node;
   }
 
-  NodePtr successor(NodePtr x) {
-    if (x->right != _TNULL) {
+  NodePtr successor(NodePtr x)
+  {
+    if (x->right != _TNULL) 
       return minimum(x->right);
-    }
-
     NodePtr y = x->parent;
-    while (y != _TNULL && x == y->right) {
-      x = y;
-      y = y->parent;
+    while (y != _TNULL && x == y->right) 
+	{
+      	x = y;
+      	y = y->parent;
     }
     return y;
   }
