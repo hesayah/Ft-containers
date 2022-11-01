@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rbtree_iterator.hpp                                :+:      :+:    :+:   */
+/*   rbt_iterator.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -16,101 +16,108 @@
 # include "iterator_traits.hpp"
 
 namespace ft {
-									template <typename T>
-	class							rbtree_iterator : public std::iterator<std::bidirectional_iterator_tag, T>
+									template <typename T, typename Node>
+	class							rbt_iterator : public std::iterator<std::bidirectional_iterator_tag, T>
 	{
-		public :
+		public	:
 			typedef	typename		std::iterator<std::bidirectional_iterator_tag, T>::difference_type						difference_type;
 			typedef	typename		std::iterator<std::bidirectional_iterator_tag, T>::value_type							value_type;
     		typedef	typename		std::iterator<std::bidirectional_iterator_tag, T>::pointer								pointer;
    			typedef	typename		std::iterator<std::bidirectional_iterator_tag, T>::reference							reference;
     		typedef	typename		std::iterator<std::bidirectional_iterator_tag, T>::iterator_category					iterator_category;
-	
-	
-   
-    	protected:
-      							T*												_ptr;
-		public :
-								rbtree_iterator() :_ptr(T()) {}
-								rbtree_iterator(const value_type & iter) : _ptr(iter) {}
-    							rbtree_iterator(const rbtree_iterator & other) : _ptr(other._ptr) {}
-								~rbtree_iterator() {}
+			typedef					Node*																					NodePtr;
+    	protected	:
+      								NodePtr												_base;
+									NodePtr												_TNULL;
+									NodePtr												_root;
 
-			rbtree_iterator &	operator=(const rbtree_iterator & other) 
-								{
-									this->_ptr = other._ptr;
-									return (*this);
-								}
-			pointer				base() const 
-								{
-									return (_ptr);
-								}			
-			reference 			operator*() const 
-								{
-									return (*this->_ptr);
-								}
-			pointer 			operator->() 
-								{
-
-									return (this->_ptr);
-								}
-			reference			operator[](difference_type diff) const 
-								{
-									
-									return (*(this->_ptr + diff));
-								}
-			rbtree_iterator	& 	operator++(void)
-								{
-									this->_ptr.successor();
-									return (*this);
-								}
-			rbtree_iterator		operator++(int)
-								{
-									this->_ptr.successor();
-									return (*this);
-								}										
-			rbtree_iterator	& 	operator--(void) 
-								{
-									this->_ptr.predecessor();
-									return (*this);
-								}
-			rbtree_iterator		operator--(int) 
-								{
-									this->_ptr.predecessor();
-									return (*this);
-								}
-			
+			NodePtr 				minimum(NodePtr node) 
+  									{
+    									while (node->left != _TNULL)
+      										node = node->left;
+    									return node;
+									}
+ 			NodePtr 				maximum(NodePtr node) 
+  									{
+										while (node->right != _TNULL)
+											node = node->right;
+										return node;
+									}
+			NodePtr					successor(NodePtr x)
+									{
+										if (x->right != _TNULL) 
+											return minimum(x->right);
+										NodePtr y = x->parent;
+										while (y != _TNULL && x == y->right) 
+										{
+											x = y;
+											y = y->parent;
+										}
+										return y;
+									}
+			NodePtr					predecessor(NodePtr x)
+									{
+										if (x->left != _TNULL) 
+											return maximum(x->left);
+										NodePtr y = x->parent;
+										while (y != _TNULL && x == y->left)
+										{
+											x = y;
+											y = y->parent;
+										}
+   										return y;
+									}
+		public	:
+									rbt_iterator() : _base(NULL), _TNULL(NULL), _root(NULL) {}
+									rbt_iterator(const NodePtr & base, const NodePtr & TNULL, const NodePtr & root) : _base(base), _TNULL(TNULL), _root(root) {}
+									rbt_iterator(const rbt_iterator<const T, Node> & other) : _base(other._base), _TNULL(other._TNULL), _root(other._root) {}
+									~rbt_iterator() {}
+  			operator 				rbt_iterator<const value_type, Node>() const {return rbt_iterator<const value_type, Node>(_base, _TNULL, _root);}
+			rbt_iterator<T, Node> &	operator=(const rbt_iterator & other) 
+									{
+										_base = other._base;
+										_TNULL = other._TNULL;
+										_root = other._root;
+										return (*this);
+									}
+			reference 				operator*() const {return ((this->_base->data));}
+			pointer 				operator->() const {return (&(this->_base->data));}
+			reference				operator[](difference_type diff) const {return (*(this->_base + diff));}
+			rbt_iterator 			operator++(int) {return (*(this)++);}
+			rbt_iterator 			operator--(int) {return (*(this)--);}								
+			rbt_iterator	& 		operator--(void) 
+									{
+										predecessor(_base);
+										return (*this);
+									}
+			rbt_iterator	& 		operator++(void)
+									{
+										successor(_base);
+										return (*this);
+									}
+			rbt_iterator			operator+(difference_type diff) const {return (_base + diff);}
+			rbt_iterator 			operator-(difference_type diff) const {return (_base - diff);}
+			rbt_iterator	& 		operator+=(difference_type diff) 
+									{
+										this->_base = _base + diff;
+										return (*this);
+									}
+			rbt_iterator	& 		operator-=(difference_type diff)
+									{
+										this->_base = _base - diff;
+										return (*this);
+									}
+	friend	rbt_iterator<T, Node>	operator+(difference_type diff, rbt_iterator<T, Node> x) {return (x += diff);}
+	friend	rbt_iterator<T, Node>	operator-(difference_type diff, rbt_iterator<T, Node> x) {return (x -= diff);}
+	friend	difference_type			operator+(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base + rhs._base);}
+	friend	difference_type			operator-(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base - rhs._base);}
+	friend	bool					operator==(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base == rhs._base);}
+	friend	bool					operator!=(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base != rhs._base);}
+	friend	bool					operator<(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base < rhs._base);}
+	friend	bool					operator<=(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base <= rhs._base);}
+	friend	bool					operator>(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base > rhs._base);}
+	friend	bool					operator>=(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base >= rhs._base);}
 	};
-						template<class X, class Y>
-	bool				operator==(const rbtree_iterator<X> & lhs, const rbtree_iterator<Y> & other)
-						{
-							return (lhs.base() == other.base());
-						}
-						template<class X, class Y>
-	bool				operator!=(const rbtree_iterator<X> & lhs, const rbtree_iterator<Y> & other)
-						{
-							return (!(lhs.base() == other.base()));
-						}
-						template<class X, class Y>
-	bool 				operator>(const rbtree_iterator<X> & lhs, const rbtree_iterator<Y> & other)
-						{
-							return (lhs.base() > other.base());
-						}
-						template<class X, class Y>
-	bool 				operator<(const rbtree_iterator<X> & lhs, const rbtree_iterator<Y> & other)
-						{
-							return (lhs.base() < other.base());
-						}
-						template<class X, class Y>
-	bool 				operator>=(const rbtree_iterator<X> & lhs, const rbtree_iterator<Y> & other)
-						{
-							return (lhs.base() >= other.base());
-						}
-						template<class X, class Y>
-	bool 				operator<=(const rbtree_iterator<X> & lhs, const rbtree_iterator<Y> & other)
-						{
-							return (lhs.base() <= other.base());
-						}
 }
 
 #endif

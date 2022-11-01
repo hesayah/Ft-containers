@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/10/30 18:24:52 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/01 05:31:54 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,10 @@ namespace ft {
 				typedef 			compare										key_compare;
 				typedef typename 	alloc::template rebind<Node<T> >::other		allocator_type;
 				typedef				size_t										size_type;
-				typedef 			Node<value_type>* 							NodePtr;
-				typedef				rbtree_iterator<NodePtr>					iterator;
-				typedef				rbtree_iterator<const NodePtr>				const_iterator;
+				typedef				Node<value_type>							Nd;
+				typedef 			Nd* 										NodePtr;
+				typedef				rbt_iterator<value_type, Nd>				iterator;
+				typedef				rbt_iterator<const NodePtr,const Nd>		const_iterator;
 
     	/*protected :*/
 									allocator_type								_alloc;
@@ -74,10 +75,40 @@ namespace ft {
 											preOrderHelper(node->right);
 										}
 									}
+		NodePtr 				minimum(NodePtr node) 
+  									{
+    									while (node->left != _TNULL)
+      										node = node->left;
+    									return node;
+									}
+ 		NodePtr 				maximum(NodePtr node) 
+  									{
+										while (node->right != _TNULL)
+											node = node->right;
+										return node;
+									}
 
+ 		iterator				begin()
+								{ 
+									return iterator(minimum(this->_root), this->_root, this->_TNULL);
+								}
+ 		const_iterator			begin() const
+								{
+									return iterator(minimum(this->_root), this->_root, this->_TNULL);
+								}
+		iterator				end()
+								{
+									return iterator(_TNULL, this->_root, this->_TNULL);
+								}
+		const_iterator			end() const 
+								{
+									return iterator(_TNULL, this->_root, this->_TNULL);
+								}
   // Inorder
-  void inOrderHelper(NodePtr node) {
-    if (node != _TNULL) {
+  void inOrderHelper(NodePtr node)
+  {
+    if (node != _TNULL)
+	{
       inOrderHelper(node->left);
       std::cout << node->data.first << " ";
       inOrderHelper(node->right);
@@ -219,10 +250,11 @@ namespace ft {
       y->left->parent = y;
       y->color = z->color;
     }
-    delete z;
-    if (y_original_color == 0) {
+    _alloc.destroy(z);
+	_alloc.deallocate(z, 1);
+    if (y_original_color == 0) 
       deleteFix(x);
-    }
+	_size--;
   }
 
   // For balancing the tree after insertion
@@ -307,8 +339,9 @@ namespace ft {
     _root = _TNULL;
   }
     ~RedBlackTree() {
-		clear(_root);
-		_alloc.destroy(_TNULL);
+		if (_size)
+			clear(_root);
+		//_alloc.destroy(_TNULL);
 		_alloc.deallocate(_TNULL, 1);
   }
 
@@ -330,47 +363,6 @@ namespace ft {
   NodePtr searchTree(T k) 
   {
     return searchTreeHelper(this->_root, k);
-  }
-
-  NodePtr minimum(NodePtr node) 
-  {
-    while (node->left != _TNULL)
-      node = node->left;
-    return node;
-  }
-
-  NodePtr maximum(NodePtr node) 
-  {
-    while (node->right != _TNULL)
-      node = node->right;
-    return node;
-  }
-
-  NodePtr successor(NodePtr x)
-  {
-    if (x->right != _TNULL) 
-      return minimum(x->right);
-    NodePtr y = x->parent;
-    while (y != _TNULL && x == y->right) 
-	{
-      	x = y;
-      	y = y->parent;
-    }
-    return y;
-  }
-
-  NodePtr predecessor(NodePtr x) {
-    if (x->left != _TNULL) {
-      return maximum(x->left);
-    }
-
-    NodePtr y = x->parent;
-    while (y != _TNULL && x == y->left) {
-      x = y;
-      y = y->parent;
-    }
-
-    return y;
   }
 
   void leftRotate(NodePtr x) {
@@ -413,6 +405,7 @@ namespace ft {
   void insert(T key) {
     NodePtr node = _alloc.allocate(1);
 	_alloc.construct(node, key);
+	_size++;
     node->parent = NULL;
     node->left = _TNULL;
     node->right = _TNULL;
