@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/01 05:31:54 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/03 08:04:59 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ namespace ft {
 				typedef				rbt_iterator<const NodePtr,const Nd>		const_iterator;
 
     	/*protected :*/
+									compare 									_cmp;
 									allocator_type								_alloc;
 									size_type									_size;
   									NodePtr										_root;
@@ -301,7 +302,6 @@ namespace ft {
     }
     _root->color = 0;
   }
-
     void clear(NodePtr _root) {
     if (_root != _TNULL) 
 	{
@@ -331,7 +331,7 @@ namespace ft {
   }
 
    public:
-  RedBlackTree() {
+  RedBlackTree(compare c = compare(), allocator_type alloca = allocator_type()) : _cmp(c), _alloc(alloca), _size(0) {
     _TNULL = _alloc.allocate(1);
     _TNULL->color = 0;
     _TNULL->left = NULL;

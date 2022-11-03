@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:10:58 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/01 05:48:25 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/03 08:06:04 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,18 @@
 # include "includes/pair.hpp"
 # include "includes/enable_if.hpp"
 # include "includes/is_integral.hpp"
+# include "includes/equal.hpp"
 # include "includes/lexicographical_compare.hpp"
 # include "includes/reverse_iterator.hpp"
 # include "includes/red_black_tree.hpp"
 
 namespace ft {
 
-    							template <class Key, class T, class compare = std::less<Key> , class Allocator = std::allocator<pair<const Key,T> > > 
+    							template <class Key, class T, class compare = std::less<Key> , class Allocator = std::allocator<std::pair<const Key,T> > > 
     class 						map
 	{
 		public :
-			typedef 			pair<const Key, T>											value_type;
+			typedef 			std::pair<const Key, T>											value_type;
 			class 				value_compare 
 				{
 					protected	:
@@ -56,21 +57,18 @@ namespace ft {
 			typedef				RedBlackTree<value_type, compare, Allocator>				rbtree;
 		protected :
 								rbtree														_NodeBase;
+								allocator_type												_alloc;
+								key_compare													_comp;
+								size_type													_size;
 		private :
 
-		/*	void				_check_storage_limit(size_type new_cap) const
-								{
-									if (new_cap > this->max_size())
-										throw std::length_error("map::reserve");
-								}
-		*/
 			void				_check_range_limit(size_type pos) const
 								{
 									if (pos >= this->_size)
 										throw std::out_of_range("pos out of range !");
 								}
 
-		/*						template <typename InputIt>
+								template <typename InputIt>
 			difference_type		_distance(InputIt first, InputIt last)
 								{
 									InputIt					tmp_it;
@@ -82,17 +80,16 @@ namespace ft {
 										n++;
 									return (n);
 								}
-		*/
 			public :
 /** 
 ***								constructors
 **/
-			explicit			map() {}
+			explicit			map() : _alloc(allocator_type()), _comp(key_compare()), _size(0) {}
+			explicit 			map(const compare& comp, const Allocator& alloc = Allocator()) : _alloc(alloc), _comp(comp), _size(0) {}
 								template <typename InputIt>
-								map(InputIt first, typename enable_if<!is_integral<InputIt>::value, InputIt>::type last)
+								map(InputIt first, typename enable_if<!is_integral<InputIt>::value, InputIt>::type last, const compare& comp = compare(), const Allocator& alloc = Allocator()) : _alloc(alloc), _comp(comp), _size(0)
 								{
-									(void)first, (void)last;
-									//assign(first, last);
+									insert(first, last);
 								}
 								map(const map& other)
 								{
@@ -100,19 +97,20 @@ namespace ft {
 								}
 			 					~map(void)
 								{
-									/*this->clear();
-									this->_deallocate();*/
 								}
 /**
 ***								Member functions 
 **/
- 		/*map	& 					operator=(const map& other)
+ 		map	& 					operator=(const map& other)
 								{
-
-								}							*/	
+									_comp = other._comp;
+									_size = other._size;
+									_alloc = other._alloc;
+									return (*this);
+								}							
  		allocator_type 			get_allocator() const
 								{
-									return (this->_NodeBase._alloc);
+									return (this->_alloc);
 								}
 /**
 *** 							Iterators
@@ -155,17 +153,17 @@ namespace ft {
 								}
  		size_type 				size() const 
 								{
-									return (this->_NodeBase._size);
+									return (this->_size);
 								}
  		size_type 				max_size() const 
 								{
-									return (_NodeBase._alloc.max_size());
+									return (_alloc.max_size());
 								}
 /**
 *** Element access
 **/
 
-		/*reference 				operator[] (size_type n)
+		reference 				operator[] (size_type n)
 								{
 									return (this->_NodeBase[n]);
 								}
@@ -182,7 +180,7 @@ namespace ft {
 								{
 									this->_check_range_limit(n);
 									return (this->_NodeBase[n]);
-								}*/
+								}
 		void					printTree()
 								{
 									_NodeBase.printTree();
@@ -191,51 +189,34 @@ namespace ft {
 *** 							Modifiers
 **/
 							
-		void					insert(const value_type & val)
+		void					insert(const value_type& val)
 		{
-								_NodeBase.insert(val);			
+								_NodeBase.insert(val);
+								_size++;
+								//return (std::pair<iterator, bool>);
 		}
 
-		/*iterator 				insert(iterator position, const value_type& val);
 								template <class InputIterator> 
-		void 					insert (InputIterator first, InputIterator last);
-		void 					erase(iterator position);
+		void 					insert (InputIterator first, InputIterator last)
+								{
+									for (; first != last; ++first)
+										insert(*first);
+								}
+		/*void 					erase(iterator position);
 		size_type				erase(const key_type& k);
 		void					erase(iterator first, iterator last);*/
 		void 					clear()
 								{
-									//this->_NodeBase._clear();
+									this->_NodeBase._clear();
 								}
 		//void 					swap(map	& other)
 		//						{
 		//						}
-		/*iterator 				erase(iterator pos)
-								{
-									pointer tmp = pos;
-
-									for (;tmp != this->_NodeBase + _size - 1; tmp++)
-										*tmp = *(tmp + 1);
-									resize(this->_size - 1);
-									return (pos);
-								}
-		iterator 				erase(iterator first, iterator last)
-								{
-									map tmp(begin(), first);
-									map tmp_two(last, end());
-									difference_type new_size = _size - _distance(first, last);
-									resize(new_size);
-									size_type i = 0;
-									for (; i < tmp.size(); i++)
-										*(_NodeBase + i) = *(tmp.begin() + i);
-									for (size_type j = 0 ; j < tmp_two.size(); j++)
-										*(_NodeBase + i + j) = *(tmp_two.begin() + j);
-									return (first);
-								}*/
 /**
 *** 							Observe
 **/
-		key_compare 						key_comp() const;
-		value_compare 						value_comp() const;
+		key_compare 						key_comp() const {return _comp;}
+		value_compare 						value_comp() const {return value_compare(_comp);};
 /**
 *** 							Operations
 **/
@@ -249,24 +230,26 @@ namespace ft {
 		pair<const_iterator,const_iterator> equal_range(const key_type& k) const;
 		pair<iterator,iterator>             equal_range(const key_type& k);
 	};
+				template<class Key, class T, class Compare, class Alloc>
+	bool 		operator==(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return  (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));}
 
-	/*										template<class Key, class T, class Compare, class Alloc>
-	bool									operator==(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs);
+				template<class Key, class T, class Compare, class Alloc>
+	bool 		operator!=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (!(lhs == rhs));}
 
-											template< class Key, class T, class Compare, class Alloc >
-	bool 									operator!=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs);
+				template<class Key, class T, class Compare, class Alloc>
+	bool 		operator<(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));}
 
-											template< class Key, class T, class Compare, class Alloc >
-	bool									operator<(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs);
+				template<class Key, class T, class Compare, class Alloc>
+	bool 		operator<=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (!(rhs < lhs));}
 
-											template< class Key, class T, class Compare, class Alloc >
-	bool									operator<=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs);
+				template<class Key, class T, class Compare, class Alloc>
+	bool 		operator>(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (rhs < lhs);}
 
-											template< class Key, class T, class Compare, class Alloc >
-	bool									operator>(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs);
+				template<class Key, class T, class Compare, class Alloc>
+	bool 		operator>=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (!(lhs < rhs));}
 
-											template< class Key, class T, class Compare, class Alloc >
-	bool 									operator>=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs);*/
+				template<class Key, class T, class Compare, class Alloc>
+	void		swap(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {lhs.swap(rhs);}
 }
 
 #endif
