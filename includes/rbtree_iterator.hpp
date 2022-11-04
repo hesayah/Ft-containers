@@ -28,8 +28,8 @@ namespace ft {
 			typedef					Node*																					NodePtr;
     	protected	:
       								NodePtr												_base;
-									NodePtr												_TNULL;
 									NodePtr												_root;
+									NodePtr												_TNULL;
 
 			NodePtr 				minimum(NodePtr node) 
   									{
@@ -68,11 +68,11 @@ namespace ft {
    										return y;
 									}
 		public	:
-									rbt_iterator() : _base(NULL), _TNULL(NULL), _root(NULL) {}
-									rbt_iterator(const NodePtr & base, const NodePtr & TNULL, const NodePtr & root) : _base(base), _TNULL(TNULL), _root(root) {}
-									rbt_iterator(const rbt_iterator<const T, Node> & other) : _base(other._base), _TNULL(other._TNULL), _root(other._root) {}
+									rbt_iterator() : _base(NULL), _root(NULL), _TNULL(NULL) {}
+									rbt_iterator(const NodePtr & base, const NodePtr & TNULL, const NodePtr & root) : _base(base),  _root(root), _TNULL(TNULL){}
+									rbt_iterator(const rbt_iterator<const T, Node> & other) : _base(other._base), _root(other._root), _TNULL(other._TNULL) {}
 									~rbt_iterator() {}
-  			operator 				rbt_iterator<const value_type, Node>() const {return rbt_iterator<const value_type, Node>(_base, _TNULL, _root);}
+  			operator 				rbt_iterator<const value_type, Node>() const {return rbt_iterator<const value_type, Node>(_base, _root, _TNULL);}
 			rbt_iterator<T, Node> &	operator=(const rbt_iterator & other) 
 									{
 										_base = other._base;
@@ -80,8 +80,8 @@ namespace ft {
 										_root = other._root;
 										return (*this);
 									}
-			reference 				operator*() const {return ((this->_base->data));}
-			pointer 				operator->() const {return (&(this->_base->data));}
+			reference 				operator*()  {return (&(this->_base)->data);}
+			pointer 				operator->() const {return (&(this->_base)->data);}
 			reference				operator[](difference_type diff) const {return (*(this->_base + diff));}
 			rbt_iterator 			operator++(int) {return (*(this)++);}
 			rbt_iterator 			operator--(int) {return (*(this)--);}								

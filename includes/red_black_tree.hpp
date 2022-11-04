@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/03 08:04:59 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/04 05:46:21 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ namespace ft {
 				typedef				Node<value_type>							Nd;
 				typedef 			Nd* 										NodePtr;
 				typedef				rbt_iterator<value_type, Nd>				iterator;
-				typedef				rbt_iterator<const NodePtr,const Nd>		const_iterator;
+				typedef				rbt_iterator<const value_type,const Nd>		const_iterator;
 
     	/*protected :*/
 									compare 									_cmp;
@@ -58,16 +58,7 @@ namespace ft {
   									NodePtr										_root;
   									NodePtr 									_TNULL;
 
-				/*void 				initializeNULLNode(NodePtr node, NodePtr parent)
-									{
-    									//node->data = 0;
-    									node->parent = parent;
-    									node->left = NULL;
-    									node->right = NULL;
-    									node->color = 0;
-  									}*/
-  // Preorder
-				void				preOrderHelper(NodePtr node)
+		void						preOrderHelper(NodePtr node)
 									{
 										if (node != _TNULL) 
 										{
@@ -76,35 +67,34 @@ namespace ft {
 											preOrderHelper(node->right);
 										}
 									}
-		NodePtr 				minimum(NodePtr node) 
+		NodePtr						minimum(NodePtr node) const
   									{
     									while (node->left != _TNULL)
       										node = node->left;
     									return node;
 									}
- 		NodePtr 				maximum(NodePtr node) 
+ 		NodePtr	 					maximum(NodePtr node) const
   									{
 										while (node->right != _TNULL)
 											node = node->right;
 										return node;
 									}
-
- 		iterator				begin()
-								{ 
-									return iterator(minimum(this->_root), this->_root, this->_TNULL);
-								}
- 		const_iterator			begin() const
-								{
-									return iterator(minimum(this->_root), this->_root, this->_TNULL);
-								}
-		iterator				end()
-								{
-									return iterator(_TNULL, this->_root, this->_TNULL);
-								}
-		const_iterator			end() const 
-								{
-									return iterator(_TNULL, this->_root, this->_TNULL);
-								}
+ 		iterator					begin()
+									{ 
+										return iterator(minimum(this->_root), this->_root, this->_TNULL);
+									}
+ 		const_iterator				begin() const
+									{
+										return const_iterator(minimum(this->_root), this->_root, this->_TNULL);
+									}
+		iterator					end()
+									{
+										return iterator(_TNULL, this->_root, this->_TNULL);
+									}
+		const_iterator				end() const 
+									{
+										return const_iterator(_TNULL, this->_root, this->_TNULL);
+									}
   // Inorder
   void inOrderHelper(NodePtr node)
   {
@@ -125,10 +115,10 @@ namespace ft {
     }
   }
 
-  NodePtr searchTreeHelper(NodePtr node, int key) 
+NodePtr searchTreeHelper(NodePtr node, T key) 
   {
     if (node == _TNULL || key == node->data)
-      return node;
+      return (node);
     if (key < node->data)
       return searchTreeHelper(node->left, key);
     return searchTreeHelper(node->right, key);
@@ -331,7 +321,8 @@ namespace ft {
   }
 
    public:
-  RedBlackTree(compare c = compare(), allocator_type alloca = allocator_type()) : _cmp(c), _alloc(alloca), _size(0) {
+  RedBlackTree(compare c = compare(), allocator_type alloca = allocator_type()) : _cmp(c), _alloc(alloca), _size(0) 
+  {
     _TNULL = _alloc.allocate(1);
     _TNULL->color = 0;
     _TNULL->left = NULL;
@@ -360,9 +351,9 @@ namespace ft {
     postOrderHelper(this->_root);
   }
 
-  NodePtr searchTree(T k) 
+  iterator searchTree(T k) 
   {
-    return searchTreeHelper(this->_root, k);
+    return (iterator(searchTreeHelper(_root, k), _root, _TNULL));
   }
 
   void leftRotate(NodePtr x) {
@@ -402,7 +393,7 @@ namespace ft {
   }
 
   // Inserting a node
-  void insert(T key) {
+  iterator insert(T key) {
     NodePtr node = _alloc.allocate(1);
 	_alloc.construct(node, key);
 	_size++;
@@ -431,22 +422,22 @@ namespace ft {
     } else {
       y->right = node;
     }
-
+	_size++;
     if (node->parent == NULL) {
       node->color = 0;
-      return;
+      return iterator(node, _root, _TNULL);
     }
 
     if (node->parent->parent == NULL) {
-      return;
+      return iterator(node, _root, _TNULL);
     }
-
     insertFix(node);
+	return iterator(node, _root, _TNULL);
   }
 
-  NodePtr get_root() {
+/*  NodePtr get_root() {
     return this->_root;
-  }
+  }*/
 
   void deleteNode(T data) {
     deleteNodeHelper(this->_root, data);
