@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/04 05:46:21 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/05 00:45:56 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -396,7 +396,6 @@ NodePtr searchTreeHelper(NodePtr node, T key)
   iterator insert(T key) {
     NodePtr node = _alloc.allocate(1);
 	_alloc.construct(node, key);
-	_size++;
     node->parent = NULL;
     node->left = _TNULL;
     node->right = _TNULL;
@@ -423,14 +422,14 @@ NodePtr searchTreeHelper(NodePtr node, T key)
       y->right = node;
     }
 	_size++;
-    if (node->parent == NULL) {
+    if (node->parent == NULL)
+	{
       node->color = 0;
       return iterator(node, _root, _TNULL);
     }
 
-    if (node->parent->parent == NULL) {
+    else if (node->parent->parent == NULL)
       return iterator(node, _root, _TNULL);
-    }
     insertFix(node);
 	return iterator(node, _root, _TNULL);
   }

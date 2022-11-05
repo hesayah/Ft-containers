@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:10:58 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/04 06:40:49 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/05 05:54:53 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ namespace ft {
 			typedef	typename	iterator_traits<pointer>::difference_type					difference_type;
 			typedef	typename	RedBlackTree<value_type, Compare, Allocator>::iterator			iterator;
 			typedef	typename	RedBlackTree<value_type, Compare, Allocator>::const_iterator	const_iterator;
+			typedef	typename			ft::reverse_iterator<const_iterator>							const_reverse_iterator;
+			typedef typename			ft::reverse_iterator<iterator>									reverse_iterator;
 			typedef				size_t														size_type;
 			typedef				RedBlackTree<value_type, Compare, Allocator>				rbtree;
 		protected :
@@ -128,7 +130,7 @@ namespace ft {
 								{
 									return (this->_NodeBase.end());
 								}
-		/*reverse_iterator		rbegin()
+		reverse_iterator		rbegin()
 								{
 									return (reverse_iterator(end()));
 								}
@@ -143,14 +145,14 @@ namespace ft {
  		const_reverse_iterator	rend() const
 								{
 									return (const_reverse_iterator(begin()));
-								}*/
+								}
  		bool 					empty() const
 								{
 									return (begin() == end());
 								}
  		size_type 				size() const 
 								{
-									return (_NodeBase._size);
+									return (_NodeBase._size + 1);
 								}
  		size_type 				max_size() const 
 								{
