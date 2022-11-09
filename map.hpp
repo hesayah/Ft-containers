@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:10:58 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/05 05:54:53 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/09 16:49:28 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,14 @@ namespace ft {
 			typedef 			Key															key_type;
 			typedef 			T															mapped_type;
 			typedef 			pair<const Key, T>											value_type;
+			typedef 			Compare														key_compare;
+			typedef				Allocator													allocator_type;
 			class 				value_compare 
 				{
 					protected	:
-								Compare 													_comp;
-								value_compare(Compare c) : _comp(c) {}
+								key_compare 												comp;
 					public	:
+						value_compare(Compare c) : comp(c) {}
 						typedef bool														result_type;
 						typedef value_type													first_argument_type;
 						typedef value_type													second_argument_type;
@@ -43,19 +45,17 @@ namespace ft {
 																								return (comp(x.first, y.first));
 																							}
 				};
-			typedef 			Compare														key_compare;
-			typedef				Allocator													allocator_type;
 			typedef	typename	allocator_type::reference									reference;
 			typedef	typename	allocator_type::const_reference								const_reference;
 			typedef	typename	allocator_type::pointer										pointer;
 			typedef	typename	allocator_type::const_pointer								const_pointer;
 			typedef	typename	iterator_traits<pointer>::difference_type					difference_type;
-			typedef	typename	RedBlackTree<value_type, Compare, Allocator>::iterator			iterator;
-			typedef	typename	RedBlackTree<value_type, Compare, Allocator>::const_iterator	const_iterator;
-			typedef	typename			ft::reverse_iterator<const_iterator>							const_reverse_iterator;
-			typedef typename			ft::reverse_iterator<iterator>									reverse_iterator;
+			typedef	typename	RedBlackTree<value_type, value_compare, Allocator>::iterator			iterator;
+			typedef	typename	RedBlackTree<value_type, value_compare, Allocator>::const_iterator	const_iterator;
+			typedef				reverse_iterator<const_iterator>							const_reverse_iterator;
+			typedef 			reverse_iterator<iterator>									reverse_iterator;
 			typedef				size_t														size_type;
-			typedef				RedBlackTree<value_type, Compare, Allocator>				rbtree;
+			typedef				RedBlackTree<value_type, value_compare, Allocator>				rbtree;
 		protected :
 								rbtree														_NodeBase;
 		private :
@@ -82,10 +82,9 @@ namespace ft {
 /** 
 ***								constructors
 **/
-								map() : _NodeBase(rbtree()) {}
-			explicit 			map(const Compare& comp, const Allocator& alloc = Allocator()) : _NodeBase(rbtree(comp, alloc)) {}
+			explicit 			map(const key_compare& compp = key_compare(), const Allocator& alloc = Allocator()) : _NodeBase(compp, alloc) {}
 								template <typename InputIt>
-								map(InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator()) : _NodeBase(comp, alloc)
+								map(InputIt first, InputIt last, const key_compare& compp = key_compare(), const Allocator& alloc = Allocator()) : _NodeBase(compp, alloc)
 								{
 									while (first != last)
 										this->insert(*first++);
@@ -191,6 +190,7 @@ namespace ft {
 		pair<iterator,bool>		insert(const value_type& val)
 		{
 								iterator it = _NodeBase.searchTree(val);
+								std::cout << &(*it) << " " << &(*end()) << std::endl;
 								if (it == this->end())
 									return (ft::make_pair(_NodeBase.insert(val), true));
 								return (ft::make_pair(it, false));
@@ -213,9 +213,10 @@ namespace ft {
 								{
 									this->_NodeBase._clear();
 								}
-		//void 					swap(map	& other)
-		//						{
-		//						}
+		void 					swap(map & other)
+								{
+									_NodeBase.swap(other._NodeBase);
+								}
 /**
 *** 							Observe
 **/
@@ -224,15 +225,42 @@ namespace ft {
 /**
 *** 							Operations
 **/
-    	iterator							find(const key_type& k);
-		const_iterator						find (const key_type& k) const;
-		size_type							count(const key_type& k) const;
-		iterator							lower_bound(const key_type& k);
-		const_iterator 						lower_bound (const key_type& k) const;
-		iterator							upper_bound(const key_type& k);
-		const_iterator 						upper_bound (const key_type& k) const;
-		pair<const_iterator,const_iterator> equal_range(const key_type& k) const;
-		pair<iterator,iterator>             equal_range(const key_type& k);
+    	iterator							find(const key_type& k)
+											{
+
+											}
+		const_iterator						find (const key_type& k) const
+											{
+
+											}
+		size_type							count(const key_type& k) const
+											{
+
+											}
+		iterator							lower_bound(const key_type& k)
+											{
+
+											}
+		const_iterator 						lower_bound(const key_type& k) const
+											{
+
+											}
+		iterator							upper_bound(const key_type& k)
+											{
+
+											}
+		const_iterator 						upper_bound (const key_type& k) const
+											{
+
+											}
+		pair<const_iterator,const_iterator> equal_range(const key_type& k) const
+											{
+
+											}
+		pair<iterator,iterator>             equal_range(const key_type& k)
+											{
+
+											}
 	};
 				template<class Key, class T, class Compare, class Alloc>
 	bool 		operator==(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return  (lhs.size() == rhs.size());}// && std::equal(lhs.begin(), lhs.end(), rhs.begin()));}
@@ -252,8 +280,8 @@ namespace ft {
 				template<class Key, class T, class Compare, class Alloc>
 	bool 		operator>=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (!(lhs < rhs));}
 
-				template<class Key, class T, class Compare, class Alloc>
-	void		swap(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {lhs.swap(rhs);}
+/*				template<class Key, class T, class Compare, class Alloc>
+	void		swap(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {lhs.swap(rhs);}*/
 }
 
 #endif

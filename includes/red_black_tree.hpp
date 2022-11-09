@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/05 00:45:56 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/09 16:49:37 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include "reverse_iterator.hpp"
 
 namespace ft {
+
+		enum Color {BLACK, RED};
 
 		template<class T>
 		struct Node
@@ -52,7 +54,7 @@ namespace ft {
 				typedef				rbt_iterator<const value_type,const Nd>		const_iterator;
 
     	/*protected :*/
-									compare 									_cmp;
+									key_compare									_cmp;
 									allocator_type								_alloc;
 									size_type									_size;
   									NodePtr										_root;
@@ -115,14 +117,22 @@ namespace ft {
     }
   }
 
-NodePtr searchTreeHelper(NodePtr node, T key) 
-  {
-    if (node == _TNULL || key == node->data)
-      return (node);
-    if (key < node->data)
-      return searchTreeHelper(node->left, key);
-    return searchTreeHelper(node->right, key);
-  }
+		NodePtr searchTreeHelper(NodePtr node, const value_type& key) const{
+			if (node == _TNULL || _isEqual(key, node->data)) {
+				return node;
+			}
+
+			if (_cmp(key ,node->data)) {
+				return searchTreeHelper(node->left, key);
+			}
+			return searchTreeHelper(node->right, key);
+		}
+
+		bool	_isEqual(value_type const & x, value_type const & y) const
+		{
+			return !_cmp(x, y) && !_cmp(y, x);
+		}
+
 
   // For balancing the tree after deletion
   void deleteFix(NodePtr x) {
@@ -185,24 +195,24 @@ NodePtr searchTreeHelper(NodePtr node, T key)
     x->color = 0;
   }
 
-  void rbTransplant(NodePtr u, NodePtr v) {
-    if (u->parent == NULL) {
+  void rbTransplant(NodePtr u, NodePtr v)
+  {
+    if (u->parent == NULL)
       _root = v;
-    } else if (u == u->parent->left) {
+    else if (u == u->parent->left)
       u->parent->left = v;
-    } else {
+    else
       u->parent->right = v;
-    }
     v->parent = u->parent;
   }
 
   void deleteNodeHelper(NodePtr node, T key) {
     NodePtr z = _TNULL;
     NodePtr x, y;
-    while (node != _TNULL) {
-      if (node->data == key) {
+    while (node != _TNULL)
+	{
+      if (node->data == key)
         z = node;
-      }
 
       if (node->data <= key) {
         node = node->right;
@@ -321,7 +331,7 @@ NodePtr searchTreeHelper(NodePtr node, T key)
   }
 
    public:
-  RedBlackTree(compare c = compare(), allocator_type alloca = allocator_type()) : _cmp(c), _alloc(alloca), _size(0) 
+  RedBlackTree(compare c = key_compare(), allocator_type alloca = allocator_type()) : _cmp(c), _alloc(alloca), _size(0) 
   {
     _TNULL = _alloc.allocate(1);
     _TNULL->color = 0;
@@ -336,7 +346,32 @@ NodePtr searchTreeHelper(NodePtr node, T key)
 		_alloc.deallocate(_TNULL, 1);
   }
 
-  void preorder()
+	void	swap(RedBlackTree & other)
+			{
+				allocator_type								alloca;
+				size_type									size;
+  				NodePtr										root;
+				NodePtr 									TNULL;
+
+				//cmp = this->_cmp;
+				alloca = this->_alloc;
+				size = this->_size;
+				root = this->_root;
+				TNULL = _TNULL;
+
+			// this->_cmp	= other._cmp;
+			this->_alloc	=other._alloc ;
+			 this->_size	=other._size ;
+			 this->_root	=other._root ;
+			 _TNULL = other._TNULL;
+
+			//	other._cmp = cmp ;
+				other._alloc = alloca;
+				other._size = size;
+				other._root = root;
+				other._TNULL = TNULL;
+			}
+  /*void preorder()
   {
     preOrderHelper(this->_root);
   }
@@ -349,14 +384,15 @@ NodePtr searchTreeHelper(NodePtr node, T key)
   void postorder()
   {
     postOrderHelper(this->_root);
-  }
+  }*/
 
   iterator searchTree(T k) 
   {
     return (iterator(searchTreeHelper(_root, k), _root, _TNULL));
   }
 
-  void leftRotate(NodePtr x) {
+  void leftRotate(NodePtr x) 
+  {
     NodePtr y = x->right;
     x->right = y->left;
     if (y->left != _TNULL) {
@@ -374,7 +410,8 @@ NodePtr searchTreeHelper(NodePtr node, T key)
     x->parent = y;
   }
 
-  void rightRotate(NodePtr x) {
+  void rightRotate(NodePtr x)
+  {
     NodePtr y = x->left;
     x->left = y->right;
     if (y->right != _TNULL) {

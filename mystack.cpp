@@ -1,8 +1,14 @@
 #include "map.hpp"
+
 #define T1 int
 #define T2 std::string
 typedef ft::map<T1, T2>::value_type T3;
 typedef ft::map<T1, T2>::iterator iterator;
+/*#include <list>
+
+#define T1 char
+#define T2 int
+typedef ft::pair<const T1, T2> T3;*/
 
 static int iter = 0;
 
@@ -69,7 +75,7 @@ int		main(void)
 
 	ft_insert(mp, mp.begin(), T3(55, "fuzzy"));
 
-	//ft_insert(mp2, mp2.begin(), T3(1337, "beauty"));
+	ft_insert(mp2, mp2.begin(), T3(1337, "beauty"));
 	ft_insert(mp2, mp2.end(), T3(1000, "Hello"));
 	ft_insert(mp2, mp2.end(), T3(1500, "World"));
 

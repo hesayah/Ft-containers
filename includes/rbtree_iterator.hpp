@@ -49,7 +49,7 @@ namespace ft {
 											return x;
 										if (x->right !=_TNULL) 
 										{
-											x = minimum(x->right);
+											x = maximum(x->right);
 											return x;
 										}
 										NodePtr y = x->parent;
@@ -67,11 +67,11 @@ namespace ft {
 									{
 										if (x ==_TNULL)
 										{
-											x = maximum(_root);
+											x = minimum(_root);
 											return x;
 										}
 										if (x->left !=_TNULL) {
-											x = maximum(x->left);
+											x = minimum(x->left);
 											return x;
 										}
 
