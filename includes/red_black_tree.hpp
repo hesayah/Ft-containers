@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/09 16:49:37 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/11 19:11:17 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ namespace ft {
 				typedef 			Nd* 										NodePtr;
 				typedef				rbt_iterator<value_type, Nd>				iterator;
 				typedef				rbt_iterator<const value_type,const Nd>		const_iterator;
+				typedef				reverse_iterator<const_iterator>			const_reverse_iterator;
+				typedef 			reverse_iterator<iterator>					reverse_iterator;
+				typedef typename	iterator_traits<iterator>::difference_type	difference_type;
 
     	/*protected :*/
 									key_compare									_cmp;
@@ -60,15 +63,6 @@ namespace ft {
   									NodePtr										_root;
   									NodePtr 									_TNULL;
 
-		void						preOrderHelper(NodePtr node)
-									{
-										if (node != _TNULL) 
-										{
-											std::cout << node->data << " ";
-											preOrderHelper(node->left);
-											preOrderHelper(node->right);
-										}
-									}
 		NodePtr						minimum(NodePtr node) const
   									{
     									while (node->left != _TNULL)
@@ -97,40 +91,19 @@ namespace ft {
 									{
 										return const_iterator(_TNULL, this->_root, this->_TNULL);
 									}
-  // Inorder
-  void inOrderHelper(NodePtr node)
-  {
-    if (node != _TNULL)
-	{
-      inOrderHelper(node->left);
-      std::cout << node->data.first << " ";
-      inOrderHelper(node->right);
-    }
-  }
 
-  // Post order
-  void postOrderHelper(NodePtr node) {
-    if (node != _TNULL) {
-      postOrderHelper(node->left);
-      postOrderHelper(node->right);
-     std::cout << node->data.first << " ";
-    }
-  }
+		NodePtr 					searchTreeHelper(NodePtr node, const value_type& key) const
+									{
+										if (node == _TNULL || isEqual(key, node->data))
+											return node;
+										if (_cmp(key ,node->data))
+											return searchTreeHelper(node->left, key);
+										return searchTreeHelper(node->right, key);
+									}
 
-		NodePtr searchTreeHelper(NodePtr node, const value_type& key) const{
-			if (node == _TNULL || _isEqual(key, node->data)) {
-				return node;
-			}
-
-			if (_cmp(key ,node->data)) {
-				return searchTreeHelper(node->left, key);
-			}
-			return searchTreeHelper(node->right, key);
-		}
-
-		bool	_isEqual(value_type const & x, value_type const & y) const
+		bool						isEqual(value_type const & x, value_type const & y) const
 		{
-			return !_cmp(x, y) && !_cmp(y, x);
+										return !_cmp(x, y) && !_cmp(y, x);
 		}
 
 
@@ -386,6 +359,29 @@ namespace ft {
     postOrderHelper(this->_root);
   }*/
 
+		iterator lower_bound (value_type& pair)
+		{
+			iterator it = this->begin();
+			while (it != this->end())
+			{
+				if (!_cmp(*it, pair))
+					return it;
+				it++;
+			}
+			return (it);
+		}
+
+		iterator upper_bound (value_type& pair)
+		{
+			iterator it = this->begin();
+			while (it != this->end())
+			{
+				if (_cmp(pair, *it))
+					return it;
+				it++;
+			}
+			return (it);
+		}
   iterator searchTree(T k) 
   {
     return (iterator(searchTreeHelper(_root, k), _root, _TNULL));
