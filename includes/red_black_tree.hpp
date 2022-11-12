@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/11 19:11:17 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/12 12:13:53 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,10 +194,8 @@ namespace ft {
       }
     }
 
-    if (z == _TNULL) {
-     std::cout << "Key not found in the tree" << std::endl;
+    if (z == _TNULL)
       return;
-    }
 
     y = z;
     int y_original_color = y->color;
@@ -275,14 +273,15 @@ namespace ft {
     }
     _root->color = 0;
   }
-    void clear(NodePtr _root) {
-    if (_root != _TNULL) 
+    void clear(NodePtr _root)
 	{
-      	clear(_root->left);
-     	clear(_root->right);
-	  	_alloc.destroy(_root);
-		_alloc.deallocate(_root, 1);
-    }
+    	if (_root != _TNULL) 
+		{
+    	  	clear(_root->left);
+     		clear(_root->right);
+	 	 	_alloc.destroy(_root);
+			_alloc.deallocate(_root, 1);
+    	}
 	}
 
   void printHelper(NodePtr _root, std::string indent, bool last) {
@@ -312,9 +311,18 @@ namespace ft {
     _TNULL->right = NULL;
     _root = _TNULL;
   }
-    ~RedBlackTree() {
-		if (_size)
-			clear(_root);
+
+RedBlackTree(const RedBlackTree &other) : _cmp(other._cmp), _alloc(other._alloc), _size(other._size) 
+  {
+    _TNULL = _alloc.allocate(1);
+    _TNULL->color = 0;
+    _TNULL->left = NULL;
+    _TNULL->right = NULL;
+    _root = _TNULL;
+  }
+    ~RedBlackTree() 
+	{
+		clear(_root);
 		//_alloc.destroy(_TNULL);
 		_alloc.deallocate(_TNULL, 1);
   }
@@ -370,6 +378,17 @@ namespace ft {
 			}
 			return (it);
 		}
+		const_iterator lower_bound (value_type& pair) const
+		{
+			const_iterator it = this->begin();
+			while (it != this->end())
+			{
+				if (!_cmp(*it, pair))
+					return it;
+				it++;
+			}
+			return (it);
+		}
 
 		iterator upper_bound (value_type& pair)
 		{
@@ -382,7 +401,18 @@ namespace ft {
 			}
 			return (it);
 		}
-  iterator searchTree(T k) 
+		const_iterator upper_bound (value_type& pair) const
+		{
+			const_iterator it = this->begin();
+			while (it != this->end())
+			{
+				if (_cmp(pair, *it))
+					return it;
+				it++;
+			}
+			return (it);
+		}
+  iterator searchTree(const T &  k) const
   {
     return (iterator(searchTreeHelper(_root, k), _root, _TNULL));
   }
@@ -426,7 +456,8 @@ namespace ft {
   }
 
   // Inserting a node
-  iterator insert(T key) {
+  iterator insert(const T & key)
+  {
     NodePtr node = _alloc.allocate(1);
 	_alloc.construct(node, key);
     node->parent = NULL;
@@ -471,7 +502,7 @@ namespace ft {
     return this->_root;
   }*/
 
-  void deleteNode(T data) {
+  void deleteNode(T & data) {
     deleteNodeHelper(this->_root, data);
   }
 

@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:10:58 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/11 19:50:16 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/12 12:09:56 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ namespace ft {
 
 		protected :
 								rbtree														_NodeBase;
+								key_compare													_kc;
 		private :
 
 								template <typename InputIt>
@@ -85,12 +86,11 @@ namespace ft {
 									for (; first != last;first++)
 										this->insert(*first);
 								}
-								map(const map& other)
+								map(const map& other) : _NodeBase(other._NodeBase)
 								{
-
-									_NodeBase = other._NodeBase;
+									insert(other.begin(), other.end());
 								}
-			 					~map(void)
+			 					~map()
 								{
 								}
 /**
@@ -105,7 +105,7 @@ namespace ft {
 								}							
  		allocator_type 			get_allocator() const
 								{
-									return (this->_alloc);
+									return (_NodeBase._alloc);
 								}
 /**
 *** 							Iterators
@@ -158,26 +158,22 @@ namespace ft {
 *** Element access
 **/
 
-		T& 				operator[] (const Key & key) const
+		T& 						operator[] (const Key & key) 
 								{
-									value_type new_pair = ft::make_pair(key, mapped_type());
-					iterator f = _NodeBase.searchTree(new_pair);
-					if (f == this->end())
-						return (_NodeBase.insert(new_pair))->second;
-					return f->second;
+									value_type pr = ft::make_pair(key, mapped_type());
+									iterator it = _NodeBase.searchTree(pr);
+									if (it == end())
+										return ((_NodeBase.insert(pr))->second);
+									return (it->second);
 								}
-		T& 				at(const Key & key) const
+		T& 						at(const Key & key) const
 								{
-																		value_type new_pair = ft::make_pair(key, mapped_type());
-					iterator f = _NodeBase.searchTree(new_pair);
-					if (f == this->end())
-						return (_NodeBase.insert(new_pair))->second;
-					return f->second;
-									/*value_type pr = ft::make_pair(key, mapped_type());
+									value_type pr = ft::make_pair(key, mapped_type());
 									iterator it = _NodeBase.searchTree(pr);
 									if (it == end())
 										throw std::out_of_range("pos out of range !");
-									return (it->second);*/
+									else
+										return (it->second);
 								}
 		void					printTree()
 								{
@@ -190,15 +186,14 @@ namespace ft {
 		pair<iterator,bool>		insert(const value_type& val)
 		{
 								iterator it = _NodeBase.searchTree(val);
-								//std::cout << &(*it) << " " << &(*end()) << std::endl;
 								if (it == this->end())
 									return (ft::make_pair(_NodeBase.insert(val), true));
 								return (ft::make_pair(it, false));
 		}
 		iterator 				insert(iterator pos, const value_type& val)
 		{
-								insert(val);
-								return (pos);
+								pos = _NodeBase.searchTree(val);
+								return (insert(val)).first;
 		}
 								template <class InputIt> 
 		void 					insert (InputIt first,InputIt last)
@@ -216,12 +211,12 @@ namespace ft {
 
 									if (it == end())
 										return (0);
-									_NodeBase.deleteNode(it);
+									_NodeBase.deleteNode(*it);
 									return (1);
 								}
 		void					erase(iterator first, iterator last)
 								{
-									for (;first != last; first++)
+									for (;first != last; ++first)
 										erase(first);
 								}
 		void 					clear()
@@ -235,8 +230,8 @@ namespace ft {
 /**
 *** 							Observe
 **/
-		key_compare 						key_comp() const {return (key_compare());}
-		value_compare 						value_comp() const {return (value_compare());};
+		key_compare 						key_comp() const {return (_kc);}
+		value_compare 						value_comp() const {return (_NodeBase._cmp);};
 /**
 *** 							Operations
 **/
@@ -251,10 +246,11 @@ namespace ft {
 												value_type searched_pair = ft::make_pair(k, mapped_type());
 												return _NodeBase.searchTree(searched_pair);
 											}
-		size_type							count(const key_type& k) const
+		size_type							count(const key_type& k)
 											{
-												(void)k;
-												return (1);
+												if (this->find(k) == this->end())
+													return (1);
+												return (0);
 											}
 		iterator							lower_bound(const key_type& k)
 											{
@@ -286,7 +282,7 @@ namespace ft {
 											}
 	};
 				template<class Key, class T, class Compare, class Alloc>
-	bool 		operator==(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return  (lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin()));}
+	bool 		operator==(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return  (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));}
 
 				template<class Key, class T, class Compare, class Alloc>
 	bool 		operator!=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (!(lhs == rhs));}
@@ -304,7 +300,7 @@ namespace ft {
 	bool 		operator>=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (!(lhs < rhs));}
 
 				template<class Key, class T, class Compare, class Alloc>
-	void		swap(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {lhs.swap(rhs);}
+	void		swap(map<Key,T,Compare,Alloc>& lhs, map<Key,T,Compare,Alloc>& rhs) {lhs.swap(rhs);}
 }
 
 #endif

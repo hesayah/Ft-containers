@@ -88,16 +88,16 @@ namespace ft {
 									}
 		public	:
 									rbt_iterator() : _base(NULL), _root(NULL),_TNULL(NULL) {}
-									rbt_iterator(const rbt_iterator<T, Node> & src) : _base(src._base), _root(src._root),_TNULL(src._TNULL) {}
+									rbt_iterator(const rbt_iterator<T, Node> & other) : _base(other._base), _root(other._root),_TNULL(other._TNULL) {}
 									rbt_iterator(const NodePtr node, const NodePtr root, const  NodePtr nil) : _base(node), _root(root),_TNULL(nil) {}
 									~rbt_iterator(){}
-		rbt_iterator&				operator=(rbt_iterator const & src)
+		rbt_iterator&				operator=(rbt_iterator const & other)
 									{
-										if (this != &src)
+										if (this != &other)
 										{
-											this->_base = src._base;
-											this->_root = src._root;
-											this->_TNULL = src._TNULL;
+											this->_base = other._base;
+											this->_root = other._root;
+											this->_TNULL = other._TNULL;
 										}
 										return *this;
 									}
@@ -119,10 +119,10 @@ namespace ft {
 										_base = successor(_base);
 										return (*this);
 									}
-	friend	rbt_iterator<T, Node>	operator+(difference_type diff, rbt_iterator<T, Node> x) {return (x += diff);}
+	/*friend	rbt_iterator<T, Node>	operator+(difference_type diff, rbt_iterator<T, Node> x) {return (x += diff);}
 	friend	rbt_iterator<T, Node>	operator-(difference_type diff, rbt_iterator<T, Node> x) {return (x -= diff);}
 	friend	difference_type			operator+(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base + rhs._base);}
-	friend	difference_type			operator-(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base - rhs._base);}
+	friend	difference_type			operator-(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base - rhs._base);}*/
 	friend	bool 					operator==(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base == rhs._base);}
 	friend	bool 					operator!=(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base != rhs._base);}
 	};
