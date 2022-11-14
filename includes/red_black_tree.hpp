@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/14 16:59:43 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/14 17:47:44 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ namespace ft {
 				typedef 			Nd* 										NodePtr;
 				typedef				rbt_iterator<value_type, Nd>				iterator;
 				typedef				rbt_iterator<const value_type,const Nd>		const_iterator;
-				typedef				reverse_iterator<const_iterator>			const_reverse_iterator;
-				typedef 			reverse_iterator<iterator>					reverse_iterator;
+				typedef				ft::reverse_iterator<const_iterator>			const_reverse_iterator;
+				typedef 			ft::reverse_iterator<iterator>					reverse_iterator;
 				typedef typename	iterator_traits<iterator>::difference_type	difference_type;
 
     	/*protected :*/
@@ -65,23 +65,22 @@ namespace ft {
 
 		NodePtr						minimum(NodePtr node) const
   									{
-			while (node && node->left != _TNULL) {
-				node = node->left;
-			}
-			if (node)
-				return node;
-			else
-				return _TNULL;
+										while (node && node->left != _TNULL)
+											node = node->left;
+										if (node)
+											return node;
+										else
+											return _TNULL;
 									}
  		NodePtr	 					maximum(NodePtr node) const
   									{
-			while (node && node->right != _TNULL) {
-				node = node->right;
-			}
-			if (node)
-				return node;
-			else
-				return _TNULL;
+										while (node && node->right != _TNULL) 
+											node = node->right;
+
+										if (node)
+											return node;
+										else
+											return _TNULL;
 									}
 		NodePtr 					searchTreeHelper(NodePtr node, const value_type& key) const
 									{
@@ -165,7 +164,7 @@ namespace ft {
     									}
 										x->color = 0;
 									}
-		void						deleteNodeHelper(NodePtr node, T key)
+		void						deleteNodeHelper(NodePtr node, value_type & key)
 									{
     									NodePtr z = _TNULL;
     									NodePtr x, y;
@@ -179,13 +178,13 @@ namespace ft {
 												node = node->left;
 										}
 										if (z == _TNULL)
-										  return ;
+											return;
 										y = z;
 										int y_original_color = y->color;
 										if (z->left == _TNULL)
 										{
 											x = z->right;
-										  	rbTransplant(z, z->right);
+											rbTransplant(z, z->right);
 										}
 										else if (z->right == _TNULL)
 										{
@@ -198,23 +197,23 @@ namespace ft {
 											y_original_color = y->color;
 											x = y->right;
 											if (y->parent == z)
-											    x->parent = y;
+												x->parent = y;
 											else
 											{
-											    rbTransplant(y, y->right);
-										    	y->right = z->right;
-										    	y->right->parent = y;
-										  		rbTransplant(z, y);
-										  		y->left = z->left;
-										  		y->left->parent = y;
-										  		y->color = z->color;
+												rbTransplant(y, y->right);
+												y->right = z->right;
+												y->right->parent = y;
 											}
-											_alloc.destroy(z);
-											_alloc.deallocate(z, 1);
-											if (y_original_color == 0) 
-										  		deleteFix(x);
-											_size--;
+											rbTransplant(z, y);
+											y->left = z->left;
+											y->left->parent = y;
+											y->color = z->color;
 										}
+										_alloc.destroy(z);
+										_alloc.deallocate(z, 1);
+										if (y_original_color == false)
+											deleteFix(x);
+										_size--;
 									}
 		void 						rbTransplant(NodePtr u, NodePtr v)
 									{
@@ -352,6 +351,7 @@ namespace ft {
 										clear();
 										//_alloc.destroy(_TNULL);
 										_alloc.deallocate(_TNULL, 1);
+										_size = 0;
 									}
 		iterator					insert(const value_type & key)
 									{
@@ -465,21 +465,21 @@ namespace ft {
 										size_type									size;
 										NodePtr										root;
 										NodePtr 									TNULL;
-										key_compare									cmp;
+									//	key_compare									cmp;
 
-										cmp = this->_cmp;
+									//	cmp = this->_cmp;
 										alloca = this->_alloc;
 										size = this->_size;
 										root = this->_root;
 										TNULL = _TNULL;
 
-										this->_cmp	= other._cmp;
-										this->_alloc	=other._alloc ;
+									//	this->_cmp	= other._cmp;
+										this->_alloc=other._alloc ;
 										this->_size	=other._size ;
 										this->_root	=other._root ;
 										_TNULL = other._TNULL;
 
-										other._cmp = cmp ;
+									//	other._cmp = cmp ;
 										other._alloc = alloca;
 										other._size = size;
 										other._root = root;

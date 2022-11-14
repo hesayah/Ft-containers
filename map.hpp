@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:10:58 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/14 16:57:14 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/14 18:19:40 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ namespace ft {
 			typedef 						Compare														key_compare;
 			class 							value_compare 
 				{			
-					friend class			 map;
+					friend class			map;
+					friend class			Redblacktree;
 					protected	:
 											Compare 													comp;
 											value_compare(Compare c) : comp(c) {}
@@ -84,13 +85,13 @@ namespace ft {
 **/			
  		map	& 								operator=(const map& x)
 											{
-					if (!this->empty())
-						this->clear();
-					this->_kc = x.key_comp();
-					const_iterator pos = x.begin();
-					while (pos != x.end())
-						this->insert(*pos++);
-					return *this;
+												if (!this->empty())
+													this->clear();
+												this->_kc = x.key_comp();
+												const_iterator pos = x.begin();
+												while (pos != x.end())
+													this->insert(*pos++);
+												return *this;
 											}							
  		allocator_type 						get_allocator() const
 											{
@@ -168,7 +169,7 @@ namespace ft {
 											}
 /**			
 *** 										Modifiers
-**/			
+**/
 		pair<iterator,bool>					insert(const value_type& val)
 		{			
 											iterator it = _NodeBase.find(val);
@@ -181,11 +182,11 @@ namespace ft {
 											(void)pos;
 											return (insert(val)).first;
 		}			
-											template <class InputIt> 
+											template <class InputIt>
 		void 								insert (InputIt first,InputIt last)
 											{
 												for (; first != last;)
-													_NodeBase.insert(*first++);
+													insert(*first++);
 											}
 		void 								erase(iterator position)
 											{
@@ -197,7 +198,7 @@ namespace ft {
 
 												if (it == end())
 													return (0);
-												_NodeBase.erase(*it);
+												erase(it);
 												return (1);
 											}
 		void								erase(iterator first, iterator last)
@@ -232,7 +233,7 @@ namespace ft {
 												value_type searched_pair = ft::make_pair(k, mapped_type());
 												return _NodeBase.find(searched_pair);
 											}
-		size_type							count(const key_type& k)
+		size_type							count(const key_type& k) const
 											{
 												if (this->find(k) == this->end())
 													return (0);
