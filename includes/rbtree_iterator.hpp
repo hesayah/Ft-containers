@@ -33,15 +33,23 @@ namespace ft {
 
 			NodePtr 				minimum(NodePtr node) 
   									{
-    									while (node->left != _TNULL)
-      										node = node->left;
-    									return (node);
+			while (node && node->left != _TNULL) {
+				node = node->left;
+			}
+			if (node)
+				return node;
+			else
+				return _TNULL;
 									}
  			NodePtr 				maximum(NodePtr node) 
   									{
-										while (node->right != _TNULL)
-											node = node->right;
-										return (node);
+			while (node && node->right != _TNULL) {
+				node = node->right;
+			}
+			if (node)
+				return node;
+			else
+				return _TNULL;
 									}
 			NodePtr					successor(NodePtr x)
 									{
@@ -49,7 +57,7 @@ namespace ft {
 											return x;
 										if (x->right !=_TNULL) 
 										{
-											x = maximum(x->right);
+											x = minimum(x->right);
 											return x;
 										}
 										NodePtr y = x->parent;
@@ -67,11 +75,11 @@ namespace ft {
 									{
 										if (x ==_TNULL)
 										{
-											x = minimum(_root);
+											x = maximum(_root);
 											return x;
 										}
 										if (x->left !=_TNULL) {
-											x = minimum(x->left);
+											x = maximum(x->left);
 											return x;
 										}
 
@@ -105,8 +113,8 @@ namespace ft {
         							{
             							return rbt_iterator<value_type const, Node const>(_base, _root,_TNULL);
        								}
-		reference 					operator* ()const {return (this->_base->data);}
-		pointer 					operator-> () const {return (&(this->_base->data));}
+		reference 					operator* () {return (this->_base->data);}
+		pointer 					operator-> () {return (&(this->_base->data));}
 		rbt_iterator 				operator++(int) {rbt_iterator tmp(*this); _base = successor(_base); return (tmp);}
 		rbt_iterator 				operator--(int) {rbt_iterator tmp(*this); _base = predecessor(_base); return (tmp);}							
 		rbt_iterator	& 			operator--(void) 
