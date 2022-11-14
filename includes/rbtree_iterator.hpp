@@ -95,7 +95,7 @@ namespace ft {
 		public	:
 									rbt_iterator() : _base(NULL), _root(NULL),_TNULL(NULL) {}
 									rbt_iterator(const rbt_iterator<T, Node> & other) : _base(other._base), _root(other._root),_TNULL(other._TNULL) {}
-									rbt_iterator(const NodePtr node, const NodePtr root, const  NodePtr nil) : _base(node), _root(root),_TNULL(nil) {}
+									rbt_iterator(const NodePtr node, const NodePtr root, const  NodePtr TNULL) : _base(node), _root(root),_TNULL(TNULL) {}
 									~rbt_iterator(){}
 		rbt_iterator&				operator=(rbt_iterator const & other)
 									{
@@ -105,11 +105,11 @@ namespace ft {
 											this->_root = other._root;
 											this->_TNULL = other._TNULL;
 										}
-										return *this;
+										return (*this);
 									}
-		operator    				rbt_iterator<value_type const, Node const>() const
+		operator    				rbt_iterator<const value_type,const Node>() const
         							{
-            							return rbt_iterator<value_type const, Node const>(_base, _root,_TNULL);
+            							return rbt_iterator<const value_type , const Node>(_base, _root,_TNULL);
        								}
 		reference 					operator* () const {return (this->_base->data);}
 		pointer 					operator-> () const {return (&(this->_base->data));}

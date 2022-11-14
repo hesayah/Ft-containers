@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map.hpp                                            :+:      :+:    :+:   */
+/*   set.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:10:58 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/14 23:40:07 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/15 00:39:32 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MAP_HPP__
-# define __MAP_HPP__
+#ifndef __SET_HPP__
+# define __SET_HPP__
 
 # include "includes/pair.hpp"
 # include "includes/enable_if.hpp"
@@ -21,36 +21,20 @@
 # include "includes/red_black_tree.hpp"
 
 namespace ft {
-    										template <class Key, class T, class Compare = std::less<Key> , class Allocator = std::allocator<pair<const Key,T> > > 
-    class 									map
+											template<class T, class Compare = std::less<T>,	class Allocator = std::allocator<T> >
+    class 									set
 	{			
 		public :			
-			typedef 						Key															key_type;
-			typedef 						T															mapped_type;
-			typedef 						pair<const Key, T>											value_type;
+			typedef 						T															key_type;
+			typedef 						T															value_type;
 			typedef 						Compare														key_compare;
-			class 							value_compare 
-				{			
-					friend class			map;
-					friend class			Redblacktree;
-					protected	:
-											Compare 													comp;
-											value_compare(Compare c) : comp(c) {}
-					public	:			
-						typedef 			bool														result_type;
-						typedef 			value_type													first_argument_type;
-						typedef 			value_type													second_argument_type;
-						bool																			operator() (const value_type& x, const value_type& y) const
-																										{
-																											return (comp(x.first, y.first));
-																										}
-				};
+			typedef							Compare														value_compare;
 			typedef							Allocator													allocator_type;
 			typedef	typename				allocator_type::reference									reference;
 			typedef	typename				allocator_type::const_reference								const_reference;
 			typedef	typename				allocator_type::pointer										pointer;
 			typedef	typename				allocator_type::const_pointer								const_pointer;
-			typedef							RedBlackTree<value_type, value_compare, allocator_type>		rbtree;
+			typedef							RedBlackTree<const T, key_compare, allocator_type>				rbtree;
 			typedef	typename				rbtree::iterator											iterator;
 			typedef	typename				rbtree::const_iterator										const_iterator;
 			typedef	typename				rbtree::reverse_iterator									reverse_iterator;
@@ -66,23 +50,23 @@ namespace ft {
 /** 	
 ***								construc	tors
 **/			
-			explicit 						map(const key_compare& comp = key_compare(), const Allocator& alloc = Allocator()) : _NodeBase(comp, alloc) {}
+			explicit 						set(const key_compare& comp = key_compare(), const Allocator& alloc = Allocator()) : _NodeBase(comp, alloc) {}
 											template <typename InputIt>
-											map(InputIt first, InputIt last, const key_compare& comp = key_compare(), const Allocator& alloc = Allocator()) : _NodeBase(comp, alloc)
+											set(InputIt first, InputIt last, const key_compare& comp = key_compare(), const Allocator& alloc = Allocator()) : _NodeBase(comp, alloc)
 											{
 													this->insert(first, last);
 											}
-											map(const map& other) : _NodeBase(other._NodeBase.cmp(), Allocator())
+											set(const set& other) : _NodeBase(other._NodeBase.cmp(), Allocator())
 											{
 												insert(other.begin(), other.end());
 											}
-			 								~map()
+			 								~set()
 											{
 											}
 /**			
 ***											Member functions 
 **/			
- 		map	& 								operator=(const map& other)
+ 		set	& 								operator=(const set& other)
 											{
 												if (!this->empty())
 													this->clear();
@@ -144,17 +128,17 @@ namespace ft {
 /**		
 *** Element access			
 **/			
-		T& 									operator[] (const Key & key) 
+		T& 									operator[] (const T & key) 
 											{
-												value_type pr = ft::make_pair(key, mapped_type());
+												value_type pr = ft::make_pair(key, value_type());
 												iterator it = _NodeBase.find(pr);
 												if (it == end())
 													return ((_NodeBase.insert(pr))->second);
 												return (it->second);
 											}
-		T& 									at(const Key & key) const
+		T& 									at(const T & key) const
 											{
-												value_type pr = ft::make_pair(key, mapped_type());
+												value_type pr = ft::make_pair(key, value_type());
 												iterator it = _NodeBase.find(pr);
 												if (it == end())
 													throw std::out_of_range("pos out of range !");
@@ -207,7 +191,7 @@ namespace ft {
 											{
 												this->_NodeBase.clear();
 											}
-		void 								swap(map & other)
+		void 								swap(set & other)
 											{
 												_NodeBase.swap(other._NodeBase);
 											}
@@ -221,14 +205,12 @@ namespace ft {
 **/
     	iterator							find(const key_type& k)
 											{
-												value_type pr = ft::make_pair(k, mapped_type());
-												return _NodeBase.find(pr);
+												return (_NodeBase.find(k));
 
 											}
 		const_iterator						find (const key_type& k) const
 											{
-												value_type pr = ft::make_pair(k, mapped_type());
-												return _NodeBase.find(pr);
+												return (_NodeBase.find(k));
 											}
 		size_type							count(const key_type& k) const
 											{
@@ -238,23 +220,19 @@ namespace ft {
 											}
 		iterator							lower_bound(const key_type& k)
 											{
-												value_type pr = ft::make_pair(k, mapped_type());
-												return (this->_NodeBase.lower_bound(pr));
+												return (this->_NodeBase.lower_bound(k));
 											}
 		const_iterator 						lower_bound(const key_type& k) const
 											{
-												value_type pr = ft::make_pair(k, mapped_type());
-												return (this->_NodeBase.lower_bound(pr));
+												return (this->_NodeBase.lower_bound(k));
 											}
 		iterator							upper_bound(const key_type& k)
 											{
-												value_type pr = ft::make_pair(k, mapped_type());
-												return (this->_NodeBase.upper_bound(pr));
+												return (this->_NodeBase.upper_bound(k));
 											}
 		const_iterator 						upper_bound (const key_type& k) const
 											{
-												value_type pr = ft::make_pair(k, mapped_type());
-												return (this->_NodeBase.upper_bound(pr));
+												return (this->_NodeBase.upper_bound(k));
 											}
 		pair<const_iterator,const_iterator> equal_range(const key_type& k) const
 											{
@@ -265,26 +243,26 @@ namespace ft {
 												return (ft::make_pair(this->lower_bound(k), this->upper_bound(k)));
 											}
 	};
-											template<class Key, class T, class Compare, class Alloc>
-		bool 								operator==(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return  (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));}
+											template<class T, class Compare, class Alloc>
+		bool 								operator==(const set<T,Compare,Alloc>& lhs,const set<T,Compare,Alloc>& rhs) {return  (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));}
 							
-											template<class Key, class T, class Compare, class Alloc>
-		bool 								operator!=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (!(lhs == rhs));}
+											template<class T, class Compare, class Alloc>
+		bool 								operator!=(const set<T,Compare,Alloc>& lhs,const set<T,Compare,Alloc>& rhs) {return (!(lhs == rhs));}
 							
-											template<class Key, class T, class Compare, class Alloc>
-		bool 								operator<(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));}
+											template<class T, class Compare, class Alloc>
+		bool 								operator<(const set<T,Compare,Alloc>& lhs,const set<T,Compare,Alloc>& rhs) {return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));}
 							
-											template<class Key, class T, class Compare, class Alloc>
-		bool 								operator<=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (!(rhs < lhs));}
+											template<class T, class Compare, class Alloc>
+		bool 								operator<=(const set<T,Compare,Alloc>& lhs,const set<T,Compare,Alloc>& rhs) {return (!(rhs < lhs));}
 							
-											template<class Key, class T, class Compare, class Alloc>
-		bool 								operator>(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (rhs < lhs);}
+											template<class T, class Compare, class Alloc>
+		bool 								operator>(const set<T,Compare,Alloc>& lhs,const set<T,Compare,Alloc>& rhs) {return (rhs < lhs);}
 							
-											template<class Key, class T, class Compare, class Alloc>
-		bool 								operator>=(const map<Key,T,Compare,Alloc>& lhs,const map<Key,T,Compare,Alloc>& rhs) {return (!(lhs < rhs));}
+											template<class T, class Compare, class Alloc>
+		bool 								operator>=(const set<T,Compare,Alloc>& lhs,const set<T,Compare,Alloc>& rhs) {return (!(lhs < rhs));}
 							
-											template<class Key, class T, class Compare, class Alloc>
-		void								swap(map<Key,T,Compare,Alloc>& lhs, map<Key,T,Compare,Alloc>& rhs) {lhs.swap(rhs);}
+											template<class T, class Compare, class Alloc>
+		void								swap(set<T,Compare,Alloc>& lhs, set<T,Compare,Alloc>& rhs) {lhs.swap(rhs);}
 }
 
 #endif

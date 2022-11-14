@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/14 18:47:47 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/15 00:29:14 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@
 
 namespace ft {
 
-		enum Color {BLACK, RED};
-
 		template<class T>
 		struct Node
 		{
@@ -40,13 +38,13 @@ namespace ft {
 			Node(const T & other) : data(other){}
 		};
 
-		template <class T, class compare, class alloc>
+		template <class T, class compare, class Allocator>
 		class RedBlackTree 
 		{
 			public :
 				typedef 			T								 			value_type;
 				typedef 			compare										key_compare;
-				typedef typename 	alloc::template rebind<Node<T> >::other		allocator_type;
+				typedef typename 	Allocator::template rebind<Node<T> >::other	allocator_type;
 				typedef				size_t										size_type;
 				typedef				Node<value_type>							Nd;
 				typedef 			Nd* 										NodePtr;
@@ -56,7 +54,7 @@ namespace ft {
 				typedef 			ft::reverse_iterator<iterator>					reverse_iterator;
 				typedef typename	iterator_traits<iterator>::difference_type	difference_type;
 
-    	/*protected :*/
+    		protected :
 									key_compare									_cmp;
 									allocator_type								_alloc;
 									size_type									_size;
@@ -321,12 +319,6 @@ namespace ft {
 											_alloc.deallocate(_root, 1);
 										}
 									}
-		void						clear()
-									{
-										clear(_root);
-										_size = 0;
-										_root = _TNULL;
-									}
 		NodePtr						new_node(const value_type & key)
 									{
 										NodePtr node = _alloc.allocate(1);
@@ -335,10 +327,10 @@ namespace ft {
 									    node->left = _TNULL;
 									    node->right = _TNULL;
 									    node->color = 1;
-										return node;
+										return (node);
 									}
-   public:		
-									RedBlackTree(compare c = key_compare(), allocator_type alloca = allocator_type()) : _cmp(c), _alloc(alloca), _size(0) 
+		public:		
+									RedBlackTree(compare c = key_compare(), allocator_type alloc = allocator_type()) : _cmp(c), _alloc(alloc), _size(0) 
 									{
 									  _TNULL = _alloc.allocate(1);
 									  _TNULL->color = 0;
@@ -349,19 +341,11 @@ namespace ft {
 									~RedBlackTree() 
 									{
 										clear();
-										//_alloc.destroy(_TNULL);
 										_alloc.deallocate(_TNULL, 1);
-										_size = 0;
 									}
 		iterator					insert(const value_type & key)
 									{
-									   	NodePtr node = _alloc.allocate(1);
-										_alloc.construct(node, key);
-									    node->parent = NULL;
-									    node->left = _TNULL;
-									    node->right = _TNULL;
-									    node->color = 1;
-
+									   	NodePtr node = new_node(key);
 									    NodePtr y = NULL;
 									    NodePtr x = this->_root;
 
@@ -465,27 +449,40 @@ namespace ft {
 										size_type									size;
 										NodePtr										root;
 										NodePtr 									TNULL;
-									//	key_compare									cmp;
 
-									//	cmp = this->_cmp;
 										alloca = this->_alloc;
 										size = this->_size;
 										root = this->_root;
 										TNULL = _TNULL;
 
-									//	this->_cmp	= other._cmp;
-										this->_alloc=other._alloc ;
-										this->_size	=other._size ;
-										this->_root	=other._root ;
+										this->_alloc=other._alloc;
+										this->_size	=other._size;
+										this->_root	=other._root;
 										_TNULL = other._TNULL;
 
-									//	other._cmp = cmp ;
 										other._alloc = alloca;
 										other._size = size;
 										other._root = root;
 										other._TNULL = TNULL;
 									}
-
+		void						clear()
+									{
+										clear(_root);
+										_size = 0;
+										_root = _TNULL;
+									}
+		size_t						size() const
+									{
+										return (_size);
+									}
+		key_compare					cmp() const
+									{
+										return (_cmp);
+									}
+		allocator_type				get_alloc() const
+									{
+										return (_alloc);
+									}
 		};
 }
 
