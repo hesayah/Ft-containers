@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/14 17:47:44 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/14 18:47:47 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ namespace ft {
 											y = minimum(z->right);
 											y_original_color = y->color;
 											x = y->right;
-											if (y->parent == z)
+											if (y->parent == z) 
 												x->parent = y;
 											else
 											{

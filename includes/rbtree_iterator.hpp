@@ -38,9 +38,9 @@ namespace ft {
 										if (node)
 											return node;
 										else
-											return _TNULL;
+										return _TNULL;
 									}
- 			NodePtr 				maximum(NodePtr node)
+ 			NodePtr 				maximum(NodePtr node) 
   									{
 										while (node && node->right != _TNULL)
 											node = node->right;
@@ -125,10 +125,6 @@ namespace ft {
 										_base = successor(_base);
 										return (*this);
 									}
-	/*friend	rbt_iterator<T, Node>	operator+(difference_type diff, rbt_iterator<T, Node> x) {return (x += diff);}
-	friend	rbt_iterator<T, Node>	operator-(difference_type diff, rbt_iterator<T, Node> x) {return (x -= diff);}
-	friend	difference_type			operator+(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base + rhs._base);}
-	friend	difference_type			operator-(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base - rhs._base);}*/
 	friend	bool 					operator==(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base == rhs._base);}
 	friend	bool 					operator!=(const rbt_iterator<T, Node>& lhs, const rbt_iterator<T, Node>& rhs) {return (lhs._base != rhs._base);}
 	};
