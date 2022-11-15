@@ -6,7 +6,7 @@
 /*   By: hesayah <hesayah@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 19:55:53 by hesayah           #+#    #+#             */
-/*   Updated: 2022/11/15 00:29:14 by hesayah          ###   ########.fr       */
+/*   Updated: 2022/11/15 00:44:20 by hesayah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ namespace ft {
 				typedef 			Nd* 										NodePtr;
 				typedef				rbt_iterator<value_type, Nd>				iterator;
 				typedef				rbt_iterator<const value_type,const Nd>		const_iterator;
-				typedef				ft::reverse_iterator<const_iterator>			const_reverse_iterator;
-				typedef 			ft::reverse_iterator<iterator>					reverse_iterator;
+				typedef				ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+				typedef 			ft::reverse_iterator<iterator>				reverse_iterator;
 				typedef typename	iterator_traits<iterator>::difference_type	difference_type;
 
     		protected :
@@ -445,12 +445,12 @@ namespace ft {
 									}
   		void						swap(RedBlackTree & other)
 									{
-										allocator_type								alloca;
+										allocator_type								alloc;
 										size_type									size;
 										NodePtr										root;
 										NodePtr 									TNULL;
 
-										alloca = this->_alloc;
+										alloc = this->_alloc;
 										size = this->_size;
 										root = this->_root;
 										TNULL = _TNULL;
@@ -460,7 +460,7 @@ namespace ft {
 										this->_root	=other._root;
 										_TNULL = other._TNULL;
 
-										other._alloc = alloca;
+										other._alloc = alloc;
 										other._size = size;
 										other._root = root;
 										other._TNULL = TNULL;
